@@ -1,4 +1,11 @@
 package org.example.librarymanager.app;
 
-public class DocumentDetailController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class DocumentDetailController extends ControllerWrapper {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
 }

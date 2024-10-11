@@ -37,7 +37,7 @@ public class Document {
 
     public Document(ResultSet rs) throws SQLException {
         this.id = rs.getInt("id");
-        this.categoryId = rs.getInt("category_id");
+        this.categoryId = rs.getInt("categoryId");
         this.author = rs.getInt("author");
         this.title = rs.getString("title");
         this.description = rs.getString("description");

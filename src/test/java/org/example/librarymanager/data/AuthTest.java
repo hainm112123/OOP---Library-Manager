@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-public class AuthQueryTest {
+public class AuthTest {
     @Test
     public void testRegister() {
-        String username = "admin3";
+        String username = "admin";
         String password = "123456";
         String retypePassword = "123456";
-        String firstname = "admin3";
-        String lastname = "admin3";
+        String firstname = "admin";
+        String lastname = "admin";
         String gender = "male";
         LocalDate dateOfBirth = LocalDate.of(2005, 2, 13);
         AuthResult result = AuthQuery.register(username, password, retypePassword, firstname, lastname, gender, dateOfBirth);

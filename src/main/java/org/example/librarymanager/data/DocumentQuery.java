@@ -71,4 +71,21 @@ public class DocumentQuery {
         }
         return document;
     }
+
+    public static boolean updateDocument(Document document) {
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement("update documents set quantityInStock = ?, borrowedTimes = ? where id = ?");
+            ps.setInt(1, document.getQuantityInStock());
+            ps.setInt(2, document.getBorrowedTimes());
+            ps.setInt(3, document.getId());
+            ps.executeUpdate();
+            ps.close();
+            connection.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

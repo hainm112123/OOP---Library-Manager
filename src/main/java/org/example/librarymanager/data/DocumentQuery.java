@@ -1,5 +1,6 @@
 package org.example.librarymanager.data;
 
+import org.example.librarymanager.models.Comment;
 import org.example.librarymanager.models.Document;
 
 import java.sql.Connection;
@@ -87,5 +88,41 @@ public class DocumentQuery {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean comment(int userId, int documentId, String content) {
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement("insert into comments (userId, documentId, content) values(?,?,?)");
+            ps.setInt(1, userId);
+            ps.setInt(2, documentId);
+            ps.setString(3, content);
+            ps.executeUpdate();
+            ps.close();
+            connection.close();
+            return true;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static List<Comment> getComments(int documentId) {
+        List<Comment> comments = new ArrayList<>();
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement("select * from comments where documentId = ?");
+            ps.setInt(1, documentId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                comments.add(new Comment(rs));
+            }
+            rs.close();
+            ps.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return comments;
     }
 }

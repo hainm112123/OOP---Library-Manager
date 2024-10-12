@@ -8,6 +8,7 @@ module org.example.librarymanager {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires static lombok;
+    requires org.apache.commons.dbcp2;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

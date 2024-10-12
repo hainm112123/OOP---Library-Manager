@@ -24,7 +24,6 @@ public class AuthQuery {
             }
             ps.close();
             rs.close();
-            DatabaseConnection.closeConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,7 +89,6 @@ public class AuthQuery {
             }
             ps.close();
             rs.close();
-            DatabaseConnection.closeConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }

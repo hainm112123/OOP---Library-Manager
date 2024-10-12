@@ -1,5 +1,7 @@
 package org.example.librarymanager.data;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -8,22 +10,21 @@ import static org.example.librarymanager.Config.*;
 
 public class DatabaseConnection {
     private static Connection connection;
+    private static BasicDataSource ds;
 
-    public static Connection getConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return connection;
+    static {
+        ds = new BasicDataSource();
+        ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        ds.setUrl(DB_URL);
+        ds.setUsername(DB_USER);
+        ds.setPassword(DB_PASSWORD);
+        ds.setMinIdle(5);
+        ds.setInitialSize(5);
+        ds.setMaxIdle(10);
+        ds.setMaxOpenPreparedStatements(100);
     }
 
-    public static void closeConnection() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public static Connection getConnection() throws SQLException {
+        return ds.getConnection();
     }
 }

@@ -23,7 +23,6 @@ public class ServiceQuery {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,7 +37,6 @@ public class ServiceQuery {
             ps.setInt(2, service.getId());
             ps.executeUpdate();
             ps.close();
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,7 +60,6 @@ public class ServiceQuery {
             ps.executeUpdate();
             ps.close();
 
-            connection.close();
             return true;
         } catch(Exception e) {
             e.printStackTrace();

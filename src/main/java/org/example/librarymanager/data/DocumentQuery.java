@@ -23,7 +23,6 @@ public class DocumentQuery {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,7 +40,6 @@ public class DocumentQuery {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,7 +64,6 @@ public class DocumentQuery {
             }
             generatedKeys.close();
             ps.close();
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,7 +79,6 @@ public class DocumentQuery {
             ps.setInt(3, document.getId());
             ps.executeUpdate();
             ps.close();
-            connection.close();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +95,6 @@ public class DocumentQuery {
             ps.setString(3, content);
             ps.executeUpdate();
             ps.close();
-            connection.close();
             return true;
         } catch(Exception e) {
             e.printStackTrace();
@@ -119,7 +114,6 @@ public class DocumentQuery {
             }
             rs.close();
             ps.close();
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

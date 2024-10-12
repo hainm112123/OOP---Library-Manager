@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class AuthTest {
     @Test
     public void testRegister() {
-        String username = "admin";
+        String username = "admin2";
         String password = "123456";
         String retypePassword = "123456";
         String firstname = "admin";

@@ -8,6 +8,11 @@ module org.example.librarymanager {
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
     requires static lombok;
+    requires org.apache.commons.dbcp2;
+    requires com.google.api.client;
+    requires com.google.api.client.json.gson;
+    requires google.api.services.books.v1.rev114;
+    requires google.api.client;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

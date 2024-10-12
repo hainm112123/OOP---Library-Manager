@@ -10,6 +10,5 @@ public class LoginController extends ControllerWrapper {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ProfileController.setStage(stage);
-        Connection connection = DatabaseConnection.getConnection();
     }
 }

@@ -1,8 +1,15 @@
 package org.example.librarymanager.data;
 
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.books.Books;
+import com.google.api.services.books.model.Volume;
+import com.google.api.services.books.model.Volumes;
 import org.example.librarymanager.models.Comment;
 import org.example.librarymanager.models.Document;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +17,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.example.librarymanager.Config.API_KEY;
+
 public class DocumentQuery {
+    private static final String APPLICATION_NAME = "LibraryManager";
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+
     public static Document getDocumentById(int id) {
         Document document = null;
         try {
@@ -118,5 +130,35 @@ public class DocumentQuery {
             e.printStackTrace();
         }
         return comments;
+    }
+
+    public static List<Volume> getDocumentsFromAPI(String pattern) {
+        try {
+            Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, null)
+                    .setApplicationName(APPLICATION_NAME).build();
+            Books.Volumes.List volumeList = books.volumes().list(pattern).setKey(API_KEY);
+            volumeList.setMaxResults(30L);
+            Volumes volumes = volumeList.execute();
+            return volumes.getItems();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Volume getDocumentByISBN(String ISBN) {
+        try {
+            Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, null)
+                    .setApplicationName(APPLICATION_NAME).build();
+            Books.Volumes.List volumeList = books.volumes().list("isbn:" + ISBN).setKey(API_KEY);
+            Volumes volumes = volumeList.execute();
+            if (volumes.getItems() != null && !volumes.getItems().isEmpty()) {
+                return volumes.getItems().getFirst();
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

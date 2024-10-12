@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 public class ServiceTest {
     @Test
     public void testBorrowDocument() {
-        int userId = 1;
-        int documentId = 2;
+        int userId = 2;
+        int documentId = 3;
         Assertions.assertTrue(ServiceQuery.borrowDocument(userId, documentId));
     }
 

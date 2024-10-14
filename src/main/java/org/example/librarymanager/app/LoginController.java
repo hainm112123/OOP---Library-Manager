@@ -42,7 +42,7 @@ public class LoginController extends ControllerWrapper {
         loginMessageLabel.setText(loginResult.getMessage());
         if(loginResult.getUser() != null) {
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("dashboard.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("document-detail.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
                 switchScene(scene);
                 stage.show();
@@ -54,7 +54,7 @@ public class LoginController extends ControllerWrapper {
 
     public void registerButtonOnAction(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("register.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("document-detail.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             switchScene(scene);
             stage.show();

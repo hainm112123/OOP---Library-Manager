@@ -27,9 +27,21 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" text="Main Menu" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <Button mnemonicParsing="false" text="Category" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <Button mnemonicParsing="false" text="I don't know" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Button mnemonicParsing="false" onAction="#mainMenuButtonOnAction" style="-fx-background-color: #FFE7BA;" text="Main Menu" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#categoryButtonOnAction" style="-fx-background-color: #FFE7BA;" text="Category" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" style="-fx-background-color: #FFE7BA;" text="I don't know" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Button>
                </children>
             </GridPane>
             <GridPane layoutX="750.0" layoutY="50.0" prefHeight="42.0" prefWidth="222.0">
@@ -49,7 +61,7 @@
                   </Button>
                </children>
             </GridPane>
-            <Button contentDisplay="GRAPHIC_ONLY" layoutX="1100.0" layoutY="26.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #FFE7BA;" text="Button">
+            <Button contentDisplay="GRAPHIC_ONLY" layoutX="1100.0" layoutY="26.0" mnemonicParsing="false" onAction="#profileButtonOnAction" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #FFE7BA;" text="Button">
                <graphic>
                   <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                      <image>

@@ -19,9 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.librarymanager.Config.API_KEY;
+import static org.example.librarymanager.Config.APPLICATION_NAME;
 
 public class DocumentQuery {
-    private static final String APPLICATION_NAME = "LibraryManager";
+//    private static final String APPLICATION_NAME = "LibraryManager";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
     public static Document getDocumentById(int id) {

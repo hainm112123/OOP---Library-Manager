@@ -41,7 +41,14 @@ public class LoginController extends ControllerWrapper {
         AuthResult loginResult = AuthQuery.login(username.getText(), password.getText());
         loginMessageLabel.setText(loginResult.getMessage());
         if(loginResult.getUser() != null) {
-            System.out.println("Yeah");
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("dashboard.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                switchScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

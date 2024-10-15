@@ -3,13 +3,11 @@ package org.example.librarymanager.data;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static org.example.librarymanager.Config.*;
 
 public class DatabaseConnection {
-    private static Connection connection;
     private static BasicDataSource ds;
 
     static {
@@ -18,8 +16,8 @@ public class DatabaseConnection {
         ds.setUrl(DB_URL);
         ds.setUsername(DB_USER);
         ds.setPassword(DB_PASSWORD);
-        ds.setMinIdle(5);
-        ds.setInitialSize(5);
+        ds.setMinIdle(3);
+        ds.setInitialSize(3);
         ds.setMaxIdle(10);
         ds.setMaxOpenPreparedStatements(100);
     }

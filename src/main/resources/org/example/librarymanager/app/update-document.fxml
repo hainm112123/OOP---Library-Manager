@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.UpdateDocumentController">
+    <fx:include source="topbar.fxml" />
+   <Label fx:id="updDocTypeLabel" layoutX="454.0" layoutY="206.0" text="Update document">
+      <font>
+         <Font size="20.0" />
+      </font>
+   </Label>
+   <GridPane layoutX="119.0" layoutY="260.0" prefHeight="479.0" prefWidth="728.0">
+     <columnConstraints>
+       <ColumnConstraints hgrow="SOMETIMES" maxWidth="357.5999755859375" minWidth="10.0" prefWidth="116.0" />
+       <ColumnConstraints hgrow="SOMETIMES" maxWidth="612.8" minWidth="10.0" prefWidth="612.8" />
+     </columnConstraints>
+     <rowConstraints>
+       <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+       <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+       <RowConstraints maxHeight="127.59998168945313" minHeight="10.0" prefHeight="66.79996337890626" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="214.8000244140625" minHeight="10.0" prefHeight="185.00003662109378" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="68.20001220703125" minHeight="10.0" prefHeight="64.99996337890627" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="49.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
+     </rowConstraints>
+      <children>
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" text="Title">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Label>
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" text="Author" GridPane.rowIndex="1">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Label>
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" text="Category" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Label>
+         <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="36.0" prefHeight="18.0" prefWidth="166.0" text="Description" GridPane.rowIndex="3">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Label>
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" text="Quantity" GridPane.rowIndex="4">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Label>
+         <TextField fx:id="updDocTitle" prefHeight="40.0" prefWidth="613.0" GridPane.columnIndex="1" />
+         <TextField fx:id="updDocAuthor" prefHeight="40.0" prefWidth="613.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         <TextField fx:id="updDocQuantity" prefHeight="40.0" prefWidth="613.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+         <ComboBox fx:id="updDocCategories" prefHeight="26.0" prefWidth="643.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         <TextArea fx:id="updDocDescription" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <children>
+               <Button fx:id="updDocSubmit" alignment="CENTER" mnemonicParsing="false" prefHeight="28.0" prefWidth="613.0" text="Button" StackPane.alignment="CENTER" />
+            </children>
+         </StackPane>
+      </children>
+   </GridPane>
+</AnchorPane>

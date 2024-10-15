@@ -169,6 +169,11 @@ public class DocumentQuery {
         return comments;
     }
 
+    /**
+     * Get list of books from Google Books API by a search pattern
+     * @param pattern
+     * @return
+     */
     public static List<Volume> getDocumentsFromAPI(String pattern) {
         try {
             Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, null)
@@ -183,6 +188,11 @@ public class DocumentQuery {
         }
     }
 
+    /**
+     * Get book's information from Google Books API by ISBN
+     * @param ISBN
+     * @return Voulume
+     */
     public static Volume getDocumentByISBN(String ISBN) {
         try {
             Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, null)

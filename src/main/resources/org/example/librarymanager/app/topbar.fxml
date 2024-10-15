@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.DashboardController">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.TopbarController">
    <children>
       <AnchorPane prefHeight="170.0" prefWidth="1200.0" style="-fx-background-color: #FFE7BA;">
          <children>
@@ -18,8 +18,8 @@
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.4000244140625" minWidth="10.0" prefWidth="210.4000244140625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.20001220703125" minWidth="10.0" prefWidth="189.5999755859375" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
@@ -27,17 +27,22 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" onAction="#mainMenuButtonOnAction" style="-fx-background-color: #FFE7BA;" text="Main Menu" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <Button fx:id="topbarHomeBtn" mnemonicParsing="false" style="-fx-background-color: #FFE7BA;" text="Home" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <font>
                         <Font size="23.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#categoryButtonOnAction" style="-fx-background-color: #FFE7BA;" text="Category" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <Button fx:id="topbarCategoryBtn" mnemonicParsing="false" style="-fx-background-color: #FFE7BA;" text="Category" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" style="-fx-background-color: #FFE7BA;" text="I don't know" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <Button mnemonicParsing="false" style="-fx-background-color: #FFE7BA;" text="I don't know" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="topbarDocModifyBtn" mnemonicParsing="false" style="-fx-background-color: #FFE7BA;" text="New Document" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                      <font>
                         <Font size="25.0" />
                      </font>
@@ -61,7 +66,7 @@
                   </Button>
                </children>
             </GridPane>
-            <Button contentDisplay="GRAPHIC_ONLY" layoutX="1100.0" layoutY="26.0" mnemonicParsing="false" onAction="#profileButtonOnAction" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #FFE7BA;" text="Button">
+            <Button fx:id="topbarProfileBtn" contentDisplay="GRAPHIC_ONLY" layoutX="1100.0" layoutY="26.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #FFE7BA;" text="Button">
                <graphic>
                   <ImageView fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                      <image>

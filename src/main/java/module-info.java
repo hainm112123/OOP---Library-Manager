@@ -13,6 +13,7 @@ module org.example.librarymanager {
     requires com.google.api.client.json.gson;
     requires google.api.services.books.v1.rev114;
     requires google.api.client;
+    requires org.checkerframework.checker.qual;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

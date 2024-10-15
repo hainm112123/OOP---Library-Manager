@@ -50,8 +50,10 @@ public class Document {
         this.quantityInStock = rs.getInt("quantityInStock");
         this.borrowedTimes = rs.getInt("borrowedTimes");
         this.addDate = LocalDate.parse(rs.getString("addDate"));
-        if (rs.getString("rating") != null) {
+        try {
             this.rating = rs.getFloat("rating");
+        } catch (Exception e) {
+            this.rating = 0;
         }
     }
 

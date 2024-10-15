@@ -26,7 +26,7 @@ public class DocumentTest {
 
     @Test
     public void getDocumentsTest() {
-        List<Document> documents = DocumentQuery.getHighestRatedDocuments(5);
+        List<Document> documents = DocumentQuery.getHighestRatedDocuments(10);
         for (Document document : documents) {
             System.out.println(document);
         }
@@ -65,7 +65,8 @@ public class DocumentTest {
         Assertions.assertNotNull(volume);
         System.out.println("Title: " + volume.getVolumeInfo().getTitle());
         System.out.println("Authors: " + volume.getVolumeInfo().getAuthors());
-        System.out.println(volume.getAccessInfo().getWebReaderLink());
+        System.out.println("Categories: " + volume.getVolumeInfo().getCategories());
+        System.out.println(volume.getVolumeInfo().getImageLinks());
     }
 
     @Test

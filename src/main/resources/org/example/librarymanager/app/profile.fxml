@@ -11,7 +11,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.librarymanager.app.ProfileController"
             prefHeight="800" prefWidth="1200.0">
-    <fx:include source="dashboard.fxml" />
+    <fx:include source="topbar.fxml" />
     <children>
         <TextArea layoutY="207.0" prefHeight="600.0" prefWidth="1200.0" promptText="Profile">
             <font>

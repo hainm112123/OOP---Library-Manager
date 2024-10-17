@@ -18,20 +18,20 @@ public class Document {
     private String author;
     private String title;
     private String description;
-    private String content;
+    private String imageLink;
     private int quantity;
     private int quantityInStock;
     private int borrowedTimes;
     private LocalDate addDate;
     private float rating;
 
-    public Document(int categoryId, int owner, String author, String title, String description, String content, int quantity, int quantityInStock, int borrowedTimes, LocalDate addDate) {
+    public Document(int categoryId, int owner, String author, String title, String description, String imageLink, int quantity, int quantityInStock, int borrowedTimes, LocalDate addDate) {
         this.categoryId = categoryId;
         this.owner = owner;
         this.author = author;
         this.title = title;
         this.description = description;
-        this.content = content;
+        this.imageLink = imageLink;
         this.quantity = quantity;
         this.quantityInStock = quantityInStock;
         this.borrowedTimes = borrowedTimes;
@@ -45,7 +45,7 @@ public class Document {
         this.author = rs.getString("author");
         this.title = rs.getString("title");
         this.description = rs.getString("description");
-        this.content = rs.getString("content");
+        this.imageLink = rs.getString("imageLink");
         this.quantity = rs.getInt("quantity");
         this.quantityInStock = rs.getInt("quantityInStock");
         this.borrowedTimes = rs.getInt("borrowedTimes");

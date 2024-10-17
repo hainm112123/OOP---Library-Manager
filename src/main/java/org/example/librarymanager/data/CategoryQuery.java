@@ -11,8 +11,7 @@ import java.util.List;
 public class CategoryQuery {
     public static List<Category> getCategories() {
         List<Category> categories = new ArrayList<Category>();
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from categories");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

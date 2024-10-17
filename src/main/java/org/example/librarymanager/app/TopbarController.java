@@ -23,7 +23,7 @@ public class TopbarController extends ControllerWrapper {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         topbarHomeBtn.setOnAction((event) -> topbarButtonOnSwitchScence("home.fxml"));
-        topbarCategoryBtn.setOnAction((event) -> topbarButtonOnSwitchScence("home.fxml"));
+        topbarCategoryBtn.setOnAction((event) -> topbarButtonOnSwitchScence("profile.fxml"));
         topbarDocModifyBtn.setOnAction((event) -> topbarButtonOnSwitchScence("new-document.fxml"));
         topbarProfileBtn.setOnAction((event) -> topbarButtonOnSwitchScence("profile.fxml"));
     }

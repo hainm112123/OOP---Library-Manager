@@ -1,5 +1,6 @@
 package org.example.librarymanager.app;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -22,6 +23,8 @@ public class HomeController extends ControllerWrapper{
 
     private static final int DOC_COMPONENT_WITDH = 200;
     private static final int DOC_COMPONENT_OFFSET = 30;
+    private static final int IMAGE_WIDTH = 128;
+    private static final int IMAGE_HEIGHT = 192;
 
     /**
      * get a document image, name,... to display
@@ -30,9 +33,19 @@ public class HomeController extends ControllerWrapper{
     private VBox documentComponent(Document document) {
         VBox container = new VBox();
 
-        String imageUrl = document.getImageLink() != null ? document.getImageLink() : "/image/Icon.png";
-        Image image = new Image(imageUrl);
-        ImageView imageView = new ImageView(image);
+        ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg")));
+        if (document.getImageLink() != null) {
+            Task<Image> task = new Task<Image>() {
+                @Override
+                protected Image call() throws Exception {
+                    return new Image(document.getImageLink(), true);
+                }
+            };
+            task.setOnSucceeded((event) -> imageView.setImage(task.getValue()));
+            new Thread(task).start();
+        }
+        imageView.setFitWidth(IMAGE_WIDTH);
+        imageView.setFitHeight(IMAGE_HEIGHT);
         container.getChildren().add(imageView);
 
         Label title = new Label(document.getTitle());

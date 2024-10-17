@@ -16,14 +16,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.NewDocumentController">
    <center>
-      <ScrollPane hbarPolicy="NEVER" prefHeight="720.0" prefWidth="1200.0" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
+      <ScrollPane prefHeight="720.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="1198.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="1184.0">
                <children>
-                  <VBox prefHeight="650.0" prefWidth="1198.0">
+                  <VBox prefHeight="650.0" prefWidth="1184.0">
                      <children>
                         <VBox alignment="CENTER" prefHeight="78.0" prefWidth="1200.0">
                            <children>

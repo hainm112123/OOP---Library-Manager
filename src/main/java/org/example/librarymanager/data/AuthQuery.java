@@ -9,9 +9,7 @@ public class AuthQuery {
     public static AuthResult login(String username, String password) {
         AuthResult result = new AuthResult();
         result.setMessage("Login failed!");
-        try {
-            Connection connection = DatabaseConnection.getConnection();
-
+        try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from users where username = ? and password = ?");
             ps.setString(1, username);
             ps.setString(2, password);
@@ -61,9 +59,7 @@ public class AuthQuery {
             result.setMessage("Invalid date of birth!");
             return result;
         }
-        try {
-            Connection connection = DatabaseConnection.getConnection();
-
+        try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from users where username = ?");
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();

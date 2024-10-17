@@ -30,8 +30,7 @@ public class ServiceQuery {
     }
 
     public static void updateService(Service service) {
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("update services set returnDate = ? where id = ?");
             ps.setDate(1, Date.valueOf(service.getReturnDate()));
             ps.setInt(2, service.getId());
@@ -43,8 +42,7 @@ public class ServiceQuery {
     }
 
     public static boolean borrowDocument(int userId, int documentId) {
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             Service service = getUndoneService(userId, documentId);
             if (service != null) return false;
             Document document = DocumentQuery.getDocumentById(documentId);
@@ -68,8 +66,7 @@ public class ServiceQuery {
     }
 
     public static boolean returnDocument(int userId, int documentId) {
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             Service service = getUndoneService(userId, documentId);
             if (service == null) return false;
             Document document = DocumentQuery.getDocumentById(documentId);

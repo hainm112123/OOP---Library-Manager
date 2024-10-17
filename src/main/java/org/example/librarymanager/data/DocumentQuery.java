@@ -27,8 +27,7 @@ public class DocumentQuery {
 
     public static Document getDocumentById(int id) {
         Document document = null;
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from documents where id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -45,8 +44,8 @@ public class DocumentQuery {
 
     public static List<Document> getDocuments(String order, int limit) {
         List<Document> documents = new ArrayList<Document>();
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
+
             String query = "select * from documents";
             if (order != null && !order.isEmpty()) {
                 query += " order by " + order;
@@ -73,8 +72,7 @@ public class DocumentQuery {
 
     public static List<Document> getHighestRatedDocuments(int limit) {
         List<Document> documents = new ArrayList<>();
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             String query = "select documents.*, avg(ratings.value) rating\n"
                     + "from documents\n"
                     + "left join ratings on documents.id = ratings.documentId\n"
@@ -94,17 +92,16 @@ public class DocumentQuery {
         return documents;
     }
 
-    public static Document addDocument(int categoryId, int owner, String author, String title, String description, String content, int quantity) {
+    public static Document addDocument(int categoryId, int owner, String author, String title, String description, String imageLink, int quantity) {
         Document document = null;
-        try {
-            Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement("insert into documents (categoryId, owner, author, title, description, content, quantity) values(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = DatabaseConnection.getConnection();){
+            PreparedStatement ps = connection.prepareStatement("insert into documents (categoryId, owner, author, title, description, imageLink, quantity) values(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, categoryId);
             ps.setInt(2, owner);
             ps.setString(3, author);
             ps.setString(4, title);
             ps.setString(5, description);
-            ps.setString(6, content);
+            ps.setString(6, imageLink);
             ps.setInt(7, quantity);
             ps.executeUpdate();
             ResultSet generatedKeys = ps.getGeneratedKeys();
@@ -120,8 +117,7 @@ public class DocumentQuery {
     }
 
     public static boolean updateDocument(Document document) {
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("update documents set quantityInStock = ?, borrowedTimes = ? where id = ?");
             ps.setInt(1, document.getQuantityInStock());
             ps.setInt(2, document.getBorrowedTimes());
@@ -136,8 +132,7 @@ public class DocumentQuery {
     }
 
     public static boolean comment(int userId, int documentId, String content) {
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("insert into comments (userId, documentId, content) values(?,?,?)");
             ps.setInt(1, userId);
             ps.setInt(2, documentId);
@@ -153,8 +148,7 @@ public class DocumentQuery {
 
     public static List<Comment> getComments(int documentId) {
         List<Comment> comments = new ArrayList<>();
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from comments where documentId = ?");
             ps.setInt(1, documentId);
             ResultSet rs = ps.executeQuery();
@@ -211,8 +205,7 @@ public class DocumentQuery {
 
     public static Rating getRating(int userId, int documentId) {
         Rating rating = null;
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from ratings where userId = ? and documentId = ?");
             ps.setInt(1, userId);
             ps.setInt(2, documentId);
@@ -227,8 +220,7 @@ public class DocumentQuery {
     }
 
     public static void rateDocument(int userId, int documentId, float value) {
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             Rating rating = getRating(userId, documentId);
             if (rating == null) {
                 PreparedStatement ps = connection.prepareStatement("insert into ratings (userId, documentId, value) values(?,?,?)");

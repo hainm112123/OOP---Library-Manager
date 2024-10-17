@@ -9,8 +9,7 @@ import java.sql.ResultSet;
 public class UserQuery {
     public static User getUserById(int id) {
         User user = null;
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from users where id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();

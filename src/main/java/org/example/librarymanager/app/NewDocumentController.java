@@ -26,6 +26,8 @@ public class NewDocumentController extends ControllerWrapper {
     @FXML
     private TextArea docDescription;
     @FXML
+    private TextField docImageLink;
+    @FXML
     private TextField docQuantity;
     @FXML
     private ComboBox<Common.Choice> docCategories;
@@ -76,7 +78,8 @@ public class NewDocumentController extends ControllerWrapper {
             docTitle.setText(volume.getVolumeInfo().getTitle());
             docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
             docDescription.setText(volume.getVolumeInfo().getDescription());
-            String category = volume.getVolumeInfo().getCategories().getFirst();
+            docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
+            String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
             Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
             if (opt.isPresent()) {
                 docCategories.getSelectionModel().select(opt.get());
@@ -116,13 +119,14 @@ public class NewDocumentController extends ControllerWrapper {
                     docAuthor.getText(),
                     docTitle.getText(),
                     docDescription.getText(),
-                    docDescription.getText(),
+                    docImageLink.getText(),
                     Integer.parseInt(docQuantity.getText())
             );
             if (document != null) {
                 docTitle.clear();
                 docAuthor.clear();
                 docDescription.clear();
+                docImageLink.clear();
                 docQuantity.clear();
                 docCategories.getSelectionModel().clearSelection();
 

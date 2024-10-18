@@ -31,10 +31,6 @@ public class NewDocumentController extends ControllerWrapper {
     private ComboBox<Common.Choice> docCategories;
     @FXML
     private Button docSubmit;
-    @FXML
-    private Button docCancel;
-    @FXML
-    private Button docDelete;
 
     @FXML
     private TextField docISBN;

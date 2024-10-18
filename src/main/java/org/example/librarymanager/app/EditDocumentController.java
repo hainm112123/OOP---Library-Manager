@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
@@ -29,21 +30,11 @@ public class EditDocumentController extends ControllerWrapper {
     private TextField docQuantity;
     @FXML
     private ComboBox<Common.Choice> docCategories;
-    @FXML
-    private Button docSubmit;
-    @FXML
-    private Button docCancel;
-    @FXML
-    private Button docDelete;
 
     @FXML
-    private TextField docISBN;
-    @FXML
-    private Button docSearch;
-    @FXML
-    private Label searchMessage;
-    @FXML
     private Label submitMessage;
+
+    private Document document;
 
     private void hideMessage(Object o, Object message) {
         if (o instanceof TextField && message instanceof Label) {
@@ -59,40 +50,25 @@ public class EditDocumentController extends ControllerWrapper {
         for (Category category : categories) {
             docCategories.getItems().add(new Common.Choice(category.getId(), category.getName()));
         }
-        searchMessage.setVisible(false);
         submitMessage.setVisible(false);
 
         hideMessage(docTitle, submitMessage);
         hideMessage(docQuantity, submitMessage);
-        hideMessage(docISBN, submitMessage);
         hideMessage(docDescription, submitMessage);
         hideMessage(docAuthor, submitMessage);
 
-        hideMessage(docISBN, searchMessage);
-    }
-
-    @FXML
-    private void onSearchByISBN(ActionEvent event) {
-        Volume volume = DocumentQuery.getDocumentByISBN(docISBN.getText());
-        if (volume != null) {
-            searchMessage.setText("Searching complete!");
-            searchMessage.setTextFill(Color.GREEN);
-            docTitle.setText(volume.getVolumeInfo().getTitle());
-            docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
-            docDescription.setText(volume.getVolumeInfo().getDescription());
-            docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
-            String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
-            Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
-            if (opt.isPresent()) {
-                docCategories.getSelectionModel().select(opt.get());
-            } else {
-                docCategories.getSelectionModel().selectLast();
-            }
+        document = getCurrentDocument();
+        docTitle.setText(document.getTitle());
+        docAuthor.setText(document.getAuthor());
+        docDescription.setText(document.getDescription());
+        docImageLink.setText(document.getImageLink());
+        docQuantity.setText(String.valueOf(document.getQuantity()));
+        Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getValue() ==  document.getCategoryId()).findFirst();
+        if (opt.isPresent()) {
+            docCategories.getSelectionModel().select(opt.get());
         } else {
-            searchMessage.setText("ISBN not found!");
-            searchMessage.setTextFill(Color.RED);
+            docCategories.getSelectionModel().selectLast();
         }
-        searchMessage.setVisible(true);
     }
 
     @FXML
@@ -100,6 +76,15 @@ public class EditDocumentController extends ControllerWrapper {
         submitMessage.setText("");
         if (docQuantity.getText().isEmpty() || !Common.isInteger(docQuantity.getText())) {
             submitMessage.setText("Please enter a valid quantity!");
+        } else {
+            if (document.getQuantityInStock() < document.getQuantity() - Integer.parseInt(docQuantity.getText())) {
+                submitMessage.setText(
+                        "New quantity is currently invalid because there only "
+                        + document.getQuantityInStock() + "book"
+                        + (document.getQuantityInStock() == 0 ? "" : "s")
+                        + " in stock now"
+                );
+            }
         }
         if (docTitle.getText().isEmpty()) {
             submitMessage.setText("Please enter a title!");
@@ -116,23 +101,20 @@ public class EditDocumentController extends ControllerWrapper {
             submitMessage.setTextFill(Color.RED);
         }
         else {
-            Document document = DocumentQuery.addDocument(docCategories.getSelectionModel().getSelectedItem().getValue(),
-                    getUser().getId(),
-                    docAuthor.getText(),
-                    docTitle.getText(),
-                    docDescription.getText(),
-                    docImageLink.getText(),
-                    Integer.parseInt(docQuantity.getText())
+            document.setCategoryId(docCategories.getSelectionModel().getSelectedItem().getValue());
+            document.setAuthor(docAuthor.getText());
+            document.setTitle(docTitle.getText());
+            document.setDescription(docDescription.getText());
+            document.setImageLink(docImageLink.getText());
+            document.setQuantityInStock(
+                    document.getQuantityInStock()
+                    - document.getQuantity()
+                    + Integer.parseInt(docQuantity.getText())
             );
-            if (document != null) {
-                docTitle.clear();
-                docAuthor.clear();
-                docDescription.clear();
-                docImageLink.clear();
-                docQuantity.clear();
-                docCategories.getSelectionModel().clearSelection();
+            document.setQuantity(Integer.parseInt(docQuantity.getText()));
 
-                submitMessage.setText("Successfully added!");
+            if (DocumentQuery.updateDocument(document)) {
+                submitMessage.setText("Successfully updated!");
                 submitMessage.setTextFill(Color.GREEN);
             }
             else {
@@ -142,5 +124,35 @@ public class EditDocumentController extends ControllerWrapper {
         }
 
         submitMessage.setVisible(true);
+    }
+
+    @FXML
+    private void handleCancel() {
+        backScene();
+    }
+
+    @FXML
+    private void handleDelete() {
+        Common.ButtonDialog deleteDialog = new Common.ButtonDialog(stage,
+                "Delete Document",
+                "Are you sure you want delete this document ?",
+                "This action can't be reverted",
+                true
+        );
+        Optional<ButtonType> result = deleteDialog.getDialog().showAndWait();
+        if (result.isPresent() && result.get() == deleteDialog.getCancelButton()) {
+            return;
+        }
+
+        String message = "";
+        if (DocumentQuery.deleteDocument(document)) {
+            message = "Successfully deleted!";
+        } else {
+            message = "Some errors occurred! Please try again!";
+        }
+        Common.ButtonDialog dialog = new Common.ButtonDialog(stage, "Delete Document", message, "", false);
+        dialog.getDialog().showAndWait();
+
+        backScene();
     }
 }

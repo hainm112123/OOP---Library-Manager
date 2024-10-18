@@ -19,23 +19,15 @@ public class TopbarController extends ControllerWrapper {
     Button topbarDocModifyBtn;
     @FXML
     Button topbarProfileBtn;
+    @FXML
+    Button topbarMyDocBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        topbarHomeBtn.setOnAction((event) -> topbarButtonOnSwitchScence("home.fxml"));
-        topbarCategoryBtn.setOnAction((event) -> topbarButtonOnSwitchScence("home.fxml"));
-        topbarDocModifyBtn.setOnAction((event) -> topbarButtonOnSwitchScence("new-document.fxml"));
-        topbarProfileBtn.setOnAction((event) -> topbarButtonOnSwitchScence("profile.fxml"));
-    }
-
-    public void topbarButtonOnSwitchScence(String url) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource(url));
-            Scene scene = new Scene(fxmlLoader.load());
-            switchScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        topbarHomeBtn.setOnAction((event) -> switchScene("home.fxml"));
+        topbarCategoryBtn.setOnAction((event) -> switchScene("profile.fxml"));
+        topbarDocModifyBtn.setOnAction((event) -> switchScene("new-document.fxml"));
+        topbarProfileBtn.setOnAction((event) -> switchScene("profile.fxml"));
+        topbarMyDocBtn.setOnAction((event) -> switchScene("my-documents.fxml"));
     }
 }

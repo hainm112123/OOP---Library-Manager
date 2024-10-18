@@ -10,6 +10,7 @@ import org.example.librarymanager.models.Comment;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.Rating;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -92,6 +93,23 @@ public class DocumentQuery {
         return documents;
     }
 
+    public static List<Document> getDocumentsByOwner(int owner) {
+        List<Document> documents = new ArrayList<>();
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("select * from documents where owner = ?");
+            ps.setInt(1, owner);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                documents.add(new Document(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return documents;
+    }
+
     public static Document addDocument(int categoryId, int owner, String author, String title, String description, String imageLink, int quantity) {
         Document document = null;
         try (Connection connection = DatabaseConnection.getConnection();){
@@ -118,10 +136,33 @@ public class DocumentQuery {
 
     public static boolean updateDocument(Document document) {
         try (Connection connection = DatabaseConnection.getConnection();) {
-            PreparedStatement ps = connection.prepareStatement("update documents set quantityInStock = ?, borrowedTimes = ? where id = ?");
-            ps.setInt(1, document.getQuantityInStock());
-            ps.setInt(2, document.getBorrowedTimes());
-            ps.setInt(3, document.getId());
+            PreparedStatement ps = connection.prepareStatement("update documents set " +
+                    "categoryId = ?, author = ?, title = ?, description = ?, imageLink = ?, " +
+                    "quantity = ?, quantityInStock = ?, borrowedTimes = ? " +
+                    "where id = ?"
+            );
+            ps.setInt(1, document.getCategoryId());
+            ps.setString(2, document.getAuthor());
+            ps.setString(3, document.getTitle());
+            ps.setString(4, document.getDescription());
+            ps.setString(5, document.getImageLink());
+            ps.setInt(6, document.getQuantity());
+            ps.setInt(7, document.getQuantityInStock());
+            ps.setInt(8, document.getBorrowedTimes());
+            ps.setInt(9, document.getId());
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean deleteDocument(Document document) {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("delete from documents where id = ?");
+            ps.setInt(1, document.getId());
             ps.executeUpdate();
             ps.close();
             return true;

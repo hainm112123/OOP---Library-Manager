@@ -61,12 +61,20 @@ public class DocumentTest {
 
     @Test
     public void getDocumentByISBN_Test() {
-        Volume volume = DocumentQuery.getDocumentByISBN("9781974738601");
+        Volume volume = DocumentQuery.getDocumentByISBN("9781975309596");
         Assertions.assertNotNull(volume);
         System.out.println("Title: " + volume.getVolumeInfo().getTitle());
         System.out.println("Authors: " + volume.getVolumeInfo().getAuthors());
         System.out.println("Categories: " + volume.getVolumeInfo().getCategories());
         System.out.println(volume.getVolumeInfo().getImageLinks());
+    }
+
+    @Test void getDocumentsByOwnerTest() {
+        List<Document> documents = DocumentQuery.getDocumentsByOwner(1);
+        for (Document document : documents) {
+            System.out.println(document);
+        }
+        Assertions.assertNotNull(documents);
     }
 
     @Test

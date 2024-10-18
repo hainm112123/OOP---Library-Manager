@@ -43,13 +43,7 @@ public class RegisterController extends ControllerWrapper {
     }
 
     public void loginButtonOnAction(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("login.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            switchScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        switchScene("login.fxml");
+        stage.show();
     }
 }

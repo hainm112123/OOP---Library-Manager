@@ -41,27 +41,15 @@ public class LoginController extends ControllerWrapper {
         AuthResult loginResult = AuthQuery.login(username.getText(), password.getText());
         loginMessageLabel.setText(loginResult.getMessage());
         if(loginResult.getUser() != null) {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("home.fxml"));
-                Scene scene = new Scene(fxmlLoader.load());
-                setUser(loginResult.getUser());
-                switchScene(scene);
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            setUser(loginResult.getUser());
+            switchScene("home.fxml");
+            stage.show();
         }
     }
 
     public void registerButtonOnAction(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("register.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            switchScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        switchScene("register.fxml");
+        stage.show();
     }
 
 }

@@ -1,24 +1,44 @@
 package org.example.librarymanager.app;
 
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.User;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ControllerWrapper implements Initializable {
     protected static Stage stage;
     private static User user;
+    private static Document currentDocument;
+    private static List<String> urls = new ArrayList<>();
 
-    public static void switchScene(Scene scene) {
-        stage.setScene(scene);
-        Rectangle2D rect = Screen.getPrimary().getVisualBounds();
-        stage.setX((rect.getWidth() - stage.getWidth()) / 2);
-        stage.setY((rect.getHeight() - stage.getHeight()) / 2);
+    public static void switchScene(String url) {
+        try {
+            urls.add(url);
+            FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource(url));
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setScene(scene);
+            Rectangle2D rect = Screen.getPrimary().getVisualBounds();
+            stage.setX((rect.getWidth() - stage.getWidth()) / 2);
+            stage.setY((rect.getHeight() - stage.getHeight()) / 2);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void backScene() {
+        urls.removeLast();
+        switchScene(urls.getLast());
     }
 
     public static Stage getStage() {
@@ -36,6 +56,15 @@ public class ControllerWrapper implements Initializable {
     public static void setUser(User user) {
         ControllerWrapper.user = user;
     }
+
+    public static Document getCurrentDocument() {
+        return currentDocument;
+    }
+
+    public static void setCurrentDocument(Document currentDocument) {
+        ControllerWrapper.currentDocument = currentDocument;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

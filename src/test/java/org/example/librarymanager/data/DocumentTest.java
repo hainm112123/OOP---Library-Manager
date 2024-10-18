@@ -69,6 +69,14 @@ public class DocumentTest {
         System.out.println(volume.getVolumeInfo().getImageLinks());
     }
 
+    @Test void getDocumentsByOwnerTest() {
+        List<Document> documents = DocumentQuery.getDocumentsByOwner(1);
+        for (Document document : documents) {
+            System.out.println(document);
+        }
+        Assertions.assertNotNull(documents);
+    }
+
     @Test
     public void rateDocumentTest() {
         int userId = 2;

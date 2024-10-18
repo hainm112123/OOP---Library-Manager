@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class NewDocumentController extends ControllerWrapper {
+public class EditDocumentController extends ControllerWrapper {
     @FXML
     private TextField docTitle;
     @FXML

@@ -10,6 +10,7 @@ import org.example.librarymanager.models.Comment;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.Rating;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -80,6 +81,23 @@ public class DocumentQuery {
                     + "order by rating desc";
             if (limit > 0) query += " limit " + limit;
             PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                documents.add(new Document(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return documents;
+    }
+
+    public static List<Document> getDocumentsByOwner(int owner) {
+        List<Document> documents = new ArrayList<>();
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("select * from documents where owner = ?");
+            ps.setInt(1, owner);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 documents.add(new Document(rs));

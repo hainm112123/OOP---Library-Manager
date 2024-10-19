@@ -3,6 +3,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -23,7 +24,7 @@
          <content>
             <VBox prefWidth="1185.0">
                <children>
-                  <AnchorPane prefHeight="284.0" prefWidth="1186.0">
+                  <AnchorPane prefHeight="271.0" prefWidth="1186.0">
                      <children>
                         <ImageView fx:id="imageView" fitHeight="192.0" fitWidth="128.0" layoutX="14.0" layoutY="25.0" pickOnBounds="true">
                            <image>
@@ -70,7 +71,7 @@
                            </children></AnchorPane>
                         <MFXButton fx:id="borrowBtn" layoutX="14.0" layoutY="223.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#3cf043" styleClass="borrow-button" text="Borrow" textFill="WHITE" />
                         <MFXButton fx:id="returnBtn" layoutX="14.0" layoutY="223.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#ffff63" styleClass="return-button" text="Return" textFill="WHITE" />
-                        <MFXButton fx:id="editBtn" layoutX="14.0" layoutY="266.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#3b75ff" styleClass="edit-button" text="Edit" />
+                        <MFXButton fx:id="editBtn" layoutX="14.0" layoutY="223.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#3b75ff" styleClass="edit-button" text="Edit" />
                      </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="1186.0">
@@ -82,6 +83,21 @@
                         </Label>
                         <TextArea fx:id="description" editable="false" layoutX="14.0" layoutY="40.0" prefHeight="149.0" prefWidth="1148.0" wrapText="true" />
                      </children></AnchorPane>
+                  <AnchorPane prefHeight="224.0" prefWidth="1186.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="136.0" style="-fx-font-weight: 700;" styleClass="info-label" text="Feedbacks:">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <VBox fx:id="ratingsBox" layoutX="14.0" layoutY="40.0" prefHeight="166.0" prefWidth="1152.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="36.0" prefWidth="1186.0">
+                     <children>
+                        <Pagination fx:id="pagination" layoutX="269.0" layoutY="7.0" maxPageIndicatorCount="5" prefHeight="26.0" prefWidth="646.0" />
+                     </children>
+                  </AnchorPane>
                </children>
             </VBox>
          </content>

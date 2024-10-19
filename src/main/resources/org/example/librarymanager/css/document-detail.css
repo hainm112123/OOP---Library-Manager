@@ -14,3 +14,9 @@
 .info-label {
     -fx-font-weight: 700;
 }
+
+.rating > .container > .button {
+    -fx-pref-width: 10;
+    -fx-pref-height: 10;
+    -fx-background-size: cover;
+}

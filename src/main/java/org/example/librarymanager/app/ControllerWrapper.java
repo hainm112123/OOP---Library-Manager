@@ -22,6 +22,11 @@ public class ControllerWrapper implements Initializable {
     private static List<String> urls = new ArrayList<>();
     private static String currentCategory = "";
 
+    static {
+        urls = new ArrayList<>();
+        urls.add("home.fxml");
+    }
+
     public static void switchScene(String url) {
         try {
             urls.add(url);

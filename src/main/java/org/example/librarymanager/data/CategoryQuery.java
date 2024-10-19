@@ -24,4 +24,21 @@ public class CategoryQuery {
         }
         return categories;
     }
+
+    public static Category getCategory(int id) {
+        Category category = null;
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("select * from categories where id = ?");
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                category = new Category(rs);
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return category;
+    }
 }

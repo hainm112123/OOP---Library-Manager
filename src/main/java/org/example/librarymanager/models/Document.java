@@ -53,7 +53,7 @@ public class Document {
         try {
             this.rating = rs.getFloat("rating");
         } catch (Exception e) {
-            this.rating = 0;
+            this.rating = -1;
         }
     }
 

@@ -6,12 +6,9 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.books.Books;
 import com.google.api.services.books.model.Volume;
 import com.google.api.services.books.model.Volumes;
-import org.example.librarymanager.models.Comment;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.Rating;
 
-import javax.print.Doc;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,7 +25,7 @@ public class DocumentQuery {
 
     public static Document getDocumentById(int id) {
         Document document = null;
-        try (Connection connection = DatabaseConnection.getConnection();) {
+        try (Connection connection = DatabaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("select * from documents where id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -194,38 +191,6 @@ public class DocumentQuery {
         }
     }
 
-    public static boolean comment(int userId, int documentId, String content) {
-        try (Connection connection = DatabaseConnection.getConnection();) {
-            PreparedStatement ps = connection.prepareStatement("insert into comments (userId, documentId, content) values(?,?,?)");
-            ps.setInt(1, userId);
-            ps.setInt(2, documentId);
-            ps.setString(3, content);
-            ps.executeUpdate();
-            ps.close();
-            return true;
-        } catch(Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static List<Comment> getComments(int documentId) {
-        List<Comment> comments = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getConnection();) {
-            PreparedStatement ps = connection.prepareStatement("select * from comments where documentId = ?");
-            ps.setInt(1, documentId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                comments.add(new Comment(rs));
-            }
-            rs.close();
-            ps.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return comments;
-    }
-
     /**
      * Get list of books from Google Books API by a search pattern
      * @param pattern
@@ -266,43 +231,36 @@ public class DocumentQuery {
         }
     }
 
-    public static Rating getRating(int userId, int documentId) {
-        Rating rating = null;
+    public static boolean rateDocument(int userId, int documentId, float value, String content) {
         try (Connection connection = DatabaseConnection.getConnection();) {
-            PreparedStatement ps = connection.prepareStatement("select * from ratings where userId = ? and documentId = ?");
+            PreparedStatement ps = connection.prepareStatement("insert into ratings (userId, documentId, value, content) values(?,?,?,?)");
             ps.setInt(1, userId);
             ps.setInt(2, documentId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                rating = new Rating(rs);
-            }
+            ps.setFloat(3, value);
+            ps.setString(4, content);
+            ps.executeUpdate();
+            ps.close();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return rating;
     }
 
-    public static void rateDocument(int userId, int documentId, float value) {
-        try (Connection connection = DatabaseConnection.getConnection();) {
-            Rating rating = getRating(userId, documentId);
-            if (rating == null) {
-                PreparedStatement ps = connection.prepareStatement("insert into ratings (userId, documentId, value) values(?,?,?)");
-                ps.setInt(1, userId);
-                ps.setInt(2, documentId);
-                ps.setFloat(3, value);
-                ps.executeUpdate();
-                ps.close();
+    public static List<Rating> getDocumentRatings(int documentId) {
+        List<Rating> ratings = new ArrayList<>();
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("select * from ratings where documentId = ?");
+            ps.setInt(1, documentId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ratings.add(new Rating(rs));
             }
-            else {
-                PreparedStatement ps = connection.prepareStatement("update ratings set value = ? where userId = ? and documentId = ?");
-                ps.setFloat(1, value);
-                ps.setInt(2, userId);
-                ps.setInt(3, documentId);
-                ps.executeUpdate();
-                ps.close();
-            }
+            rs.close();
+            ps.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return ratings;
     }
 }

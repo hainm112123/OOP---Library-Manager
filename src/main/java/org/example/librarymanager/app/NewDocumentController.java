@@ -41,6 +41,11 @@ public class NewDocumentController extends ControllerWrapper {
     @FXML
     private Label submitMessage;
 
+    /**
+     * hide message when edit input
+     * @param o
+     * @param message
+     */
     private void hideMessage(Object o, Object message) {
         if (o instanceof TextField && message instanceof Label) {
             ((TextField) o).textProperty().addListener((observable, oldValue, newValue) -> {
@@ -67,6 +72,10 @@ public class NewDocumentController extends ControllerWrapper {
         hideMessage(docISBN, searchMessage);
     }
 
+    /**
+     * search book by ISBN and fill in the form
+     * @param event
+     */
     @FXML
     private void onSearchByISBN(ActionEvent event) {
         Volume volume = DocumentQuery.getDocumentByISBN(docISBN.getText());

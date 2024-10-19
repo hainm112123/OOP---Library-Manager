@@ -1,7 +1,6 @@
 package org.example.librarymanager.data;
 
 import com.google.api.services.books.model.Volume;
-import org.example.librarymanager.models.Comment;
 import org.example.librarymanager.models.Document;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,21 +30,6 @@ public class DocumentTest {
             System.out.println(document);
         }
 //        Assertions.assertEquals(documents.size(), 1);
-    }
-
-    @Test
-    public void commentTest() {
-        int userId = 1;
-        int documentId = 2;
-        String content = "comment";
-        Assertions.assertTrue(DocumentQuery.comment(userId, documentId, content));
-    }
-
-    @Test
-    public void getCommentsTest() {
-        int documentId = 2;
-        List<Comment> comments = DocumentQuery.getComments(documentId);
-        Assertions.assertEquals(comments.size(), 1);
     }
 
     @Test
@@ -79,9 +63,13 @@ public class DocumentTest {
 
     @Test
     public void rateDocumentTest() {
-        int userId = 2;
-        int documentId = 3;
-        float value = (float)3;
-        DocumentQuery.rateDocument(userId, documentId, value);
+        int userId = 1;
+        int documentId = 13;
+        float value = (float)5;
+        DocumentQuery.rateDocument(userId, documentId, value, "Lorem ipsum dolor sit amet, " +
+                "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore " +
+                "magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco " +
+                "laboris nisi ut aliquip ex ea commodo consequat"
+        );
     }
 }

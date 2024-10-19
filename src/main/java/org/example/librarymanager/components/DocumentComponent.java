@@ -2,7 +2,6 @@ package org.example.librarymanager.components;
 
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -49,7 +48,7 @@ public class DocumentComponent {
 
         container.setOnMouseClicked((event) -> {
             ControllerWrapper.setCurrentDocument(document);
-            ControllerWrapper.switchScene("edit-document.fxml");
+            ControllerWrapper.switchScene("document-detail.fxml");
         });
     }
 

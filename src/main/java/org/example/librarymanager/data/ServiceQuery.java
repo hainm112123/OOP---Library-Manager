@@ -29,6 +29,10 @@ public class ServiceQuery {
         return service;
     }
 
+    public static boolean isBorrowingDocument(int userId, int documentId) {
+        return getUndoneService(userId, documentId) != null;
+    }
+
     public static void updateService(Service service) {
         try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("update services set returnDate = ? where id = ?");

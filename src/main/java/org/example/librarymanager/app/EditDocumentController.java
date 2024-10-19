@@ -1,12 +1,14 @@
 package org.example.librarymanager.app;
 
 import com.google.api.services.books.model.Volume;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import org.example.librarymanager.Common;
+import org.example.librarymanager.components.ButtonDialog;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Category;
@@ -30,7 +32,6 @@ public class EditDocumentController extends ControllerWrapper {
     private TextField docQuantity;
     @FXML
     private ComboBox<Common.Choice> docCategories;
-
     @FXML
     private Label submitMessage;
 
@@ -133,7 +134,7 @@ public class EditDocumentController extends ControllerWrapper {
 
     @FXML
     private void handleDelete() {
-        Common.ButtonDialog deleteDialog = new Common.ButtonDialog(stage,
+        ButtonDialog deleteDialog = new ButtonDialog(stage,
                 "Delete Document",
                 "Are you sure you want delete this document ?",
                 "This action can't be reverted",
@@ -150,7 +151,7 @@ public class EditDocumentController extends ControllerWrapper {
         } else {
             message = "Some errors occurred! Please try again!";
         }
-        Common.ButtonDialog dialog = new Common.ButtonDialog(stage, "Delete Document", message, "", false);
+        ButtonDialog dialog = new ButtonDialog(stage, "Delete Document", message, "", false);
         dialog.getDialog().showAndWait();
 
         backScene();

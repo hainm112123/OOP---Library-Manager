@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -15,11 +16,15 @@ public class Rating {
     private int userId;
     private int documentId;
     private float value;
+    private String content;
+    private LocalDateTime postedTime;
 
     public Rating(ResultSet rs) throws SQLException {
         this.id = rs.getInt("id");
         this.userId = rs.getInt("userId");
         this.documentId = rs.getInt("documentId");
         this.value = rs.getFloat("value");
+        this.content = rs.getString("content");
+        this.postedTime = rs.getTimestamp("postedTime").toLocalDateTime();
     }
 }

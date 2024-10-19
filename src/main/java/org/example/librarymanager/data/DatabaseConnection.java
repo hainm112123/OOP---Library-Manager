@@ -16,15 +16,15 @@ public class DatabaseConnection {
         ds.setUrl(DB_URL);
         ds.setUsername(DB_USER);
         ds.setPassword(DB_PASSWORD);
-        ds.setMinIdle(5);
-        ds.setInitialSize(5);
-        ds.setMaxIdle(20);
-        ds.setMaxTotal(50);
-        ds.setMaxOpenPreparedStatements(100);
+        ds.setMinIdle(10);
+        ds.setInitialSize(10);
+        ds.setMaxIdle(30);
+        ds.setMaxTotal(100);
+        ds.setMaxOpenPreparedStatements(200);
     }
 
     public static Connection getConnection() throws SQLException {
-        logPoolStatus();
+//        logPoolStatus();
         return ds.getConnection();
     }
 

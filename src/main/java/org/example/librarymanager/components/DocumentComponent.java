@@ -39,6 +39,8 @@ public class DocumentComponent {
 
         title = new Label(document.getTitle());
         title.getStyleClass().add("title");
+        title.setMinWidth(DOC_COMPONENT_WITDH);
+        title.setPrefWidth(DOC_COMPONENT_WITDH);
         title.setMaxWidth(DOC_COMPONENT_WITDH);
         title.setEllipsisString("...");
         title.alignmentProperty().set(Pos.CENTER);

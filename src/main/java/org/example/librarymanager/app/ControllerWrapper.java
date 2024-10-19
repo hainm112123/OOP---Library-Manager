@@ -19,7 +19,8 @@ public class ControllerWrapper implements Initializable {
     protected static Stage stage;
     private static User user;
     private static Document currentDocument;
-    private static List<String> urls;
+    private static List<String> urls = new ArrayList<>();
+    private static String currentCategory = "";
 
     static {
         urls = new ArrayList<>();
@@ -68,6 +69,14 @@ public class ControllerWrapper implements Initializable {
 
     public static void setCurrentDocument(Document currentDocument) {
         ControllerWrapper.currentDocument = currentDocument;
+    }
+
+    public static String getCurrentCategory() {
+        return currentCategory;
+    }
+
+    public static void setCurrentCategory(String currentCategory) {
+        ControllerWrapper.currentCategory = currentCategory;
     }
 
     @Override

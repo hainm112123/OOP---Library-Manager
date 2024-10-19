@@ -1,13 +1,12 @@
 package org.example.librarymanager.app;
 
+import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import org.example.librarymanager.data.AuthQuery;
 import org.example.librarymanager.data.AuthResult;
 import org.example.librarymanager.data.DatabaseConnection;
@@ -18,12 +17,6 @@ import java.sql.Connection;
 import java.util.ResourceBundle;
 
 public class LoginController extends ControllerWrapper {
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        //LoginController.setStage(stage);
-    }
-
-
     @FXML
     private TextField username;
     @FXML
@@ -36,15 +29,38 @@ public class LoginController extends ControllerWrapper {
     private Hyperlink registerHyperlink;
     @FXML
     private Label loginMessageLabel;
+    @FXML
+    private Button submitBtn;
+    @FXML
+    private MFXProgressSpinner progressSpinner;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        progressSpinner.setVisible(false);
+    }
 
     public void loginButtonOnAction(ActionEvent event) {
-        AuthResult loginResult = AuthQuery.login(username.getText(), password.getText());
-        loginMessageLabel.setText(loginResult.getMessage());
-        if(loginResult.getUser() != null) {
-            setUser(loginResult.getUser());
-            switchScene("home.fxml");
-            stage.show();
-        }
+        Task<AuthResult> task = new Task<AuthResult>() {
+            @Override
+            protected AuthResult call() throws Exception {
+                return AuthQuery.login(username.getText(), password.getText());
+            }
+        };
+        progressSpinner.setVisible(true);
+        submitBtn.setVisible(false);
+
+        task.setOnSucceeded((e) -> {
+            progressSpinner.setVisible(false);
+            submitBtn.setVisible(true);
+            AuthResult loginResult = task.getValue();
+            loginMessageLabel.setText(loginResult.getMessage());
+            if(loginResult.getUser() != null) {
+                setUser(loginResult.getUser());
+                switchScene("home.fxml");
+                stage.show();
+            }
+        });
+        new Thread(task).start();
     }
 
     public void registerButtonOnAction(ActionEvent event) {

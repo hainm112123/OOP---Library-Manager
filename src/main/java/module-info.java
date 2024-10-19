@@ -15,6 +15,8 @@ module org.example.librarymanager {
     requires google.api.client;
     requires org.checkerframework.checker.qual;
     requires java.desktop;
+    requires atlantafx.base;
+    requires MaterialFX;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

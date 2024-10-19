@@ -19,7 +19,12 @@ public class ControllerWrapper implements Initializable {
     protected static Stage stage;
     private static User user;
     private static Document currentDocument;
-    private static List<String> urls = new ArrayList<>();
+    private static List<String> urls;
+
+    static {
+        urls = new ArrayList<>();
+        urls.add("home.fxml");
+    }
 
     public static void switchScene(String url) {
         try {

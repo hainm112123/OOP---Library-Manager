@@ -49,7 +49,7 @@ public class DocumentComponent {
 
         container.setOnMouseClicked((event) -> {
             ControllerWrapper.setCurrentDocument(document);
-            ControllerWrapper.switchScene("edit-document.fxml");
+            ControllerWrapper.switchScene("document-detail.fxml");
         });
     }
 

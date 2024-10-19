@@ -244,7 +244,7 @@ public class DocumentQuery {
         }
     }
 
-    public static Rating getRating(int userId, int documentId) {
+    public static Rating getUserRating(int userId, int documentId) {
         Rating rating = null;
         try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from ratings where userId = ? and documentId = ?");
@@ -262,7 +262,7 @@ public class DocumentQuery {
 
     public static void rateDocument(int userId, int documentId, float value) {
         try (Connection connection = DatabaseConnection.getConnection();) {
-            Rating rating = getRating(userId, documentId);
+            Rating rating = getUserRating(userId, documentId);
             if (rating == null) {
                 PreparedStatement ps = connection.prepareStatement("insert into ratings (userId, documentId, value) values(?,?,?)");
                 ps.setInt(1, userId);
@@ -281,6 +281,23 @@ public class DocumentQuery {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static Double getDocumentRating(int documentId) {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("select avg(value) from ratings where documentId = ?");
+            ps.setInt(1, documentId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+            rs.close();
+            ps.close();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

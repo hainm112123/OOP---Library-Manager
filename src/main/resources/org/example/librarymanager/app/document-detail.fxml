@@ -1,18 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="800" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.DocumentDetailController">
-   <fx:include source="topbar.fxml" />
-   <children>
-      <TextArea layoutY="207.0" prefHeight="600.0" prefWidth="1200.0" promptText="Document detail">
-         <font>
-            <Font size="45.0" />
-         </font>
-      </TextArea>
-   </children>
-</AnchorPane>
+
+<BorderPane prefHeight="720.0" stylesheets="@../css/document-detail.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.DocumentDetailController">
+   <top>
+      <fx:include prefHeight="170.0" source="topbar.fxml" />
+   </top>
+   <center>
+      <MFXScrollPane BorderPane.alignment="CENTER">
+         <content>
+            <VBox prefWidth="1185.0">
+               <children>
+                  <AnchorPane prefHeight="284.0" prefWidth="1186.0">
+                     <children>
+                        <ImageView fx:id="imageView" fitHeight="192.0" fitWidth="128.0" layoutX="14.0" layoutY="25.0" pickOnBounds="true">
+                           <image>
+                              <Image url="@../image/no_image.jpg" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="title" alignment="TOP_LEFT" layoutX="168.0" layoutY="25.0" prefHeight="52.0" prefWidth="600.0" style="-fx-font-weight: 900;" text="Wandering witch: The journal of Elaina Vol 6." wrapText="true">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <AnchorPane layoutX="168.0" layoutY="77.0" prefHeight="140.0" prefWidth="323.0">
+                           <children>
+                              <GridPane prefHeight="140.0" prefWidth="600.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.39996337890625" minWidth="10.0" prefWidth="75.20003662109374" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="321.60004272460935" minWidth="0.0" prefWidth="164.00003662109376" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="321.60004272460935" minWidth="10.0" prefWidth="102.39996337890622" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="321.60004272460935" minWidth="10.0" prefWidth="160.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label prefHeight="18.0" prefWidth="83.0" style="-fx-font-weight: 700;" styleClass="info-label" text="Author:" />
+                                    <Label prefHeight="18.0" prefWidth="133.0" styleClass="info-label" text="Category:" GridPane.rowIndex="1" />
+                                    <Label prefHeight="18.0" prefWidth="164.0" styleClass="info-label" text="Owner:" GridPane.columnIndex="2" />
+                                    <Label prefHeight="18.0" prefWidth="127.0" styleClass="info-label" text="Available:" GridPane.rowIndex="2" />
+                                    <Label fx:id="author" prefHeight="18.0" prefWidth="125.0" text="Label" GridPane.columnIndex="1" />
+                                    <Label prefHeight="18.0" prefWidth="151.0" styleClass="info-label" text="Borrowed times:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <Label prefHeight="18.0" prefWidth="166.0" styleClass="info-label" text="Rating: " GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                    <Label prefHeight="18.0" prefWidth="132.0" styleClass="info-label" text="Added date:" GridPane.rowIndex="3" />
+                                    <Label fx:id="category" prefHeight="18.0" prefWidth="152.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label fx:id="numberAvailable" prefHeight="18.0" prefWidth="168.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label fx:id="addDate" prefHeight="18.0" prefWidth="178.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label fx:id="owner" prefHeight="18.0" prefWidth="156.0" text="Label" GridPane.columnIndex="3" />
+                                    <Label fx:id="borrowedTimes" prefHeight="18.0" prefWidth="191.0" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <Label fx:id="rating" prefHeight="18.0" prefWidth="182.0" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </children></AnchorPane>
+                        <MFXButton fx:id="borrowBtn" layoutX="14.0" layoutY="223.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#3cf043" styleClass="borrow-button" text="Borrow" textFill="WHITE" />
+                        <MFXButton fx:id="returnBtn" layoutX="14.0" layoutY="223.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#ffff63" styleClass="return-button" text="Return" textFill="WHITE" />
+                        <MFXButton fx:id="editBtn" layoutX="14.0" layoutY="266.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#3b75ff" styleClass="edit-button" text="Edit" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="1186.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="14.0" prefHeight="18.0" prefWidth="282.0" style="-fx-font-weight: 700;" styleClass="info-label" text="Description:">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="description" editable="false" layoutX="14.0" layoutY="40.0" prefHeight="149.0" prefWidth="1148.0" wrapText="true" />
+                     </children></AnchorPane>
+               </children>
+            </VBox>
+         </content>
+      </MFXScrollPane>
+   </center>
+</BorderPane>

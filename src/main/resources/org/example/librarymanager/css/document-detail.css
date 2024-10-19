@@ -1,0 +1,16 @@
+.edit-button {
+    -fx-background-color: #2363d0;
+    -fx-text-fill: #fff;
+}
+
+.borrow-button {
+    -fx-background-color: #58e821;
+}
+
+.return-button {
+    -fx-background-color: #edf405;
+}
+
+.info-label {
+    -fx-font-weight: 700;
+}

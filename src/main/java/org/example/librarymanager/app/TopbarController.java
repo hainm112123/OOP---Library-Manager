@@ -1,20 +1,27 @@
 package org.example.librarymanager.app;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import org.example.librarymanager.Common;
+import org.example.librarymanager.data.CategoryQuery;
+import org.example.librarymanager.models.Category;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class TopbarController extends ControllerWrapper {
     @FXML
     Button topbarHomeBtn;
     @FXML
-    Button topbarCategoryBtn;
+    private ComboBox<String> topbarCategoryBtn;
     @FXML
     Button topbarDocModifyBtn;
     @FXML
@@ -25,9 +32,16 @@ public class TopbarController extends ControllerWrapper {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         topbarHomeBtn.setOnAction((event) -> switchScene("home.fxml"));
-        topbarCategoryBtn.setOnAction((event) -> switchScene("profile.fxml"));
+        ObservableList<String> list = FXCollections.observableArrayList("Mathematics", "Technology", "Philosophy" );
+        topbarCategoryBtn.setItems(list);
+        topbarCategoryBtn.setOnAction((event) -> {
+            ControllerWrapper.setCurrentCategory(topbarCategoryBtn.getValue());
+            switchScene("category.fxml");
+        });
+
         topbarDocModifyBtn.setOnAction((event) -> switchScene("new-document.fxml"));
         topbarProfileBtn.setOnAction((event) -> switchScene("profile.fxml"));
         topbarMyDocBtn.setOnAction((event) -> switchScene("my-documents.fxml"));
     }
+
 }

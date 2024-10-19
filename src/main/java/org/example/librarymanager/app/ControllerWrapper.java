@@ -20,6 +20,7 @@ public class ControllerWrapper implements Initializable {
     private static User user;
     private static Document currentDocument;
     private static List<String> urls = new ArrayList<>();
+    private static String currentCategory = "";
 
     public static void switchScene(String url) {
         try {
@@ -65,6 +66,13 @@ public class ControllerWrapper implements Initializable {
         ControllerWrapper.currentDocument = currentDocument;
     }
 
+    public static String getCurrentCategory() {
+        return currentCategory;
+    }
+
+    public static void setCurrentCategory(String currentCategory) {
+        ControllerWrapper.currentCategory = currentCategory;
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

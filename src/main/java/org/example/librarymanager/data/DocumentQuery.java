@@ -66,7 +66,29 @@ public class DocumentQuery {
         }
         return documents;
     }
+    public static List<Document> getDocumentsByCategory(String order, int limit) {
+        List<Document> documents = new ArrayList<Document>();
+        try (Connection connection = DatabaseConnection.getConnection();) {
 
+            String query = "select d.* from documents d join categories c on d.categoryId = c.id";
+            if (order != null && !order.isEmpty()) {
+                query += " where c.name = '" + order + "'";
+            }
+            if (limit > 0) {
+                query += " limit " + limit;
+            }
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                documents.add(new Document(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return documents;
+    }
     public static List<Document> getMostPopularDocuments(int limit) {
         return getDocuments("borrowedTimes desc", limit);
     }

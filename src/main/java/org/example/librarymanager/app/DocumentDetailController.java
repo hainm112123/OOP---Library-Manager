@@ -1,6 +1,8 @@
 package org.example.librarymanager.app;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXScrollPane;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
@@ -57,6 +59,8 @@ public class DocumentDetailController extends ControllerWrapper {
     VBox ratingsBox;
     @FXML
     Pagination pagination;
+    @FXML
+    MFXScrollPane scrollScreen;
 
     public void setRatingsBox(List<Rating> ratings, int start, int end) {
         ratingsBox.getChildren().clear();
@@ -113,6 +117,11 @@ public class DocumentDetailController extends ControllerWrapper {
             pagination.setPageCount((ratings.size() - 1) / 5 + 1);
             pagination.currentPageIndexProperty().addListener((observable, oldValue, newValue) -> {
                 setRatingsBox(ratings, newValue.intValue() * 5, newValue.intValue() * 5 + 5);
+                Platform.runLater(() -> {
+                    scrollScreen.applyCss();
+                    scrollScreen.layout();
+                    scrollScreen.setVvalue(1);
+                });
             });
         } catch (Exception e) {
             e.printStackTrace();

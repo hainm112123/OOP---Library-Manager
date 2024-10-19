@@ -20,7 +20,7 @@
       <fx:include prefHeight="170.0" source="topbar.fxml" />
    </top>
    <center>
-      <MFXScrollPane BorderPane.alignment="CENTER">
+      <MFXScrollPane fx:id="scrollScreen" BorderPane.alignment="CENTER">
          <content>
             <VBox prefWidth="1185.0">
                <children>

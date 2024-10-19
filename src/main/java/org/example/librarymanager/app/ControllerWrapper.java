@@ -78,7 +78,6 @@ public class ControllerWrapper implements Initializable {
     public static void setCurrentCategory(String currentCategory) {
         ControllerWrapper.currentCategory = currentCategory;
     }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

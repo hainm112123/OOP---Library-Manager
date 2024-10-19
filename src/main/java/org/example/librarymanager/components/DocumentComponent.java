@@ -2,7 +2,6 @@ package org.example.librarymanager.components;
 
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

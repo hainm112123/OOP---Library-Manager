@@ -28,6 +28,7 @@ public class MyDocumentsController extends ControllerWrapper {
     public void initialize(URL location, ResourceBundle resources) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<List<Document>> future = executor.submit(() -> DocumentQuery.getDocumentsByOwner(getUser().getId()));
+        executor.shutdown();
         List<Document> documents = new ArrayList<>();
         try {
             documents = future.get();
@@ -50,6 +51,5 @@ public class MyDocumentsController extends ControllerWrapper {
             container.add(box, col, row);
             col = (col + 1) % NUM_COL;
         }
-        executor.shutdown();
     }
 }

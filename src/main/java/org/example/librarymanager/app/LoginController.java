@@ -4,16 +4,12 @@ import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import org.example.librarymanager.data.AuthQuery;
 import org.example.librarymanager.data.AuthResult;
 import org.example.librarymanager.data.DatabaseConnection;
 
-import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.util.ResourceBundle;
 
 public class LoginController extends ControllerWrapper {

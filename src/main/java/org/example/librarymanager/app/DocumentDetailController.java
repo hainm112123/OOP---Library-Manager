@@ -1,6 +1,7 @@
 package org.example.librarymanager.app;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -9,8 +10,8 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import org.example.librarymanager.Common;
 import org.example.librarymanager.components.RatingComponent;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
@@ -23,9 +24,7 @@ import org.example.librarymanager.models.User;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class DocumentDetailController extends ControllerWrapper {
     @FXML
@@ -61,6 +60,8 @@ public class DocumentDetailController extends ControllerWrapper {
     Pagination pagination;
     @FXML
     MFXScrollPane scrollScreen;
+    @FXML
+    MFXProgressSpinner loader;
 
     public void setRatingsBox(List<Rating> ratings, int start, int end) {
         ratingsBox.getChildren().clear();
@@ -78,7 +79,7 @@ public class DocumentDetailController extends ControllerWrapper {
         addDate.setText(""+getCurrentDocument().getAddDate());
         borrowedTimes.setText(""+getCurrentDocument().getBorrowedTimes());
         description.setText(getCurrentDocument().getDescription());
-        editBtn.setOnMouseClicked(e -> ControllerWrapper.switchScene("edit-document.fxml"));
+        loader.setVisible(false);
 
         ExecutorService executor = Executors.newFixedThreadPool(5);
         Future<Boolean> borrowStatusFu = executor.submit(() -> ServiceQuery.isBorrowingDocument(getUser().getId(), getCurrentDocument().getId()));
@@ -86,19 +87,20 @@ public class DocumentDetailController extends ControllerWrapper {
         Future<Image> imageFu = executor.submit(() -> new Image(getCurrentDocument().getImageLink(), true));
         Future<List<Rating>> ratingsFu = executor.submit(() -> DocumentQuery.getDocumentRatings(getCurrentDocument().getId()));
         Future<User> ownerFu = executor.submit(() -> UserQuery.getUserById(getCurrentDocument().getOwner()));
+        executor.shutdown();
 
         try {
             if (borrowStatusFu.get()) {
-                borrowBtn.setVisible(false);
-                returnBtn.setVisible(true);
+                Common.disable(borrowBtn);
+                Common.enable(returnBtn);
             }
             else {
-                borrowBtn.setVisible(true);
-                returnBtn.setVisible(false);
+                Common.enable(borrowBtn);
+                Common.disable(returnBtn);
             }
             if (ownerFu.get().getId() == getUser().getId()) {
-                borrowBtn.setVisible(false);
-                returnBtn.setVisible(false);
+                Common.disable(borrowBtn);
+                Common.disable(returnBtn);
             }
             editBtn.setVisible(ownerFu.get().getId() == getUser().getId());
             owner.setText(ownerFu.get().getFirstname() + " " + ownerFu.get().getLastname());
@@ -123,10 +125,42 @@ public class DocumentDetailController extends ControllerWrapper {
                     scrollScreen.setVvalue(1);
                 });
             });
+
+            editBtn.setOnMouseClicked(e -> {
+                switchScene("edit-document.fxml");
+            });
+            borrowBtn.setOnMouseClicked(e -> {
+                Common.disable(borrowBtn);
+                Common.enable(loader);
+                ExecutorService taskExe = Executors.newSingleThreadExecutor();
+                Future<Boolean> future = taskExe.submit(() -> ServiceQuery.borrowDocument(getUser().getId(), getCurrentDocument().getId()));
+                taskExe.shutdown();
+                try {
+                    if (future.get()) {
+                        Common.disable(loader);
+                        switchScene("document-detail.fxml");
+                    }
+                } catch (InterruptedException | ExecutionException exception) {
+                    exception.printStackTrace();
+                }
+            });
+            returnBtn.setOnAction(e -> {
+                Common.disable(borrowBtn);
+                Common.enable(loader);
+                ExecutorService taskExe = Executors.newSingleThreadExecutor();
+                Future<Boolean> future = taskExe.submit(() -> ServiceQuery.returnDocument(getUser().getId(), getCurrentDocument().getId()));
+                taskExe.shutdown();
+                try {
+                    if (future.get()) {
+                        Common.disable(loader);
+                        switchScene("document-detail.fxml");
+                    }
+                } catch (InterruptedException | ExecutionException exception) {
+                    exception.printStackTrace();
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        executor.shutdown();
     }
 }

@@ -44,9 +44,10 @@ public class HomeController extends ControllerWrapper{
             List<Document> highestRatedDocuments = highestRateDocFu.get();
             executor.submit(() -> display(mostPopularDocuments, mostPopularContainer));
             executor.submit(() -> display(highestRatedDocuments, highestRatedContainer));
+            executor.shutdown();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+            executor.shutdown();
         }
-        executor.shutdown();
     }
 }

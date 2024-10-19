@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
@@ -72,6 +73,7 @@
                         <MFXButton fx:id="borrowBtn" layoutX="14.0" layoutY="223.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#3cf043" styleClass="borrow-button" text="Borrow" textFill="WHITE" />
                         <MFXButton fx:id="returnBtn" layoutX="14.0" layoutY="223.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#ffff63" styleClass="return-button" text="Return" textFill="WHITE" />
                         <MFXButton fx:id="editBtn" layoutX="14.0" layoutY="223.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#3b75ff" styleClass="edit-button" text="Edit" />
+                        <MFXProgressSpinner fx:id="loader" layoutX="64.0" layoutY="223.0" prefHeight="28.0" prefWidth="28.0" />
                      </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="1186.0">

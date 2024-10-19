@@ -25,7 +25,7 @@ public class DocumentQuery {
 
     public static Document getDocumentById(int id) {
         Document document = null;
-        try (Connection connection = DatabaseConnection.getConnection();) {
+        try (Connection connection = DatabaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("select * from documents where id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();

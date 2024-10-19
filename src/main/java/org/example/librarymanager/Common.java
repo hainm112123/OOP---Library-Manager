@@ -1,5 +1,7 @@
 package org.example.librarymanager;
 
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -28,5 +30,15 @@ public class Common {
         public String toString() {
             return label;
         }
+    }
+
+    public static void disable(Node node) {
+        node.setDisable(true);
+        node.setVisible(false);
+    }
+
+    public static void enable(Node node) {
+        node.setDisable(false);
+        node.setVisible(true);
     }
 }

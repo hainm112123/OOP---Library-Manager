@@ -85,7 +85,9 @@ public class NewDocumentController extends ControllerWrapper {
             docTitle.setText(volume.getVolumeInfo().getTitle());
             docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
             docDescription.setText(volume.getVolumeInfo().getDescription());
-            docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
+            if (volume.getVolumeInfo().getImageLinks() != null) {
+                docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
+            }
             String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
             Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
             if (opt.isPresent()) {

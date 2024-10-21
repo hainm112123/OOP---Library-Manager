@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 
 public class ControllerWrapper implements Initializable {
     protected static Stage stage;
@@ -21,13 +22,14 @@ public class ControllerWrapper implements Initializable {
     private static Document currentDocument;
     private static List<String> urls = new ArrayList<>();
     private static String currentCategory = "";
+    protected ExecutorService executor;
 
     static {
         urls = new ArrayList<>();
         urls.add("home.fxml");
     }
 
-    public static void switchScene(String url) {
+    private static void unsafeSwitchScene(String url) {
         try {
             urls.add(url);
             FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource(url));
@@ -42,9 +44,14 @@ public class ControllerWrapper implements Initializable {
         }
     }
 
-    public static void backScene() {
+    public void safeSwitchScene(String url) {
+        unsafeSwitchScene(url);
+        if (executor != null) executor.shutdownNow();
+    }
+
+    public void backScene() {
         urls.removeLast();
-        switchScene(urls.getLast());
+        safeSwitchScene(urls.getLast());
     }
 
     public static Stage getStage() {

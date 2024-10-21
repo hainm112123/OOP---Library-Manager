@@ -26,7 +26,7 @@ public class MyDocumentsController extends ControllerWrapper {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor = Executors.newSingleThreadExecutor();
         Future<List<Document>> future = executor.submit(() -> DocumentQuery.getDocumentsByOwner(getUser().getId()));
         executor.shutdown();
         List<Document> documents = new ArrayList<>();
@@ -46,7 +46,7 @@ public class MyDocumentsController extends ControllerWrapper {
             }
             VBox box = new VBox();
             box.setPrefHeight(ROW_HEIGHT);
-            box.getChildren().add(new DocumentComponent(document).getElement());
+            box.getChildren().add(new DocumentComponent(document, this).getElement());
             box.setAlignment(Pos.CENTER);
             container.add(box, col, row);
             col = (col + 1) % NUM_COL;

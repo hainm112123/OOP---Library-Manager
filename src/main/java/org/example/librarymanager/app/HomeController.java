@@ -1,5 +1,6 @@
 package org.example.librarymanager.app;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -25,18 +26,18 @@ public class HomeController extends ControllerWrapper{
     AnchorPane highestRatedContainer;
 
     private void display(List<Document> documents, AnchorPane container) {
+        container.setPrefWidth(documents.size() * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET));
         for (int i = 0; i < documents.size(); ++ i) {
             Document document = documents.get(i);
-            VBox doc = new DocumentComponent(document).getElement();
+            VBox doc = new DocumentComponent(document, this).getElement();
             AnchorPane.setLeftAnchor(doc, (double)(i * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET)));
             container.getChildren().add(doc);
         }
-        container.setPrefWidth(documents.size() * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET));
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ExecutorService executor = Executors.newFixedThreadPool(2);
+        executor = Executors.newFixedThreadPool(2);
         Future<List<Document>> mostPoularDocFu = executor.submit(() -> DocumentQuery.getMostPopularDocuments(15));
         Future<List<Document>> highestRateDocFu = executor.submit(() -> DocumentQuery.getHighestRatedDocuments(15));
         try {

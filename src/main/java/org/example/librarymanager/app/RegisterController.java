@@ -40,7 +40,7 @@ public class RegisterController extends ControllerWrapper {
     }
 
     public void loginButtonOnAction(ActionEvent event) {
-        switchScene("login.fxml");
+        safeSwitchScene("login.fxml");
         stage.show();
     }
 }

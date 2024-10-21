@@ -81,10 +81,17 @@ public class DocumentDetailController extends ControllerWrapper {
         description.setText(getCurrentDocument().getDescription());
         loader.setVisible(false);
 
-        ExecutorService executor = Executors.newFixedThreadPool(5);
+        executor = Executors.newFixedThreadPool(5);
         Future<Boolean> borrowStatusFu = executor.submit(() -> ServiceQuery.isBorrowingDocument(getUser().getId(), getCurrentDocument().getId()));
         Future<Category> categoryFu = executor.submit(() -> CategoryQuery.getCategory(getCurrentDocument().getCategoryId()));
-        Future<Image> imageFu = executor.submit(() -> new Image(getCurrentDocument().getImageLink(), true));
+        Future<Image> imageFu = executor.submit(() -> {
+            try {
+                return new Image(getCurrentDocument().getImageLink(), true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg"));
+            }
+        });
         Future<List<Rating>> ratingsFu = executor.submit(() -> DocumentQuery.getDocumentRatings(getCurrentDocument().getId()));
         Future<User> ownerFu = executor.submit(() -> UserQuery.getUserById(getCurrentDocument().getOwner()));
         executor.shutdown();
@@ -127,7 +134,7 @@ public class DocumentDetailController extends ControllerWrapper {
             });
 
             editBtn.setOnMouseClicked(e -> {
-                switchScene("edit-document.fxml");
+                safeSwitchScene("edit-document.fxml");
             });
             borrowBtn.setOnMouseClicked(e -> {
                 Common.disable(borrowBtn);
@@ -138,7 +145,7 @@ public class DocumentDetailController extends ControllerWrapper {
                 try {
                     if (future.get()) {
                         Common.disable(loader);
-                        switchScene("document-detail.fxml");
+                        safeSwitchScene("document-detail.fxml");
                     }
                 } catch (InterruptedException | ExecutionException exception) {
                     exception.printStackTrace();
@@ -153,7 +160,7 @@ public class DocumentDetailController extends ControllerWrapper {
                 try {
                     if (future.get()) {
                         Common.disable(loader);
-                        switchScene("document-detail.fxml");
+                        safeSwitchScene("document-detail.fxml");
                     }
                 } catch (InterruptedException | ExecutionException exception) {
                     exception.printStackTrace();

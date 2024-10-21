@@ -30,7 +30,7 @@ public class TopbarController extends ControllerWrapper {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        topbarHomeBtn.setOnAction((event) -> switchScene("home.fxml"));
+        topbarHomeBtn.setOnAction((event) -> safeSwitchScene("home.fxml"));
         List<String> categoryList = CategoryQuery.getCategoriesName();
         for (String categoryName : categoryList) {
             System.out.println(categoryName);
@@ -39,12 +39,12 @@ public class TopbarController extends ControllerWrapper {
         topbarCategoryBtn.setItems(list);
         topbarCategoryBtn.setOnAction((event) -> {
             ControllerWrapper.setCurrentCategory(topbarCategoryBtn.getValue());
-            switchScene("category.fxml");
+            safeSwitchScene("category.fxml");
         });
 
-        topbarDocModifyBtn.setOnAction((event) -> switchScene("new-document.fxml"));
-        topbarProfileBtn.setOnAction((event) -> switchScene("profile.fxml"));
-        topbarMyDocBtn.setOnAction((event) -> switchScene("my-documents.fxml"));
+        topbarDocModifyBtn.setOnAction((event) -> safeSwitchScene("new-document.fxml"));
+        topbarProfileBtn.setOnAction((event) -> safeSwitchScene("profile.fxml"));
+        topbarMyDocBtn.setOnAction((event) -> safeSwitchScene("my-documents.fxml"));
     }
 
 }

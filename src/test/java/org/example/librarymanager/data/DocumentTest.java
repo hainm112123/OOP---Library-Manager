@@ -64,7 +64,7 @@ public class DocumentTest {
     @Test
     public void rateDocumentTest() {
         int userId = 1;
-        int documentId = 13;
+        int documentId = 1;
         float value = (float)5;
         DocumentQuery.rateDocument(userId, documentId, value, "Lorem ipsum dolor sit amet, " +
                 "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore " +

@@ -14,6 +14,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static org.example.librarymanager.data.CategoryQuery.getCategoriesName;
+
 public class TopbarController extends ControllerWrapper {
     @FXML
     Button topbarHomeBtn;
@@ -29,7 +31,11 @@ public class TopbarController extends ControllerWrapper {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         topbarHomeBtn.setOnAction((event) -> switchScene("home.fxml"));
-        ObservableList<String> list = FXCollections.observableArrayList("Mathematics", "Technology", "Philosophy" );
+        List<String> categoryList = CategoryQuery.getCategoriesName();
+        for (String categoryName : categoryList) {
+            System.out.println(categoryName);
+        }
+        ObservableList<String> list = FXCollections.observableArrayList(categoryList);
         topbarCategoryBtn.setItems(list);
         topbarCategoryBtn.setOnAction((event) -> {
             ControllerWrapper.setCurrentCategory(topbarCategoryBtn.getValue());

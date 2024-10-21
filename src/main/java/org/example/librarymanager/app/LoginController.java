@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.example.librarymanager.data.AuthQuery;
 import org.example.librarymanager.data.AuthResult;
-import org.example.librarymanager.data.DatabaseConnection;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -52,7 +51,7 @@ public class LoginController extends ControllerWrapper {
             loginMessageLabel.setText(loginResult.getMessage());
             if(loginResult.getUser() != null) {
                 setUser(loginResult.getUser());
-                switchScene("home.fxml");
+                safeSwitchScene("home.fxml");
                 stage.show();
             }
         });
@@ -60,7 +59,7 @@ public class LoginController extends ControllerWrapper {
     }
 
     public void registerButtonOnAction(ActionEvent event) {
-        switchScene("register.fxml");
+        safeSwitchScene("register.fxml");
         stage.show();
     }
 

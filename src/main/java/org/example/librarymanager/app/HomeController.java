@@ -29,7 +29,7 @@ public class HomeController extends ControllerWrapper{
         container.setPrefWidth(documents.size() * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET));
         for (int i = 0; i < documents.size(); ++ i) {
             Document document = documents.get(i);
-            VBox doc = new DocumentComponent(document).getElement();
+            VBox doc = new DocumentComponent(document, this).getElement();
             AnchorPane.setLeftAnchor(doc, (double)(i * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET)));
             container.getChildren().add(doc);
         }
@@ -37,7 +37,7 @@ public class HomeController extends ControllerWrapper{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ExecutorService executor = Executors.newFixedThreadPool(2);
+        executor = Executors.newFixedThreadPool(2);
         Future<List<Document>> mostPoularDocFu = executor.submit(() -> DocumentQuery.getMostPopularDocuments(15));
         Future<List<Document>> highestRateDocFu = executor.submit(() -> DocumentQuery.getHighestRatedDocuments(15));
         try {

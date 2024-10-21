@@ -13,13 +13,14 @@ public class DocumentComponent {
     private VBox container;
     private ImageView imageView;
     private Label title;
+    private ControllerWrapper controller;
 
     private static final int IMAGE_WIDTH = 128;
     private static final int IMAGE_HEIGHT = 192;
     public static final int DOC_COMPONENT_WITDH = 200;
     public static final int DOC_COMPONENT_OFFSET = 30;
 
-    public DocumentComponent(Document document) {
+    public DocumentComponent(Document document, ControllerWrapper controller) {
         container = new VBox();
 
         imageView = new ImageView(new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg")));
@@ -55,7 +56,7 @@ public class DocumentComponent {
 
         container.setOnMouseClicked((event) -> {
             ControllerWrapper.setCurrentDocument(document);
-            ControllerWrapper.switchScene("document-detail.fxml");
+            controller.safeSwitchScene("document-detail.fxml");
         });
     }
 

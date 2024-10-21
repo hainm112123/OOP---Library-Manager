@@ -1,12 +1,8 @@
 package org.example.librarymanager.app;
 
-import com.google.api.services.books.model.Volume;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.ButtonDialog;
 import org.example.librarymanager.data.CategoryQuery;
@@ -155,6 +151,6 @@ public class EditDocumentController extends ControllerWrapper {
         dialog.getDialog().showAndWait();
 
         setCurrentDocument(null);
-        switchScene("home.fxml");
+        safeSwitchScene("home.fxml");
     }
 }

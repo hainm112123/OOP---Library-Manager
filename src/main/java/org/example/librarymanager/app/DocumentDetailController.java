@@ -81,7 +81,7 @@ public class DocumentDetailController extends ControllerWrapper {
         description.setText(getCurrentDocument().getDescription());
         loader.setVisible(false);
 
-        ExecutorService executor = Executors.newFixedThreadPool(5);
+        executor = Executors.newFixedThreadPool(5);
         Future<Boolean> borrowStatusFu = executor.submit(() -> ServiceQuery.isBorrowingDocument(getUser().getId(), getCurrentDocument().getId()));
         Future<Category> categoryFu = executor.submit(() -> CategoryQuery.getCategory(getCurrentDocument().getCategoryId()));
         Future<Image> imageFu = executor.submit(() -> {
@@ -134,7 +134,7 @@ public class DocumentDetailController extends ControllerWrapper {
             });
 
             editBtn.setOnMouseClicked(e -> {
-                switchScene("edit-document.fxml");
+                safeSwitchScene("edit-document.fxml");
             });
             borrowBtn.setOnMouseClicked(e -> {
                 Common.disable(borrowBtn);
@@ -145,7 +145,7 @@ public class DocumentDetailController extends ControllerWrapper {
                 try {
                     if (future.get()) {
                         Common.disable(loader);
-                        switchScene("document-detail.fxml");
+                        safeSwitchScene("document-detail.fxml");
                     }
                 } catch (InterruptedException | ExecutionException exception) {
                     exception.printStackTrace();
@@ -160,7 +160,7 @@ public class DocumentDetailController extends ControllerWrapper {
                 try {
                     if (future.get()) {
                         Common.disable(loader);
-                        switchScene("document-detail.fxml");
+                        safeSwitchScene("document-detail.fxml");
                     }
                 } catch (InterruptedException | ExecutionException exception) {
                     exception.printStackTrace();

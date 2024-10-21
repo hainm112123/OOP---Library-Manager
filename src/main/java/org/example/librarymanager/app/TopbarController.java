@@ -32,9 +32,6 @@ public class TopbarController extends ControllerWrapper {
     public void initialize(URL location, ResourceBundle resources) {
         topbarHomeBtn.setOnAction((event) -> switchScene("home.fxml"));
         List<String> categoryList = CategoryQuery.getCategoriesName();
-        for (String categoryName : categoryList) {
-            System.out.println(categoryName);
-        }
         ObservableList<String> list = FXCollections.observableArrayList(categoryList);
         topbarCategoryBtn.setItems(list);
         topbarCategoryBtn.setOnAction((event) -> {

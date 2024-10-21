@@ -24,7 +24,7 @@ public class CategoriesController extends ControllerWrapper {
     private void display(List<Document> documents, AnchorPane container) {
         for (int i = 0; i < documents.size(); ++ i) {
             Document document = documents.get(i);
-            VBox doc = new DocumentComponent(document).getElement();
+            VBox doc = new DocumentComponent(document, this).getElement();
             AnchorPane.setLeftAnchor(doc, (double)(i * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET)));
             container.getChildren().add(doc);
         }

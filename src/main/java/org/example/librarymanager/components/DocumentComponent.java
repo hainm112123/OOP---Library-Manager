@@ -26,8 +26,13 @@ public class DocumentComponent {
         if (document.getImageLink() != null) {
             Task<Image> task = new Task<Image>() {
                 @Override
-                protected Image call() throws Exception {
-                    return new Image(document.getImageLink(), true);
+                protected Image call() {
+                    try {
+                        return new Image(document.getImageLink(), true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg"));
+                    }
                 }
             };
             task.setOnSucceeded((event) -> imageView.setImage(task.getValue()));

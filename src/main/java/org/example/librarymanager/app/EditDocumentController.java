@@ -154,6 +154,7 @@ public class EditDocumentController extends ControllerWrapper {
         ButtonDialog dialog = new ButtonDialog(stage, "Delete Document", message, "", false);
         dialog.getDialog().showAndWait();
 
-        backScene();
+        setCurrentDocument(null);
+        switchScene("home.fxml");
     }
 }

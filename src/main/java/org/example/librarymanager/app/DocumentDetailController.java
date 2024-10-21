@@ -84,7 +84,14 @@ public class DocumentDetailController extends ControllerWrapper {
         ExecutorService executor = Executors.newFixedThreadPool(5);
         Future<Boolean> borrowStatusFu = executor.submit(() -> ServiceQuery.isBorrowingDocument(getUser().getId(), getCurrentDocument().getId()));
         Future<Category> categoryFu = executor.submit(() -> CategoryQuery.getCategory(getCurrentDocument().getCategoryId()));
-        Future<Image> imageFu = executor.submit(() -> new Image(getCurrentDocument().getImageLink(), true));
+        Future<Image> imageFu = executor.submit(() -> {
+            try {
+                return new Image(getCurrentDocument().getImageLink(), true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg"));
+            }
+        });
         Future<List<Rating>> ratingsFu = executor.submit(() -> DocumentQuery.getDocumentRatings(getCurrentDocument().getId()));
         Future<User> ownerFu = executor.submit(() -> UserQuery.getUserById(getCurrentDocument().getOwner()));
         executor.shutdown();

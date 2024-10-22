@@ -15,7 +15,7 @@ public class Rating {
     private int id;
     private int userId;
     private int documentId;
-    private float value;
+    private double value;
     private String content;
     private LocalDateTime postedTime;
 
@@ -23,7 +23,7 @@ public class Rating {
         this.id = rs.getInt("id");
         this.userId = rs.getInt("userId");
         this.documentId = rs.getInt("documentId");
-        this.value = rs.getFloat("value");
+        this.value = rs.getDouble("value");
         this.content = rs.getString("content");
         this.postedTime = rs.getTimestamp("postedTime").toLocalDateTime();
     }

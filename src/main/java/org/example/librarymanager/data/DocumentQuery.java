@@ -231,12 +231,12 @@ public class DocumentQuery {
         }
     }
 
-    public static boolean rateDocument(int userId, int documentId, float value, String content) {
+    public static boolean rateDocument(int userId, int documentId, double value, String content) {
         try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("insert into ratings (userId, documentId, value, content) values(?,?,?,?)");
             ps.setInt(1, userId);
             ps.setInt(2, documentId);
-            ps.setFloat(3, value);
+            ps.setDouble(3, value);
             ps.setString(4, content);
             ps.executeUpdate();
             ps.close();
@@ -250,7 +250,7 @@ public class DocumentQuery {
     public static List<Rating> getDocumentRatings(int documentId) {
         List<Rating> ratings = new ArrayList<>();
         try (Connection connection = DatabaseConnection.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement("select * from ratings where documentId = ?");
+            PreparedStatement ps = connection.prepareStatement("select * from ratings where documentId = ? order by postedTime desc");
             ps.setInt(1, documentId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

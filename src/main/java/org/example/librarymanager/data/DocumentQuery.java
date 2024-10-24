@@ -255,7 +255,7 @@ public class DocumentQuery {
             return null;
         }
     }
-
+  
     /**
      * Add a rating to database.
      */

@@ -23,6 +23,9 @@ public class DocumentQuery {
 //    private static final String APPLICATION_NAME = "LibraryManager";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
+    /**
+     * Get a document by id
+     */
     public static Document getDocumentById(int id) {
         Document document = null;
         try (Connection connection = DatabaseConnection.getConnection()) {
@@ -40,6 +43,10 @@ public class DocumentQuery {
         return document;
     }
 
+
+    /**
+     * Get documents by order and limit.
+     */
     public static List<Document> getDocuments(String order, int limit) {
         List<Document> documents = new ArrayList<Document>();
         try (Connection connection = DatabaseConnection.getConnection();) {
@@ -63,6 +70,11 @@ public class DocumentQuery {
         }
         return documents;
     }
+
+
+    /**
+     * Get documents by category.
+     */
     public static List<Document> getDocumentsByCategory(String order, int limit) {
         List<Document> documents = new ArrayList<Document>();
         try (Connection connection = DatabaseConnection.getConnection();) {
@@ -86,10 +98,17 @@ public class DocumentQuery {
         }
         return documents;
     }
+
+    /**
+     * Get documents by borrowed time, descending.
+     */
     public static List<Document> getMostPopularDocuments(int limit) {
         return getDocuments("borrowedTimes desc", limit);
     }
 
+    /**
+     * Get documents by ratings, descending.
+     */
     public static List<Document> getHighestRatedDocuments(int limit) {
         List<Document> documents = new ArrayList<>();
         try (Connection connection = DatabaseConnection.getConnection();) {
@@ -112,6 +131,9 @@ public class DocumentQuery {
         return documents;
     }
 
+    /**
+     * Get documents by owner.
+     */
     public static List<Document> getDocumentsByOwner(int owner) {
         List<Document> documents = new ArrayList<>();
         try (Connection connection = DatabaseConnection.getConnection()) {
@@ -129,6 +151,9 @@ public class DocumentQuery {
         return documents;
     }
 
+    /**
+     * Add a new document to database.
+     */
     public static Document addDocument(int categoryId, int owner, String author, String title, String description, String imageLink, int quantity) {
         Document document = null;
         try (Connection connection = DatabaseConnection.getConnection();){
@@ -153,6 +178,9 @@ public class DocumentQuery {
         return document;
     }
 
+    /**
+     * Update an existed document in database.
+     */
     public static boolean updateDocument(Document document) {
         try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("update documents set " +
@@ -178,6 +206,9 @@ public class DocumentQuery {
         }
     }
 
+    /**
+     * Delete an existed document.
+     */
     public static boolean deleteDocument(Document document) {
         try (Connection connection = DatabaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("delete from documents where id = ?");
@@ -192,9 +223,7 @@ public class DocumentQuery {
     }
 
     /**
-     * Get list of books from Google Books API by a search pattern
-     * @param pattern
-     * @return
+     * Get list of books from Google Books API by a search pattern.
      */
     public static List<Volume> getDocumentsFromAPI(String pattern) {
         try {
@@ -211,9 +240,7 @@ public class DocumentQuery {
     }
 
     /**
-     * Get book's information from Google Books API by ISBN
-     * @param ISBN
-     * @return Voulume
+     * Get book's information from Google Books API by ISBN.
      */
     public static Volume getDocumentByISBN(String ISBN) {
         try {
@@ -231,6 +258,9 @@ public class DocumentQuery {
         }
     }
 
+    /**
+     * Add a rating to database.
+     */
     public static boolean rateDocument(int userId, int documentId, float value, String content) {
         try (Connection connection = DatabaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("insert into ratings (userId, documentId, value, content) values(?,?,?,?)");
@@ -247,6 +277,9 @@ public class DocumentQuery {
         }
     }
 
+    /**
+     * Get ratings by document id in database.
+     */
     public static List<Rating> getDocumentRatings(int documentId) {
         List<Rating> ratings = new ArrayList<>();
         try (Connection connection = DatabaseConnection.getConnection()) {

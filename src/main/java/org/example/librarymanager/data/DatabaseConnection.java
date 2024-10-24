@@ -23,11 +23,17 @@ public class DatabaseConnection {
         ds.setMaxOpenPreparedStatements(200);
     }
 
+    /**
+     * Get connection.
+     */
     public static Connection getConnection() throws SQLException {
 //        logPoolStatus();
         return ds.getConnection();
     }
 
+    /**
+     * Something I don't know.
+     */
     public synchronized static void logPoolStatus() throws SQLException {
         System.out.println("+ Num of Active Connections: " + ds.getNumActive());
         System.out.println("+ Num of Idle Connections: " + ds.getNumIdle());

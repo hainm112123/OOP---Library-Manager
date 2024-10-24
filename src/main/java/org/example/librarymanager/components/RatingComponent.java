@@ -19,6 +19,13 @@ public class RatingComponent {
     private TextArea content;
     private Label user;
 
+    /**
+     * Construct a component of rating in a VBox.
+     * Owner user details are loaded from sql in a distinct thread.
+     * @param value rating value 0 - 5.
+     * @param ratingContent comment content of rating.
+     * @param userId id of rating owner.
+     */
     public RatingComponent(double value, String ratingContent, int userId) {
         user = new Label();
         container = new VBox();

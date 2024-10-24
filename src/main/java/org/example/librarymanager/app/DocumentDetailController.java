@@ -63,6 +63,9 @@ public class DocumentDetailController extends ControllerWrapper {
     @FXML
     MFXProgressSpinner loader;
 
+    /**
+     * Set rating box.
+     */
     public void setRatingsBox(List<Rating> ratings, int start, int end) {
         ratingsBox.getChildren().clear();
         for (int i = start; i < Math.min(end, ratings.size()); ++ i) {
@@ -71,6 +74,16 @@ public class DocumentDetailController extends ControllerWrapper {
         }
     }
 
+    /**
+     * Initialization.
+     * Show details from current document.
+     * Executor manages 5 threads: status, category, image, ratings, owner.
+     * TaskExe manages 1 single threads: borrow or return.
+     * Ratings are displayed in pagination, each page contains 5 ratings.
+     * Edit button switch scene to edit-document.
+     * Borrow button, return button updates data in sql then switch scene to document-detail.
+     * @param location url to document-detail.fxml
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         title.setText(getCurrentDocument().getTitle());

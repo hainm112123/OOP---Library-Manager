@@ -29,6 +29,12 @@ public class ControllerWrapper implements Initializable {
         urls.add("home.fxml");
     }
 
+    /**
+     * Load new fxml and set this scene for current stage.
+     * Align stage to center.
+     * Add this scene url to url list.
+     * @param url destination scene url.
+     */
     private static void unsafeSwitchScene(String url) {
         try {
             urls.add(url);
@@ -44,15 +50,23 @@ public class ControllerWrapper implements Initializable {
         }
     }
 
+    /**
+     * Switch to new scene and shutdown all current threads.
+     * @param url
+     */
     public void safeSwitchScene(String url) {
         unsafeSwitchScene(url);
         if (executor != null) executor.shutdownNow();
     }
 
+    /**
+     * Trace back to the previous url in url list.
+     */
     public void backScene() {
         urls.removeLast();
         safeSwitchScene(urls.getLast());
     }
+
 
     public static Stage getStage() {
         return stage;
@@ -85,6 +99,11 @@ public class ControllerWrapper implements Initializable {
     public static void setCurrentCategory(String currentCategory) {
         ControllerWrapper.currentCategory = currentCategory;
     }
+
+    /**
+     * Initialization.
+     * @param location scene url.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

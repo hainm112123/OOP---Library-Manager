@@ -42,9 +42,9 @@ public class NewDocumentController extends ControllerWrapper {
     private Label submitMessage;
 
     /**
-     * hide message when edit input
-     * @param o
-     * @param message
+     * Hide message when edit input.
+     * @param o text field object
+     * @param message label object
      */
     private void hideMessage(Object o, Object message) {
         if (o instanceof TextField && message instanceof Label) {
@@ -54,6 +54,11 @@ public class NewDocumentController extends ControllerWrapper {
         }
     }
 
+    /**
+     * Initialize forms.
+     * Search by Google Books API or manually add a new book.
+     * @param location url to new-document.fxml
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         List<Category> categories = CategoryQuery.getCategories();
@@ -73,8 +78,7 @@ public class NewDocumentController extends ControllerWrapper {
     }
 
     /**
-     * search book by ISBN and fill in the form
-     * @param event
+     * Search book by ISBN and fill in the form.
      */
     @FXML
     private void onSearchByISBN(ActionEvent event) {
@@ -102,6 +106,9 @@ public class NewDocumentController extends ControllerWrapper {
         searchMessage.setVisible(true);
     }
 
+    /**
+     * Handle submit cases.
+     */
     @FXML
     private void handleSubmit() {
         submitMessage.setText("");

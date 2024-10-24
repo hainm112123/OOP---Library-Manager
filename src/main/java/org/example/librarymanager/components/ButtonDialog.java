@@ -13,6 +13,14 @@ public class ButtonDialog {
     private ButtonType okButton;
     private ButtonType cancelButton;
 
+    /**
+     * Construct a dialog to ask app user.
+     * @param owner owner stage
+     * @param title dialog title
+     * @param header dialog header
+     * @param content dialog content
+     * @param cancellable can dialog canceled
+     */
     public ButtonDialog(Stage owner, String title, String header, String content, boolean cancellable) {
         dialog = new Dialog<>();
         dialog.setTitle(title);

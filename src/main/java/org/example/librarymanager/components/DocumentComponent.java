@@ -20,6 +20,12 @@ public class DocumentComponent {
     public static final int DOC_COMPONENT_WITDH = 200;
     public static final int DOC_COMPONENT_OFFSET = 30;
 
+    /**
+     * Construct a component of document details in a VBox.
+     * Image is loaded in a task which is executed in a new distinct thread.
+     * @param document document to display
+     * @param controller current controller
+     */
     public DocumentComponent(Document document, ControllerWrapper controller) {
         container = new VBox();
 
@@ -60,6 +66,9 @@ public class DocumentComponent {
         });
     }
 
+    /**
+     * Return container.
+     */
     public VBox getElement() {
         return container;
     }

@@ -33,6 +33,11 @@ public class EditDocumentController extends ControllerWrapper {
 
     private Document document;
 
+    /**
+     * Hide message when edit input.
+     * @param o text field object
+     * @param message label object
+     */
     private void hideMessage(Object o, Object message) {
         if (o instanceof TextField && message instanceof Label) {
             ((TextField) o).textProperty().addListener((observable, oldValue, newValue) -> {
@@ -41,6 +46,11 @@ public class EditDocumentController extends ControllerWrapper {
         }
     }
 
+    /**
+     * Initialization.
+     * Create a scene display all details of current document for editing.
+     * @param location url to edit-document.fxml
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         List<Category> categories = CategoryQuery.getCategories();
@@ -68,6 +78,10 @@ public class EditDocumentController extends ControllerWrapper {
         }
     }
 
+    /**
+     * Update button on action.
+     * Submit message handles cases.
+     */
     @FXML
     private void handleSubmit() {
         submitMessage.setText("");
@@ -123,11 +137,20 @@ public class EditDocumentController extends ControllerWrapper {
         submitMessage.setVisible(true);
     }
 
+    /**
+     * Cancel button on action.
+     * Switch scene to previous scene.
+     */
     @FXML
     private void handleCancel() {
         backScene();
     }
 
+    /**
+     * Delete button on action.
+     * Dialog appears to confirm delete action.
+     * Switch scene to home.
+     */
     @FXML
     private void handleDelete() {
         ButtonDialog deleteDialog = new ButtonDialog(stage,

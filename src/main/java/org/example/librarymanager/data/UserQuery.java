@@ -7,6 +7,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class UserQuery {
+
+    /**
+     * Get a user by id in database.
+     */
     public static User getUserById(int id) {
         User user = null;
         try (Connection connection = DatabaseConnection.getConnection();) {

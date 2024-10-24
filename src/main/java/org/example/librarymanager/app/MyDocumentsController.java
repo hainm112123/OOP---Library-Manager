@@ -24,6 +24,11 @@ public class MyDocumentsController extends ControllerWrapper {
     @FXML
     GridPane container;
 
+    /**
+     * Display all documents by owner in a grid pane.
+     * Executor manages 1 thread to load documents.
+     * @param location url to my-document.fxml
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         executor = Executors.newSingleThreadExecutor();

@@ -12,6 +12,9 @@ public class AuthResult {
     private String message;
     private User user;
 
+    /**
+     * Check equals.
+     */
     @Override
     public boolean equals(Object o) {
         if (o instanceof AuthResult) {

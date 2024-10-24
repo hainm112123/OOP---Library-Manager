@@ -25,6 +25,12 @@ public class HomeController extends ControllerWrapper{
     @FXML
     AnchorPane highestRatedContainer;
 
+    /**
+     * Display documents as document components on a scroll pane.
+     * Each document component can set current document and switch scene to document detail.
+     * @param documents the list of documents to display
+     * @param container the pane in which the documents are displayed
+     */
     private void display(List<Document> documents, AnchorPane container) {
         container.setPrefWidth(documents.size() * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET));
         for (int i = 0; i < documents.size(); ++ i) {
@@ -35,6 +41,11 @@ public class HomeController extends ControllerWrapper{
         }
     }
 
+    /**
+     * Initialization.
+     * Executor manages 2 threads: 1 for popular docs, 1 for high rated docs.
+     * @param location url to home.fxml
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         executor = Executors.newFixedThreadPool(2);

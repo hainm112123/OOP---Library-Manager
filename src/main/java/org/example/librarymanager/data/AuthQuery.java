@@ -6,6 +6,11 @@ import java.sql.*;
 import java.time.LocalDate;
 
 public class AuthQuery {
+
+    /**
+     * Check and execute login query.
+     * @return result statement
+     */
     public static AuthResult login(String username, String password) {
         AuthResult result = new AuthResult();
         result.setMessage("Login failed!");
@@ -28,6 +33,10 @@ public class AuthQuery {
         return result;
     }
 
+    /**
+     * Check and execute register query.
+     * @return result statement
+     */
     public static AuthResult register(String username, String password, String retypePassword, String firstname, String lastname, String gender, LocalDate dateOfBirth) {
         AuthResult result = new AuthResult();
         result.setMessage("register failed!");

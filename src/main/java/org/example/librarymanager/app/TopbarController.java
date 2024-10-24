@@ -28,6 +28,11 @@ public class TopbarController extends ControllerWrapper {
     @FXML
     Button topbarMyDocBtn;
 
+    /**
+     * Initialization.
+     * Create layout with buttons to switch to main scenes.
+     * @param location url to top bar.fxml
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         topbarHomeBtn.setOnAction((event) -> safeSwitchScene("home.fxml"));

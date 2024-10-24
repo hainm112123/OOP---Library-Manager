@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryQuery {
+
+    /**
+     * Get all in table categories.
+     */
     public static List<Category> getCategories() {
         List<Category> categories = new ArrayList<Category>();
         try (Connection connection = DatabaseConnection.getConnection();) {
@@ -25,6 +29,10 @@ public class CategoryQuery {
         return categories;
     }
 
+
+    /**
+     * Get all name in table categories.
+     */
     public static List<String> getCategoriesName() {
         List<String> categories = new ArrayList<String>();
         try (Connection connection = DatabaseConnection.getConnection();) {
@@ -41,7 +49,9 @@ public class CategoryQuery {
         return categories;
     }
 
-
+    /**
+     * Get category by id in table categories.
+     */
     public static Category getCategory(int id) {
         Category category = null;
         try (Connection connection = DatabaseConnection.getConnection()) {

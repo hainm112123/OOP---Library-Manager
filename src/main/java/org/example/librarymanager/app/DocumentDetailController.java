@@ -70,7 +70,7 @@ public class DocumentDetailController extends ControllerWrapper {
         ratingsBox.getChildren().clear();
         for (int i = start; i < Math.min(end, ratings.size()); ++ i) {
             Rating rating = ratings.get(i);
-            ratingsBox.getChildren().add(new RatingComponent(rating.getValue(), rating.getContent(), rating.getUserId()).getContainer());
+            ratingsBox.getChildren().add(new RatingComponent(rating.getValue(), rating.getContent(), rating.getPostedTime(), rating.getUserId()).getContainer());
         }
     }
 
@@ -173,7 +173,7 @@ public class DocumentDetailController extends ControllerWrapper {
                 try {
                     if (future.get()) {
                         Common.disable(loader);
-                        safeSwitchScene("document-detail.fxml");
+                        safeSwitchScene("rating.fxml");
                     }
                 } catch (InterruptedException | ExecutionException exception) {
                     exception.printStackTrace();

@@ -8,42 +8,42 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.HomeController">
-   <top>
-       <fx:include prefHeight="170.0" source="topbar.fxml" />
-   </top>
-   <center>
-      <VBox prefHeight="550.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <StackPane alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1200.0">
-               <children>
-                  <Label alignment="CENTER" prefHeight="35.0" prefWidth="315.0" text="Most popular books">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-            </StackPane>
-            <ScrollPane prefHeight="225.0" prefWidth="200.0" vbarPolicy="NEVER">
-              <content>
-                <AnchorPane fx:id="mostPopularContainer" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-              </content>
-            </ScrollPane>
-            <StackPane alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1200.0">
-               <children>
-                  <Label alignment="CENTER" prefHeight="35.0" prefWidth="319.0" text="Highest rated books">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Label>
-               </children>
-            </StackPane>
-            <ScrollPane prefHeight="225.0" prefWidth="1200.0">
-              <content>
-                <AnchorPane fx:id="highestRatedContainer" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-              </content>
-            </ScrollPane>
-         </children>
-      </VBox>
-   </center>
-</BorderPane>
+<AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.HomeController">
+   <children>
+      <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="170.0">
+         <VBox prefHeight="550.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
+            <children>
+               <StackPane alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1200.0">
+                  <children>
+                     <Label alignment="CENTER" prefHeight="35.0" prefWidth="315.0" text="Most popular books">
+                        <font>
+                           <Font size="24.0" />
+                        </font>
+                     </Label>
+                  </children>
+               </StackPane>
+               <ScrollPane prefHeight="225.0" prefWidth="200.0" vbarPolicy="NEVER">
+                 <content>
+                   <AnchorPane fx:id="mostPopularContainer" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                 </content>
+               </ScrollPane>
+               <StackPane alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1200.0">
+                  <children>
+                     <Label alignment="CENTER" prefHeight="35.0" prefWidth="319.0" text="Highest rated books">
+                        <font>
+                           <Font size="24.0" />
+                        </font>
+                     </Label>
+                  </children>
+               </StackPane>
+               <ScrollPane prefHeight="225.0" prefWidth="1200.0">
+                 <content>
+                   <AnchorPane fx:id="highestRatedContainer" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                 </content>
+               </ScrollPane>
+            </children>
+         </VBox>
+      </AnchorPane>
+      <fx:include prefHeight="170.0" source="topbar.fxml" />
+   </children>
+</AnchorPane>

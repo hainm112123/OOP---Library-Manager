@@ -181,6 +181,7 @@ public class DocumentQuery {
      */
     public static boolean updateDocument(Document document) {
         try (Connection connection = DatabaseConnection.getConnection();) {
+            Trie.addTrie(document.getTitle(), document.getId());
             PreparedStatement ps = connection.prepareStatement("update documents set " +
                     "categoryId = ?, author = ?, title = ?, description = ?, imageLink = ?, " +
                     "quantity = ?, quantityInStock = ?, borrowedTimes = ? " +
@@ -209,6 +210,7 @@ public class DocumentQuery {
      */
     public static boolean deleteDocument(Document document) {
         try (Connection connection = DatabaseConnection.getConnection()) {
+            Trie.delTrie(document.getTitle());
             PreparedStatement ps = connection.prepareStatement("delete from documents where id = ?");
             ps.setInt(1, document.getId());
             ps.executeUpdate();

@@ -51,15 +51,18 @@ public class HomeController extends ControllerWrapper{
         executor = Executors.newFixedThreadPool(2);
         Future<List<Document>> mostPoularDocFu = executor.submit(() -> DocumentQuery.getMostPopularDocuments(15));
         Future<List<Document>> highestRateDocFu = executor.submit(() -> DocumentQuery.getHighestRatedDocuments(15));
+        executor.shutdown();
         try {
             List<Document> mostPopularDocuments = mostPoularDocFu.get();
             List<Document> highestRatedDocuments = highestRateDocFu.get();
-            executor.submit(() -> display(mostPopularDocuments, mostPopularContainer));
-            executor.submit(() -> display(highestRatedDocuments, highestRatedContainer));
-            executor.shutdown();
+//            executor.submit(() -> display(mostPopularDocuments, mostPopularContainer));
+//            executor.submit(() -> display(highestRatedDocuments, highestRatedContainer));
+            display(mostPopularDocuments, mostPopularContainer);
+            display(highestRatedDocuments, highestRatedContainer);
+//            executor.shutdown();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-            executor.shutdown();
+//            executor.shutdown();
         }
     }
 }

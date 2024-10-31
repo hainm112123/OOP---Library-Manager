@@ -32,7 +32,7 @@ public class DatabaseConnection {
     }
 
     /**
-     * Something I don't know.
+     * Log database connection pool status
      */
     public synchronized static void logPoolStatus() throws SQLException {
         System.out.println("+ Num of Active Connections: " + ds.getNumActive());

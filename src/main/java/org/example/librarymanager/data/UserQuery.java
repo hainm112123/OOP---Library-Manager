@@ -13,7 +13,7 @@ public class UserQuery implements DataAccessObject<User> {
         this.databaseConnection = databaseConnection;
     }
 
-    public static UserQuery getInstance() {
+    public static synchronized UserQuery getInstance() {
         if (instance == null) {
             instance = new UserQuery(DatabaseConnection.getInstance());
         }

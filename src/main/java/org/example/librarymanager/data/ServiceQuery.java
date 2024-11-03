@@ -12,8 +12,7 @@ import java.time.LocalDate;
 public class ServiceQuery {
     public static Service getUndoneService(int userId, int documentId) {
         Service service = null;
-        try {
-            Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from services where userId= ? and documentId= ? and returnDate is null");
             ps.setInt(1, userId);
             ps.setInt(2, documentId);
@@ -34,7 +33,7 @@ public class ServiceQuery {
     }
 
     public static void updateService(Service service) {
-        try (Connection connection = DatabaseConnection.getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
             PreparedStatement ps = connection.prepareStatement("update services set returnDate = ? where id = ?");
             ps.setDate(1, Date.valueOf(service.getReturnDate()));
             ps.setInt(2, service.getId());
@@ -46,7 +45,7 @@ public class ServiceQuery {
     }
 
     public static boolean borrowDocument(int userId, int documentId) {
-        try (Connection connection = DatabaseConnection.getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
             Service service = getUndoneService(userId, documentId);
             if (service != null) return false;
             Document document = DocumentQuery.getDocumentById(documentId);
@@ -70,7 +69,7 @@ public class ServiceQuery {
     }
 
     public static boolean returnDocument(int userId, int documentId) {
-        try (Connection connection = DatabaseConnection.getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
             Service service = getUndoneService(userId, documentId);
             if (service == null) return false;
             Document document = DocumentQuery.getDocumentById(documentId);

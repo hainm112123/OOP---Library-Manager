@@ -15,7 +15,7 @@ public class CategoryQuery {
      */
     public static List<Category> getCategories() {
         List<Category> categories = new ArrayList<Category>();
-        try (Connection connection = DatabaseConnection.getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from categories");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -35,7 +35,7 @@ public class CategoryQuery {
      */
     public static List<String> getCategoriesName() {
         List<String> categories = new ArrayList<String>();
-        try (Connection connection = DatabaseConnection.getConnection();) {
+        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select name from categories");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -54,7 +54,7 @@ public class CategoryQuery {
      */
     public static Category getCategory(int id) {
         Category category = null;
-        try (Connection connection = DatabaseConnection.getConnection()) {
+        try (Connection connection = DatabaseConnection.getInstance().getConnection()) {
             PreparedStatement ps = connection.prepareStatement("select * from categories where id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();

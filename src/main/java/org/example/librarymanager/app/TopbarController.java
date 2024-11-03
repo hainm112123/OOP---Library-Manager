@@ -1,25 +1,18 @@
 package org.example.librarymanager.app;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
-import org.example.librarymanager.Common;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.data.Trie;
-import org.example.librarymanager.models.Category;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static org.example.librarymanager.data.CategoryQuery.getCategoriesName;
 
 public class TopbarController extends ControllerWrapper {
     @FXML
@@ -47,7 +40,7 @@ public class TopbarController extends ControllerWrapper {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         topbarHomeBtn.setOnAction((event) -> safeSwitchScene("home.fxml"));
-        List<String> categoryList = CategoryQuery.getCategoriesName();
+        List<String> categoryList = CategoryQuery.getInstance().getCategoriesName();
         ObservableList<String> list = FXCollections.observableArrayList(categoryList);
         topbarCategoryBtn.setItems(list);
         topbarCategoryBtn.setOnAction((event) -> {
@@ -99,7 +92,7 @@ public class TopbarController extends ControllerWrapper {
             button.setOnAction(event -> {
                 Button clickedButton = (Button) event.getSource();
                 int id = (Integer)clickedButton.getUserData();
-                setCurrentDocument(DocumentQuery.getDocumentById(id));
+                setCurrentDocument(DocumentQuery.getInstance().getById(id));
                 safeSwitchScene("document-detail.fxml");
                 //System.out.println("On clicked");
             } );

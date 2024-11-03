@@ -35,7 +35,7 @@ public class RegisterController extends ControllerWrapper {
     private Hyperlink loginHyperlink;
 
     public void registerButtonOnAction(ActionEvent event) {
-        AuthResult registerResult = AuthQuery.register(username.getText(), password.getText(), confirmPassword.getText(), firstname.getText(), lastname.getText(), gender.getText(), dateOfBirth.getValue());
+        AuthResult registerResult = AuthQuery.getInstance().register(username.getText(), password.getText(), confirmPassword.getText(), firstname.getText(), lastname.getText(), gender.getText(), dateOfBirth.getValue());
         registerMessageLabel.setText(registerResult.getMessage());
     }
 

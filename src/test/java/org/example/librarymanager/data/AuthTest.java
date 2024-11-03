@@ -15,7 +15,7 @@ public class AuthTest {
         String lastname = "admin";
         String gender = "male";
         LocalDate dateOfBirth = LocalDate.of(2005, 2, 13);
-        AuthResult result = AuthQuery.register(username, password, retypePassword, firstname, lastname, gender, dateOfBirth);
+        AuthResult result = AuthQuery.getInstance().register(username, password, retypePassword, firstname, lastname, gender, dateOfBirth);
         Assertions.assertEquals(result.getMessage(), "Registration successful!");
     }
 
@@ -23,7 +23,7 @@ public class AuthTest {
     public void testLogin() {
         String username = "admin";
         String password = "123456";
-        AuthResult result = AuthQuery.login(username, password);
+        AuthResult result = AuthQuery.getInstance().login(username, password);
         Assertions.assertEquals(result.getMessage(), "Login successful!");
     }
 }

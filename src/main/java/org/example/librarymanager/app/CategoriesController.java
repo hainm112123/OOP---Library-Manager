@@ -79,7 +79,7 @@ public class CategoriesController extends ControllerWrapper {
     public void initialize(URL location, ResourceBundle resources) {
         currentCategoryLabel.setText(ControllerWrapper.getCurrentCategory());
         executor = Executors.newFixedThreadPool(1);
-        Future<List<Document>> documentsFu = executor.submit(() -> DocumentQuery.getDocumentsByCategory(ControllerWrapper.getCurrentCategory(), 50));
+        Future<List<Document>> documentsFu = executor.submit(() -> DocumentQuery.getInstance().getDocumentsByCategory(ControllerWrapper.getCurrentCategory(), 50));
         try {
             List<Document> documents = documentsFu.get();
             pagination.setPageCount((documents.size() - 1) / 20 + 1);

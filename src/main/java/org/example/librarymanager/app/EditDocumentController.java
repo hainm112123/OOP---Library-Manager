@@ -53,7 +53,7 @@ public class EditDocumentController extends ControllerWrapper {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<Category> categories = CategoryQuery.getCategories();
+        List<Category> categories = CategoryQuery.getInstance().getAll();
         for (Category category : categories) {
             docCategories.getItems().add(new Common.Choice(category.getId(), category.getName()));
         }
@@ -124,7 +124,7 @@ public class EditDocumentController extends ControllerWrapper {
             );
             document.setQuantity(Integer.parseInt(docQuantity.getText()));
 
-            if (DocumentQuery.updateDocument(document)) {
+            if (DocumentQuery.getInstance().update(document)) {
                 submitMessage.setText("Successfully updated!");
                 submitMessage.setTextFill(Color.GREEN);
             }
@@ -165,7 +165,7 @@ public class EditDocumentController extends ControllerWrapper {
         }
 
         String message = "";
-        if (DocumentQuery.deleteDocument(document)) {
+        if (DocumentQuery.getInstance().delete(document)) {
             message = "Successfully deleted!";
         } else {
             message = "Some errors occurred! Please try again!";

@@ -7,14 +7,14 @@ public class ServiceTest {
     @Test
     public void testBorrowDocument() {
         int userId = 2;
-        int documentId = 3;
-        Assertions.assertTrue(ServiceQuery.borrowDocument(userId, documentId));
+        int documentId = 13;
+        Assertions.assertTrue(ServiceQuery.getInstance().borrowDocument(userId, DocumentQuery.getInstance().getById(documentId)));
     }
 
     @Test
     public void testReturnDocument() {
-        int userId = 1;
-        int documentId = 2;
-        Assertions.assertTrue(ServiceQuery.returnDocument(userId, documentId));
+        int userId = 2;
+        int documentId = 13;
+        Assertions.assertTrue(ServiceQuery.getInstance().returnDocument(userId, DocumentQuery.getInstance().getById(documentId)));
     }
 }

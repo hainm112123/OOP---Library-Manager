@@ -8,14 +8,28 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryQuery {
+public class CategoryQuery implements DataAccessObject<Category> {
+    private static CategoryQuery instance;
+    private DatabaseConnection databaseConnection;
+
+    private CategoryQuery(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
+    }
+
+    public static CategoryQuery getInstance() {
+        if (instance == null) {
+            instance = new CategoryQuery(DatabaseConnection.getInstance());
+        }
+        return instance;
+    }
 
     /**
      * Get all in table categories.
      */
-    public static List<Category> getCategories() {
+    @Override
+    public List<Category> getAll() {
         List<Category> categories = new ArrayList<Category>();
-        try (Connection connection = DatabaseConnection.getConnection();) {
+        try (Connection connection = databaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from categories");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -33,9 +47,9 @@ public class CategoryQuery {
     /**
      * Get all name in table categories.
      */
-    public static List<String> getCategoriesName() {
+    public List<String> getCategoriesName() {
         List<String> categories = new ArrayList<String>();
-        try (Connection connection = DatabaseConnection.getConnection();) {
+        try (Connection connection = databaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select name from categories");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -52,9 +66,10 @@ public class CategoryQuery {
     /**
      * Get category by id in table categories.
      */
-    public static Category getCategory(int id) {
+    @Override
+    public Category getById(int id) {
         Category category = null;
-        try (Connection connection = DatabaseConnection.getConnection()) {
+        try (Connection connection = databaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("select * from categories where id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -67,5 +82,20 @@ public class CategoryQuery {
             e.printStackTrace();
         }
         return category;
+    }
+
+    @Override
+    public Category add(Category category) {
+        return null;
+    }
+
+    @Override
+    public boolean update(Category category) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(Category category) {
+        return false;
     }
 }

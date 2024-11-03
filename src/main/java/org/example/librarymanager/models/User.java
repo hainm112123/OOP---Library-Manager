@@ -21,13 +21,13 @@ public class User {
     private String gender;
     private LocalDate dateOfBirth;
 
-    public User(LocalDate dateOfBirth, String gender, String lastname, String firstname, String password, String username) {
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.lastname = lastname;
-        this.firstname = firstname;
-        this.password = password;
+    public User(String username, String password, String firstname, String lastname, String gender, LocalDate dateOfBirth) {
         this.username = username;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public User(ResultSet rs) throws SQLException {

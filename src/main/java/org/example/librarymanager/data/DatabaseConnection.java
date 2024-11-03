@@ -8,9 +8,10 @@ import java.sql.SQLException;
 import static org.example.librarymanager.Config.*;
 
 public class DatabaseConnection {
-    private static BasicDataSource ds;
+    private static DatabaseConnection instance;
+    private BasicDataSource ds;
 
-    static {
+    private DatabaseConnection() {
         ds = new BasicDataSource();
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
         ds.setUrl(DB_URL);
@@ -23,10 +24,17 @@ public class DatabaseConnection {
         ds.setMaxOpenPreparedStatements(200);
     }
 
+    public static DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+
     /**
      * Get connection.
      */
-    public static Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
 //        logPoolStatus();
         return ds.getConnection();
     }
@@ -34,7 +42,7 @@ public class DatabaseConnection {
     /**
      * Log database connection pool status
      */
-    public synchronized static void logPoolStatus() throws SQLException {
+    public synchronized void logPoolStatus() throws SQLException {
         System.out.println("+ Num of Active Connections: " + ds.getNumActive());
         System.out.println("+ Num of Idle Connections: " + ds.getNumIdle());
     }

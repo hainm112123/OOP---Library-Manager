@@ -49,8 +49,8 @@ public class HomeController extends ControllerWrapper{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         executor = Executors.newFixedThreadPool(2);
-        Future<List<Document>> mostPoularDocFu = executor.submit(() -> DocumentQuery.getMostPopularDocuments(15));
-        Future<List<Document>> highestRateDocFu = executor.submit(() -> DocumentQuery.getHighestRatedDocuments(15));
+        Future<List<Document>> mostPoularDocFu = executor.submit(() -> DocumentQuery.getInstance().getMostPopularDocuments(15));
+        Future<List<Document>> highestRateDocFu = executor.submit(() -> DocumentQuery.getInstance().getHighestRatedDocuments(15));
         executor.shutdown();
         try {
             List<Document> mostPopularDocuments = mostPoularDocFu.get();

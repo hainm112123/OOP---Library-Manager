@@ -61,7 +61,7 @@ public class NewDocumentController extends ControllerWrapper {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<Category> categories = CategoryQuery.getCategories();
+        List<Category> categories = CategoryQuery.getInstance().getAll();
         for (Category category : categories) {
             docCategories.getItems().add(new Common.Choice(category.getId(), category.getName()));
         }
@@ -82,7 +82,7 @@ public class NewDocumentController extends ControllerWrapper {
      */
     @FXML
     private void onSearchByISBN(ActionEvent event) {
-        Volume volume = DocumentQuery.getDocumentByISBN(docISBN.getText());
+        Volume volume = DocumentQuery.getInstance().getDocumentByISBN(docISBN.getText());
         if (volume != null) {
             searchMessage.setText("Searching complete!");
             searchMessage.setTextFill(Color.GREEN);
@@ -130,14 +130,15 @@ public class NewDocumentController extends ControllerWrapper {
             submitMessage.setTextFill(Color.RED);
         }
         else {
-            Document document = DocumentQuery.addDocument(docCategories.getSelectionModel().getSelectedItem().getValue(),
+            Document document = DocumentQuery.getInstance().add(new Document(
+                    docCategories.getSelectionModel().getSelectedItem().getValue(),
                     getUser().getId(),
                     docAuthor.getText(),
                     docTitle.getText(),
                     docDescription.getText(),
                     docImageLink.getText(),
                     Integer.parseInt(docQuantity.getText())
-            );
+            ));
             if (document != null) {
                 docTitle.clear();
                 docAuthor.clear();

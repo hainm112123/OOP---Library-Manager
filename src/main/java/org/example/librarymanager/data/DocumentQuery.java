@@ -19,16 +19,29 @@ import java.util.List;
 import static org.example.librarymanager.Config.API_KEY;
 import static org.example.librarymanager.Config.APPLICATION_NAME;
 
-public class DocumentQuery {
-    //    private static final String APPLICATION_NAME = "LibraryManager";
+public class DocumentQuery implements DataAccessObject<Document> {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static DocumentQuery instance;
+    private DatabaseConnection databaseConnection;
+
+    private DocumentQuery(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
+    }
+
+    public static DocumentQuery getInstance() {
+        if (instance == null) {
+            instance = new DocumentQuery(DatabaseConnection.getInstance());
+        }
+        return instance;
+    }
 
     /**
      * Get a document by id
      */
-    public static Document getDocumentById(int id) {
+    @Override
+    public Document getById(int id) {
         Document document = null;
-        try (Connection connection = DatabaseConnection.getInstance().getConnection()) {
+        try (Connection connection = databaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("select * from documents where id = ?");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -43,12 +56,31 @@ public class DocumentQuery {
         return document;
     }
 
+    @Override
+    public List<Document> getAll() {
+        List<Document> documents = new ArrayList<Document>();
+        try (Connection connection = databaseConnection.getConnection();) {
+
+            String query = "select * from documents";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                documents.add(new Document(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return documents;
+    }
+
     /**
      * Get documents by order and limit.
      */
-    public static List<Document> getDocuments(String order, int limit) {
+    public List<Document> getDocuments(String order, int limit) {
         List<Document> documents = new ArrayList<Document>();
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = databaseConnection.getConnection();) {
 
             String query = "select * from documents";
             if (order != null && !order.isEmpty()) {
@@ -73,9 +105,9 @@ public class DocumentQuery {
     /**
      * Get documents by category.
      */
-    public static List<Document> getDocumentsByCategory(String order, int limit) {
+    public List<Document> getDocumentsByCategory(String order, int limit) {
         List<Document> documents = new ArrayList<Document>();
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = databaseConnection.getConnection();) {
 
             String query = "select d.* from documents d join categories c on d.categoryId = c.id";
             if (order != null && !order.isEmpty()) {
@@ -100,16 +132,16 @@ public class DocumentQuery {
     /**
      * Get documents by borrowed time, descending.
      */
-    public static List<Document> getMostPopularDocuments(int limit) {
+    public List<Document> getMostPopularDocuments(int limit) {
         return getDocuments("borrowedTimes desc", limit);
     }
 
     /**
      * Get documents by ratings, descending.
      */
-    public static List<Document> getHighestRatedDocuments(int limit) {
+    public List<Document> getHighestRatedDocuments(int limit) {
         List<Document> documents = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = databaseConnection.getConnection();) {
             String query = "select documents.*, avg(ratings.value) rating\n"
                     + "from documents\n"
                     + "left join ratings on documents.id = ratings.documentId\n"
@@ -132,9 +164,9 @@ public class DocumentQuery {
     /**
      * Get documents by owner.
      */
-    public static List<Document> getDocumentsByOwner(int owner) {
+    public List<Document> getDocumentsByOwner(int owner) {
         List<Document> documents = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getInstance().getConnection()) {
+        try (Connection connection = databaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("select * from documents where owner = ?");
             ps.setInt(1, owner);
             ResultSet rs = ps.executeQuery();
@@ -152,35 +184,37 @@ public class DocumentQuery {
     /**
      * Add a new document to database.
      */
-    public static Document addDocument(int categoryId, int owner, String author, String title, String description, String imageLink, int quantity) {
-        Document document = null;
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();){
+    @Override
+    public Document add(Document document) {
+        Document documentEntity = null;
+        try (Connection connection = databaseConnection.getConnection();){
             PreparedStatement ps = connection.prepareStatement("insert into documents (categoryId, owner, author, title, description, imageLink, quantity) values(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, categoryId);
-            ps.setInt(2, owner);
-            ps.setString(3, author);
-            ps.setString(4, title);
-            ps.setString(5, description);
-            ps.setString(6, imageLink);
-            ps.setInt(7, quantity);
+            ps.setInt(1, document.getCategoryId());
+            ps.setInt(2, document.getOwner());
+            ps.setString(3, document.getAuthor());
+            ps.setString(4, document.getTitle());
+            ps.setString(5, document.getDescription());
+            ps.setString(6, document.getImageLink());
+            ps.setInt(7, document.getQuantity());
             ps.executeUpdate();
             ResultSet generatedKeys = ps.getGeneratedKeys();
             if (generatedKeys.next()) {
-                document = getDocumentById(generatedKeys.getInt(1));
+                documentEntity = getById(generatedKeys.getInt(1));
             }
             generatedKeys.close();
             ps.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return document;
+        return documentEntity;
     }
 
     /**
      * Update an existed document in database.
      */
-    public static boolean updateDocument(Document document) {
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+    @Override
+    public boolean update(Document document) {
+        try (Connection connection = databaseConnection.getConnection();) {
             Trie.addTrie(document.getTitle(), document.getId());
             PreparedStatement ps = connection.prepareStatement("update documents set " +
                     "categoryId = ?, author = ?, title = ?, description = ?, imageLink = ?, " +
@@ -208,8 +242,9 @@ public class DocumentQuery {
     /**
      * Delete an existed document.
      */
-    public static boolean deleteDocument(Document document) {
-        try (Connection connection = DatabaseConnection.getInstance().getConnection()) {
+    @Override
+    public boolean delete(Document document) {
+        try (Connection connection = databaseConnection.getConnection()) {
             Trie.delTrie(document.getTitle());
             PreparedStatement ps = connection.prepareStatement("delete from documents where id = ?");
             ps.setInt(1, document.getId());
@@ -225,7 +260,7 @@ public class DocumentQuery {
     /**
      * Get list of books from Google Books API by a search pattern.
      */
-    public static List<Volume> getDocumentsFromAPI(String pattern) {
+    public List<Volume> getDocumentsFromAPI(String pattern) {
         try {
             Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, null)
                     .setApplicationName(APPLICATION_NAME).build();
@@ -242,7 +277,7 @@ public class DocumentQuery {
     /**
      * Get book's information from Google Books API by ISBN.
      */
-    public static Volume getDocumentByISBN(String ISBN) {
+    public Volume getDocumentByISBN(String ISBN) {
         try {
             Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, null)
                     .setApplicationName(APPLICATION_NAME).build();
@@ -261,8 +296,8 @@ public class DocumentQuery {
     /**
      * Add a rating to database.
      */
-    public static boolean rateDocument(int userId, int documentId, double value, String content) {
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+    public boolean rateDocument(int userId, int documentId, double value, String content) {
+        try (Connection connection = databaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("insert into ratings (userId, documentId, value, content) values(?,?,?,?)");
             ps.setInt(1, userId);
             ps.setInt(2, documentId);
@@ -280,9 +315,9 @@ public class DocumentQuery {
     /**
      * Get ratings by document id in database.
      */
-    public static List<Rating> getDocumentRatings(int documentId) {
+    public List<Rating> getDocumentRatings(int documentId) {
         List<Rating> ratings = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getInstance().getConnection()) {
+        try (Connection connection = databaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("select * from ratings where documentId = ? order by postedTime desc");
             ps.setInt(1, documentId);
             ResultSet rs = ps.executeQuery();

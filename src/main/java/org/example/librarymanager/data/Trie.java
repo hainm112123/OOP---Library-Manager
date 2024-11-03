@@ -49,7 +49,7 @@ public class Trie {
             Arrays.fill(rightNode, null);
             cnt = 0;
         }
-        List<Document> data = DocumentQuery.getDocuments(null, 0);
+        List<Document> data = DocumentQuery.getInstance().getDocuments(null, 0);
         for (int i = 0; i < data.size(); i++) {
             addTrie(data.get(i).getTitle(), data.get(i).getId());
         }

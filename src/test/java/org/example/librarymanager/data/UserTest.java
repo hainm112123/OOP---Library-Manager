@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class UserTest {
     @Test
     public void testGetUserById() {
-        User user = UserQuery.getUserById(1);
+        User user = UserQuery.getInstance().getById(1);
         Assertions.assertEquals(user.getId(), 1);
         Assertions.assertEquals(user.getUsername(), "admin");
     }

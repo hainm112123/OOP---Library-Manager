@@ -38,7 +38,7 @@ public class LoginController extends ControllerWrapper {
         Task<AuthResult> task = new Task<AuthResult>() {
             @Override
             protected AuthResult call() throws Exception {
-                return AuthQuery.login(username.getText(), password.getText());
+                return AuthQuery.getInstance().login(username.getText(), password.getText());
             }
         };
         progressSpinner.setVisible(true);

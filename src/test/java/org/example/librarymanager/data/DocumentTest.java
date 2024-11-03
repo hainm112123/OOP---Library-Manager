@@ -17,7 +17,7 @@ public class DocumentTest {
         String description = "description";
         String content = "content";
         int quantity = 5;
-        Document document = DocumentQuery.addDocument(categoryId, owner, author, title, description, content, quantity);
+        Document document = DocumentQuery.getInstance().add(new Document(categoryId, owner, author, title, description, content, quantity));
         Assertions.assertEquals(categoryId, document.getCategoryId());
         Assertions.assertEquals(owner, document.getOwner());
         Assertions.assertEquals(title, document.getTitle());
@@ -25,7 +25,7 @@ public class DocumentTest {
 
     @Test
     public void getDocumentsTest() {
-        List<Document> documents = DocumentQuery.getHighestRatedDocuments(10);
+        List<Document> documents = DocumentQuery.getInstance().getHighestRatedDocuments(10);
         for (Document document : documents) {
             System.out.println(document);
         }
@@ -35,7 +35,7 @@ public class DocumentTest {
     @Test
     public void getDocumentsFromAPI_Test() {
         String pattern = "Harry Potter";
-        List<Volume> volumes = DocumentQuery.getDocumentsFromAPI(pattern);
+        List<Volume> volumes = DocumentQuery.getInstance().getDocumentsFromAPI(pattern);
         Assertions.assertNotNull(volumes);
         for (Volume volume : volumes) {
             System.out.println("Title: " + volume.getVolumeInfo().getTitle());
@@ -45,7 +45,7 @@ public class DocumentTest {
 
     @Test
     public void getDocumentByISBN_Test() {
-        Volume volume = DocumentQuery.getDocumentByISBN("9781975309596");
+        Volume volume = DocumentQuery.getInstance().getDocumentByISBN("0316559806");
         Assertions.assertNotNull(volume);
         System.out.println("Title: " + volume.getVolumeInfo().getTitle());
         System.out.println("Authors: " + volume.getVolumeInfo().getAuthors());
@@ -54,7 +54,7 @@ public class DocumentTest {
     }
 
     @Test void getDocumentsByOwnerTest() {
-        List<Document> documents = DocumentQuery.getDocumentsByOwner(1);
+        List<Document> documents = DocumentQuery.getInstance().getDocumentsByOwner(1);
         for (Document document : documents) {
             System.out.println(document);
         }
@@ -66,7 +66,7 @@ public class DocumentTest {
         int userId = 1;
         int documentId = 1;
         float value = (float)5;
-        DocumentQuery.rateDocument(userId, documentId, value, "Lorem ipsum dolor sit amet, " +
+        DocumentQuery.getInstance().rateDocument(userId, documentId, value, "Lorem ipsum dolor sit amet, " +
                 "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore " +
                 "magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco " +
                 "laboris nisi ut aliquip ex ea commodo consequat"

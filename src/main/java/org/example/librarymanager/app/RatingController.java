@@ -39,7 +39,7 @@ public class RatingController extends ControllerWrapper {
         Task<Boolean> task = new Task<>() {
             @Override
             protected Boolean call() throws Exception {
-                return DocumentQuery.rateDocument(getUser().getId(), getCurrentDocument().getId(), rating.getRating(), content.getText());
+                return DocumentQuery.getInstance().rateDocument(getUser().getId(), getCurrentDocument().getId(), rating.getRating(), content.getText());
             }
         };
         Common.enable(loader);

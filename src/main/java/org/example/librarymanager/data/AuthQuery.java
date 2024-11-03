@@ -6,15 +6,28 @@ import java.sql.*;
 import java.time.LocalDate;
 
 public class AuthQuery {
+    private static AuthQuery instance;
+    private DatabaseConnection databaseConnection;
+
+    private AuthQuery(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
+    }
+
+    public static AuthQuery getInstance() {
+        if (instance == null) {
+            instance = new AuthQuery(DatabaseConnection.getInstance());
+        }
+        return instance;
+    }
 
     /**
      * Check and execute login query.
      * @return result statement
      */
-    public static AuthResult login(String username, String password) {
+    public AuthResult login(String username, String password) {
         AuthResult result = new AuthResult();
         result.setMessage("Login failed!");
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = databaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from users where username = ? and password = ?");
             ps.setString(1, username);
             ps.setString(2, password);
@@ -37,7 +50,7 @@ public class AuthQuery {
      * Check and execute register query.
      * @return result statement
      */
-    public static AuthResult register(String username, String password, String retypePassword, String firstname, String lastname, String gender, LocalDate dateOfBirth) {
+    public AuthResult register(String username, String password, String retypePassword, String firstname, String lastname, String gender, LocalDate dateOfBirth) {
         AuthResult result = new AuthResult();
         result.setMessage("register failed!");
         if (!retypePassword.equals(password)) {
@@ -68,29 +81,18 @@ public class AuthQuery {
             result.setMessage("Invalid date of birth!");
             return result;
         }
-        try (Connection connection = DatabaseConnection.getInstance().getConnection();) {
+        try (Connection connection = databaseConnection.getConnection();) {
             PreparedStatement ps = connection.prepareStatement("select * from users where username = ?");
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 result.setMessage("Username already exists!");
             } else {
-                PreparedStatement createUserSt = connection.prepareStatement("insert into users (username, password, firstname, lastname, gender, dateOfBirth) values (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-                createUserSt.setString(1, username);
-                createUserSt.setString(2, password);
-                createUserSt.setString(3, firstname);
-                createUserSt.setString(4, lastname);
-                createUserSt.setString(5, gender);
-                createUserSt.setDate(6, Date.valueOf(dateOfBirth));
-                createUserSt.executeUpdate();
-                ResultSet generatedKeys = createUserSt.getGeneratedKeys();
-                if (generatedKeys.next()) {
+                User user = UserQuery.getInstance().add(new User(username, password, firstname, lastname, gender, dateOfBirth));
+                if (user != null) {
                     result.setMessage("Registration successful!");
-                    int userId = generatedKeys.getInt(1);
-                    result.setUser(UserQuery.getUserById(userId));
+                    result.setUser(user);
                 }
-                generatedKeys.close();
-                createUserSt.close();
             }
             ps.close();
             rs.close();

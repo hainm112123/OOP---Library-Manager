@@ -32,7 +32,7 @@ public class MyDocumentsController extends ControllerWrapper {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         executor = Executors.newSingleThreadExecutor();
-        Future<List<Document>> future = executor.submit(() -> DocumentQuery.getDocumentsByOwner(getUser().getId()));
+        Future<List<Document>> future = executor.submit(() -> DocumentQuery.getInstance().getDocumentsByOwner(getUser().getId()));
         executor.shutdown();
         List<Document> documents = new ArrayList<>();
         try {

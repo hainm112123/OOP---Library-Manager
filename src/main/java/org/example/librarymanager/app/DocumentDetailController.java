@@ -95,8 +95,8 @@ public class DocumentDetailController extends ControllerWrapper {
         loader.setVisible(false);
 
         executor = Executors.newFixedThreadPool(5);
-        Future<Boolean> borrowStatusFu = executor.submit(() -> ServiceQuery.isBorrowingDocument(getUser().getId(), getCurrentDocument().getId()));
-        Future<Category> categoryFu = executor.submit(() -> CategoryQuery.getCategory(getCurrentDocument().getCategoryId()));
+        Future<Boolean> borrowStatusFu = executor.submit(() -> ServiceQuery.getInstance().isBorrowingDocument(getUser().getId(), getCurrentDocument().getId()));
+        Future<Category> categoryFu = executor.submit(() -> CategoryQuery.getInstance().getById(getCurrentDocument().getCategoryId()));
         Future<Image> imageFu = executor.submit(() -> {
             try {
                 return new Image(getCurrentDocument().getImageLink(), true);
@@ -105,8 +105,8 @@ public class DocumentDetailController extends ControllerWrapper {
                 return new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg"));
             }
         });
-        Future<List<Rating>> ratingsFu = executor.submit(() -> DocumentQuery.getDocumentRatings(getCurrentDocument().getId()));
-        Future<User> ownerFu = executor.submit(() -> UserQuery.getUserById(getCurrentDocument().getOwner()));
+        Future<List<Rating>> ratingsFu = executor.submit(() -> DocumentQuery.getInstance().getDocumentRatings(getCurrentDocument().getId()));
+        Future<User> ownerFu = executor.submit(() -> UserQuery.getInstance().getById(getCurrentDocument().getOwner()));
         executor.shutdown();
 
         try {
@@ -153,7 +153,7 @@ public class DocumentDetailController extends ControllerWrapper {
                 Common.disable(borrowBtn);
                 Common.enable(loader);
                 ExecutorService taskExe = Executors.newSingleThreadExecutor();
-                Future<Boolean> future = taskExe.submit(() -> ServiceQuery.borrowDocument(getUser().getId(), getCurrentDocument().getId()));
+                Future<Boolean> future = taskExe.submit(() -> ServiceQuery.getInstance().borrowDocument(getUser().getId(), getCurrentDocument()));
                 taskExe.shutdown();
                 try {
                     if (future.get()) {
@@ -168,7 +168,7 @@ public class DocumentDetailController extends ControllerWrapper {
                 Common.disable(borrowBtn);
                 Common.enable(loader);
                 ExecutorService taskExe = Executors.newSingleThreadExecutor();
-                Future<Boolean> future = taskExe.submit(() -> ServiceQuery.returnDocument(getUser().getId(), getCurrentDocument().getId()));
+                Future<Boolean> future = taskExe.submit(() -> ServiceQuery.getInstance().returnDocument(getUser().getId(), getCurrentDocument()));
                 taskExe.shutdown();
                 try {
                     if (future.get()) {

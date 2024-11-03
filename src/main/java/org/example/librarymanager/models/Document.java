@@ -25,7 +25,7 @@ public class Document {
     private LocalDate addDate;
     private float rating;
 
-    public Document(int categoryId, int owner, String author, String title, String description, String imageLink, int quantity, int quantityInStock, int borrowedTimes, LocalDate addDate) {
+    public Document(int categoryId, int owner, String author, String title, String description, String imageLink, int quantity) {
         this.categoryId = categoryId;
         this.owner = owner;
         this.author = author;
@@ -33,9 +33,6 @@ public class Document {
         this.description = description;
         this.imageLink = imageLink;
         this.quantity = quantity;
-        this.quantityInStock = quantityInStock;
-        this.borrowedTimes = borrowedTimes;
-        this.addDate = addDate;
     }
 
     public Document(ResultSet rs) throws SQLException {

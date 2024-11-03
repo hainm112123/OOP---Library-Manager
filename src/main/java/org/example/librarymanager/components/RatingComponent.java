@@ -43,7 +43,7 @@ public class RatingComponent {
         Task<String> task = new Task<String>() {
             @Override
             protected String call() throws Exception {
-                User user = UserQuery.getUserById(userId);
+                User user = UserQuery.getInstance().getById(userId);
                 return user.getFirstname() + " " + user.getLastname();
             }
         };

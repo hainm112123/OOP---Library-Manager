@@ -18,7 +18,7 @@ public class ServiceQuery implements DataAccessObject<Service> {
         this.databaseConnection = databaseConnection;
     }
 
-    public static ServiceQuery getInstance() {
+    public static synchronized ServiceQuery getInstance() {
         if (instance == null) {
             instance = new ServiceQuery(DatabaseConnection.getInstance());
         }

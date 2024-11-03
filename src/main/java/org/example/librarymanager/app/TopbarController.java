@@ -26,6 +26,8 @@ public class TopbarController extends ControllerWrapper {
     @FXML
     Button topbarMyDocBtn;
     @FXML
+    Button topbarBorrowDocBtn;
+    @FXML
     TextField searchBox;
     @FXML
     VBox suggestionsBox;
@@ -51,6 +53,7 @@ public class TopbarController extends ControllerWrapper {
         topbarDocModifyBtn.setOnAction((event) -> safeSwitchScene("new-document.fxml"));
         topbarProfileBtn.setOnAction((event) -> safeSwitchScene("profile.fxml"));
         topbarMyDocBtn.setOnAction((event) -> safeSwitchScene("my-documents.fxml"));
+        topbarBorrowDocBtn.setOnAction((event) -> safeSwitchScene("borrowing-documents.fxml"));
 
         if (Trie.getCnt() == 0) {
             Trie.buildTrie();

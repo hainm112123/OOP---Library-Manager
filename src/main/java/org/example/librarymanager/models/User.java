@@ -13,6 +13,10 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
+    public static final int TYPE_USER = 0;
+    public static final int TYPE_MODERATOR = 1;
+    public static final int TYPE_ADMIN = 2;
+
     private int id;
     private String username;
     private String password;
@@ -20,6 +24,7 @@ public class User {
     private String lastname;
     private String gender;
     private LocalDate dateOfBirth;
+    private int permission;
 
     public User(String username, String password, String firstname, String lastname, String gender, LocalDate dateOfBirth) {
         this.username = username;
@@ -38,5 +43,6 @@ public class User {
         this.lastname = rs.getString("lastname");
         this.gender = rs.getString("gender");
         this.dateOfBirth = new Date(rs.getDate("dateOfBirth").getTime()).toLocalDate();
+        this.permission = rs.getInt("permission");
     }
 }

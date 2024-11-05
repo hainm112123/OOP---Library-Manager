@@ -1,6 +1,7 @@
 package org.example.librarymanager.data;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -16,31 +17,38 @@ import java.net.URL;
 import java.util.*;
 
 public class Trie {
-    private static int maxChar = 301;
-    private static int maxCnt = 40000;
-    private static int cnt = 0;
-    private static int[][] nextChar = new int[maxChar*40][40];
-    private static int[] prevChar = new int[maxChar*40];
-    private static Node[] leftNode = new Node[maxChar*40];
-    private static Node[] rightNode = new Node[maxChar*40];
+    private static final int maxChar = 301;
+    private static final int maxCnt = 40000;
     private static final String Viet    = "ắằẳẵặăấầẩẫậâáàãảạđếềểễệêéèẻẽẹíìỉĩịốồổỗộôớờởỡợơóòõọứừửữựưúùủũụýỳỷỹỵ";
     private static final String Eng     = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiioooooooooooooooouuuuuuuuuuuyyyyy";
-    private static Map<Character, Character> trans = new HashMap<Character, Character>();
-    static {
+
+    private int cnt = 0;
+    private int[][] nextChar = new int[maxChar*40][40];
+    private int[] prevChar = new int[maxChar*40];
+    private Node[] leftNode = new Node[maxChar*40];
+    private Node[] rightNode = new Node[maxChar*40];
+    private Map<Character, Character> trans = new HashMap<Character, Character>();
+
+    private static Trie instance;
+
+    private Trie() {
         for (int i = 0; i < Viet.length(); i++) {
             trans.put(Viet.charAt(i), Eng.charAt(i));
         }
     }
 
-//    public Trie(List<String> data) {
-//        buildTrie(data);
-//    }
+    public static synchronized Trie getInstance() {
+        if (instance == null) {
+            instance = new Trie();
+        }
+        return instance;
+    }
 
-    public static int getCnt() {
+    public int getCnt() {
         return cnt;
     }
 
-    public static void buildTrie() {
+    public void buildTrie() {
         if (cnt > 0) {
             Arrays.fill(nextChar, 0);
             Arrays.fill(prevChar, 0);
@@ -49,21 +57,30 @@ public class Trie {
             Arrays.fill(rightNode, null);
             cnt = 0;
         }
-        List<Document> data = DocumentQuery.getInstance().getDocuments(null, 0);
-        for (int i = 0; i < data.size(); i++) {
-            addTrie(data.get(i).getTitle(), data.get(i).getId());
-        }
-//        System.out.println("Build Trie");
+
+        Task<List<Document>> task = new Task<List<Document>>() {
+            @Override
+            protected List<Document> call() throws Exception {
+                return DocumentQuery.getInstance().getDocuments(null, 0);
+            }
+        };
+        task.setOnSucceeded(e -> {
+            List<Document> data = task.getValue();
+            for (int i = 0; i < data.size(); i++) {
+                addTrie(data.get(i).getTitle(), data.get(i).getId());
+            }
+        });
+        new Thread(task).start();
     }
 
-    private static int value(char x) {
+    private int value(char x) {
         if(x >= 'a' && x <= 'z') return x - 'a';
         if(x >= 'A' && x <= 'Z') return x - 'A';
         if(x >= '0' && x <= '9') return 26 + x - '0';
         return -1;
     }
 
-    public static StringBuffer modify(String x) {
+    public StringBuffer modify(String x) {
         String tmp = x.toLowerCase();
         StringBuffer res = new StringBuffer();
         for(int i = 0; i < tmp.length(); i++) {
@@ -77,9 +94,9 @@ public class Trie {
         return res;
     }
 
-    public static void addTrie(String x, int id) {
+    public void addTrie(String x, int id) {
         if (cnt > maxCnt) {
-            Trie.buildTrie();
+            buildTrie();
         }
         StringBuffer tmp = modify(x);
         int top = 0;
@@ -118,7 +135,7 @@ public class Trie {
         }
     }
 
-    public static void delTrie(String x) throws Exception{
+    public void delTrie(String x) throws Exception{
         StringBuffer tmp = modify(x);
         int top = 0;
         for (int i = 0; i < tmp.length(); i++) {
@@ -148,7 +165,7 @@ public class Trie {
         }
     }
 
-    public static Pair<Node, Node> getRange(String x) {
+    public Pair<Node, Node> getRange(String x) {
         StringBuffer tmp = modify(x);
         int top = 0;
         for (int i = 0; i < tmp.length(); i++) {

@@ -25,7 +25,7 @@ public class ListDocumentsComponent {
         scrollPane = wrapper;
         this.controller = controller;
 
-        container.setPrefWidth(1200);
+        container.setPrefWidth(1185);
 
         pagination.setPageCount((documents.size() - 1) / 20 + 1);
         pagination.setCurrentPageIndex(0);
@@ -76,7 +76,7 @@ public class ListDocumentsComponent {
         grid.getColumnConstraints().clear();
         for (int c = 0; c < columns; ++ c) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setPrefWidth(1200 / columns);
+            columnConstraints.setPrefWidth(1185 / columns);
             grid.getColumnConstraints().add(columnConstraints);
         }
     }

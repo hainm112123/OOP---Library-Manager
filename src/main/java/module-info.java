@@ -17,6 +17,7 @@ module org.example.librarymanager {
     requires java.desktop;
     requires atlantafx.base;
     requires MaterialFX;
+    requires org.kordamp.ikonli.antdesignicons;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

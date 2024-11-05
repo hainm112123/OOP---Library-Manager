@@ -11,6 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 public class Common {
+    public static final String PRIMARY_COLOR = "#5C1C00";
+    public static final String TOPBAR_DROPDOWN_BUTTON_BG = "#f0f0f0";
+    public static final String TOPBAR_DROPDOWN_BUTTON_BG_HOVER = " #00000011";
+
     public static boolean isInteger(String str) {
         try {
             Integer.parseInt(str);
@@ -32,13 +36,26 @@ public class Common {
         }
     }
 
+    /**
+     * disable node, make it invisible and remove from layout calculations
+     * (make sure it doesn't occupy space or block mouse event)
+     * @param node
+     */
     public static void disable(Node node) {
         node.setDisable(true);
         node.setVisible(false);
+        node.setMouseTransparent(true);
+        node.setManaged(false);
     }
 
+    /**
+     * enable node, make it visible and add to layout calculations
+     * @param node
+     */
     public static void enable(Node node) {
         node.setDisable(false);
         node.setVisible(true);
+        node.setMouseTransparent(false);
+        node.setManaged(true);
     }
 }

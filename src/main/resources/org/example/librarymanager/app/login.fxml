@@ -25,7 +25,7 @@
         <Label fx:id="usernameLabel" layoutX="165.0" layoutY="234.0" prefHeight="17.0" prefWidth="212.0" textFill="#ff1414" />
         <PasswordField fx:id="password" layoutX="158.0" layoutY="259.0" prefHeight="36.0" prefWidth="283.0" promptText="Password" />
       <Label fx:id="passwordLabel" layoutX="165.0" layoutY="303.0" prefHeight="17.0" prefWidth="212.0" textFill="#ff1414" />
-        <Label fx:id="loginMessageLabel" layoutX="215.0" layoutY="327.0" prefHeight="17.0" prefWidth="169.0" textFill="#2130ff" />
+        <Label fx:id="loginMessageLabel" alignment="CENTER" layoutX="158.0" layoutY="327.0" prefHeight="18.0" prefWidth="283.0" textFill="#ff3321" />
         <Button fx:id="submitBtn" layoutX="158.0" layoutY="356.0" mnemonicParsing="false" onAction="#loginButtonOnAction" prefHeight="36.0" prefWidth="283.0" text="Log in" />
         <GridPane layoutX="158.0" layoutY="400.0" prefHeight="30.0" prefWidth="283.0">
             <columnConstraints>

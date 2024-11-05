@@ -16,6 +16,7 @@ public class User {
     public static final int TYPE_USER = 0;
     public static final int TYPE_MODERATOR = 1;
     public static final int TYPE_ADMIN = 2;
+    public static final String[] USER_TYPE_STRING = {"User", "Moderator", "Admin"};
 
     private int id;
     private String username;

@@ -51,7 +51,7 @@ public class TopbarController extends ControllerWrapper {
     @FXML
     Label notificationBadge;
     @FXML
-    MFXScrollPane notificationPane;
+    VBox notificationPane;
     @FXML
     VBox notificationBox;
     @FXML

@@ -28,7 +28,7 @@ public class DocumentQuery implements DataAccessObject<Document> {
         this.databaseConnection = databaseConnection;
     }
 
-    public static DocumentQuery getInstance() {
+    public static synchronized DocumentQuery getInstance() {
         if (instance == null) {
             instance = new DocumentQuery(DatabaseConnection.getInstance());
         }

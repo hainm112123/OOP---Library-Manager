@@ -6,6 +6,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.librarymanager.components.ListDocumentsComponent;
 import org.example.librarymanager.data.DocumentQuery;
+import org.example.librarymanager.data.ServiceQuery;
 import org.example.librarymanager.models.Document;
 
 import java.net.URL;
@@ -15,19 +16,18 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class MyDocumentsController extends ControllerWrapper {
+public class BorrowingDocumentController extends ControllerWrapper {
     @FXML
     private MFXScrollPane scrollPane;
 
     /**
-     * Display all documents by owner in a grid pane.
+     * Display all documents user currently borrow in a grid pane.
      * Executor manages 1 thread to load documents.
-     * @param location url to my-document.fxml
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         executor = Executors.newSingleThreadExecutor();
-        Future<List<Document>> future = executor.submit(() -> DocumentQuery.getInstance().getDocumentsByOwner(getUser().getId()));
+        Future<List<Document>> future = executor.submit(() -> ServiceQuery.getInstance().getBorrowingDocuments(getUser().getId()));
         executor.shutdown();
         List<Document> documents = new ArrayList<>();
         try {

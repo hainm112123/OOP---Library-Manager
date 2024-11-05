@@ -13,7 +13,7 @@ public class AuthQuery {
         this.databaseConnection = databaseConnection;
     }
 
-    public static AuthQuery getInstance() {
+    public static synchronized AuthQuery getInstance() {
         if (instance == null) {
             instance = new AuthQuery(DatabaseConnection.getInstance());
         }

@@ -16,7 +16,7 @@ public class CategoryQuery implements DataAccessObject<Category> {
         this.databaseConnection = databaseConnection;
     }
 
-    public static CategoryQuery getInstance() {
+    public static synchronized CategoryQuery getInstance() {
         if (instance == null) {
             instance = new CategoryQuery(DatabaseConnection.getInstance());
         }

@@ -26,8 +26,8 @@
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="259.20001220703125" minWidth="10.0" prefWidth="175.40001220703124" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="316.8000030517578" minWidth="10.0" prefWidth="222.8" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="346.4000122070312" minWidth="10.0" prefWidth="244.80001220703122" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="352.00004882812505" minWidth="10.0" prefWidth="279.20001220703125" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.9999877929688" minWidth="10.0" prefWidth="275.9999877929688" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="352.00004882812505" minWidth="10.0" prefWidth="263.199951171875" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="292.800048828125" minWidth="10.0" prefWidth="292.800048828125" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -49,6 +49,11 @@
                            </font>
                         </Button>
                         <ComboBox fx:id="topbarCategoryBtn" prefHeight="52.0" prefWidth="204.0" promptText="Category" style="-fx-background-color: #FFE7BA; -fx-font-size: 25px;" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Button fx:id="topbarBorrowDocBtn" mnemonicParsing="false" prefHeight="52.0" prefWidth="290.0" style="-fx-background-color: #FFE7BA;" text="Borrowing Documents" GridPane.columnIndex="4">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Button>
                      </children>
                   </GridPane>
                   <Button fx:id="topbarProfileBtn" contentDisplay="GRAPHIC_ONLY" layoutX="1100.0" layoutY="26.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #FFE7BA;" text="Button">

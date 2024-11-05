@@ -24,7 +24,7 @@ public class DatabaseConnection {
         ds.setMaxOpenPreparedStatements(200);
     }
 
-    public static DatabaseConnection getInstance() {
+    public static synchronized DatabaseConnection getInstance() {
         if (instance == null) {
             instance = new DatabaseConnection();
         }

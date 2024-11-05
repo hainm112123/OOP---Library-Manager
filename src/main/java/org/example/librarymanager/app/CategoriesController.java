@@ -65,8 +65,6 @@ public class CategoriesController extends ControllerWrapper {
             rowConstraints.setPrefHeight(200);
             currentCategoryPane.getRowConstraints().add(rowConstraints);
         }
-
-
     }
 
     /**

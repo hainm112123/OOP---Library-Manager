@@ -11,4 +11,17 @@ public class UserTest {
         Assertions.assertEquals(user.getId(), 1);
         Assertions.assertEquals(user.getUsername(), "admin");
     }
+
+    @Test
+    public void testUpdate() {
+        User user = UserQuery.getInstance().getById(1);
+        user.setLastname("ultimate");
+        Assertions.assertTrue(UserQuery.getInstance().update(user));
+    }
+
+    @Test
+    public void testDelete() {
+        User user = UserQuery.getInstance().getById(1);
+        Assertions.assertTrue(UserQuery.getInstance().delete(user));
+    }
 }

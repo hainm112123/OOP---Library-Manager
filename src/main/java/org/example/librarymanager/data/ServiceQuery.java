@@ -20,7 +20,7 @@ public class ServiceQuery implements DataAccessObject<Service> {
         this.databaseConnection = databaseConnection;
     }
 
-    public static ServiceQuery getInstance() {
+    public static synchronized ServiceQuery getInstance() {
         if (instance == null) {
             instance = new ServiceQuery(DatabaseConnection.getInstance());
         }
@@ -49,6 +49,26 @@ public class ServiceQuery implements DataAccessObject<Service> {
             e.printStackTrace();
         }
         return service;
+    }
+
+    public List<Document> getBorrowingDocuments(int userId) {
+        List<Document> documents = new ArrayList<>();
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(
+                    "select d.* from services as s join documents as d on s.documentId = d.id " +
+                            "where s.userId = ? and s.returnDate is null;"
+            );
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                documents.add(new Document(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return documents;
     }
 
     public boolean isBorrowingDocument(int userId, int documentId) {
@@ -102,6 +122,12 @@ public class ServiceQuery implements DataAccessObject<Service> {
         return false;
     }
 
+    /**
+     * handle borrow document
+     * @param userId
+     * @param document
+     * @return
+     */
     public boolean borrowDocument(int userId, Document document) {
         try (Connection connection = databaseConnection.getConnection();) {
             Service service = getUndoneService(userId, document.getId());
@@ -125,6 +151,12 @@ public class ServiceQuery implements DataAccessObject<Service> {
         }
     }
 
+    /**
+     * handle return document
+     * @param userId
+     * @param document
+     * @return
+     */
     public boolean returnDocument(int userId, Document document) {
         try {
             Service service = getUndoneService(userId, document.getId());

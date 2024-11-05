@@ -25,7 +25,7 @@ public class ListDocumentsComponent {
         scrollPane = wrapper;
         this.controller = controller;
 
-        container.setPrefWidth(1200);
+        container.setPrefWidth(1185);
 
         pagination.setPageCount((documents.size() - 1) / 20 + 1);
         pagination.setCurrentPageIndex(0);

@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.example.librarymanager.Common;
 import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.models.Document;
 
@@ -70,10 +71,10 @@ public class NotificationComponent {
         container.setAlignment(Pos.CENTER);
         container.setPadding(new Insets(10, 8, 10, 8));
         container.setOnMouseEntered(e -> {
-            container.setOpacity(0.8);
+            container.setStyle("-fx-background-color: " + Common.TOPBAR_DROPDOWN_BUTTON_BG_HOVER + ";");
         });
         container.setOnMouseExited(e -> {
-            container.setOpacity(1);
+            container.setStyle("-fx-background-color: " + Common.TOPBAR_DROPDOWN_BUTTON_BG + ";");
         });
         container.setOnMouseClicked(e -> {
             ControllerWrapper.setCurrentDocument(document);

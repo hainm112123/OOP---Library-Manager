@@ -11,6 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 public class Common {
+    public static final String PRIMARY_COLOR = "#5C1C00";
+    public static final String TOPBAR_DROPDOWN_BUTTON_BG = "#f0f0f0";
+    public static final String TOPBAR_DROPDOWN_BUTTON_BG_HOVER = " #00000011";
+
     public static boolean isInteger(String str) {
         try {
             Integer.parseInt(str);

@@ -5,11 +5,14 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.NotificationComponent;
@@ -18,10 +21,12 @@ import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.data.ServiceQuery;
 import org.example.librarymanager.data.Trie;
 import org.example.librarymanager.models.Document;
+import org.example.librarymanager.models.User;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
@@ -31,13 +36,7 @@ public class TopbarController extends ControllerWrapper {
     @FXML
     private ComboBox<String> topbarCategoryBtn;
     @FXML
-    Button topbarDocModifyBtn;
-    @FXML
-    Button topbarProfileBtn;
-    @FXML
-    Button topbarMyDocBtn;
-    @FXML
-    Button topbarBorrowDocBtn;
+    ImageView userBtn;
     @FXML
     TextField searchBox;
     @FXML
@@ -54,6 +53,26 @@ public class TopbarController extends ControllerWrapper {
     MFXScrollPane notificationPane;
     @FXML
     VBox notificationBox;
+    @FXML
+    MFXScrollPane userPane;
+    @FXML
+    Label usernameLabel;
+    @FXML
+    Label usertypeLabel;
+    @FXML
+    VBox userBox;
+    @FXML
+    HBox profileBtn;
+    @FXML
+    HBox changePasswordBtn;
+    @FXML
+    HBox bookshelfBtn;
+    @FXML
+    HBox mydocBtn;
+    @FXML
+    HBox newdocBtn;
+    @FXML
+    HBox signoutBtn;
 
     private Future<List<String>> categoryFu;
     private Future<List<Document>> documentFu;
@@ -74,10 +93,6 @@ public class TopbarController extends ControllerWrapper {
 
     private void initRedirect() {
         topbarHomeBtn.setOnAction((event) -> safeSwitchScene("home.fxml"));
-        topbarDocModifyBtn.setOnAction((event) -> safeSwitchScene("new-document.fxml"));
-        topbarProfileBtn.setOnAction((event) -> safeSwitchScene("profile.fxml"));
-        topbarMyDocBtn.setOnAction((event) -> safeSwitchScene("my-documents.fxml"));
-        topbarBorrowDocBtn.setOnAction((event) -> safeSwitchScene("borrowing-documents.fxml"));
     }
 
     private void initSearchBox() {
@@ -89,17 +104,6 @@ public class TopbarController extends ControllerWrapper {
             Pair<Trie.Node, Trie.Node> range = Trie.getInstance().getRange(searchBox.getText());
             displaySuggestionPane(range.getKey(), range.getValue());
             suggestionsScrollPane.setVisible(true);
-        });
-        Platform.runLater(() -> {
-            getStage().getScene().setOnMousePressed(event -> {
-                if (!searchBox.isFocused()) {
-                    return;
-                }
-                if (!searchBox.getBoundsInParent().contains(event.getX(), event.getY())) {
-                    suggestionsScrollPane.setVisible(false);
-                    pane.requestFocus();
-                }
-            });
         });
     }
 
@@ -126,6 +130,7 @@ public class TopbarController extends ControllerWrapper {
                 notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
                 notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
                 notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
+                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
             }
             notificationBell.setOnMouseClicked(event -> {
                Common.enable(notificationPane);
@@ -138,6 +143,37 @@ public class TopbarController extends ControllerWrapper {
         }
     }
 
+    private void initUser() {
+        usernameLabel.setText(getUser().getUsername());
+        usertypeLabel.setText(User.USER_TYPE_STRING[getUser().getPermission()]);
+        profileBtn.setOnMouseClicked(event -> safeSwitchScene("profile.fxml"));
+        changePasswordBtn.setOnMouseClicked(event -> {});
+        bookshelfBtn.setOnMouseClicked(event -> safeSwitchScene("borrowing-documents.fxml"));
+        mydocBtn.setOnMouseClicked(event -> safeSwitchScene("my-documents.fxml"));
+        newdocBtn.setOnMouseClicked(event -> safeSwitchScene("new-document.fxml"));
+        signoutBtn.setOnMouseClicked(event -> {
+            safeSwitchScene("login.fxml");
+            setUser(null);
+        });
+        for (Node node: userBox.getChildren()) {
+            if (node instanceof HBox) {
+                node.setOnMouseEntered(e -> {
+                    node.setStyle("-fx-background-color: " + Common.TOPBAR_DROPDOWN_BUTTON_BG_HOVER + ";");
+                });
+                node.setOnMouseExited(e -> {
+                    node.setStyle("-fx-background-color: " + Common.TOPBAR_DROPDOWN_BUTTON_BG + ";");
+                });
+            }
+        }
+        if (getUser().getPermission() == User.TYPE_USER) {
+            userBox.getChildren().subList(7, 9).clear();
+            userBox.setPrefHeight(380);
+            userBox.setMaxHeight(380);
+        }
+        userBtn.setOnMouseClicked(e -> Common.enable(userPane));
+        Common.disable(userPane);
+    }
+
     /**
      * Initialization.
      * Create layout with buttons to switch to main scenes.
@@ -148,11 +184,38 @@ public class TopbarController extends ControllerWrapper {
         executor = Executors.newFixedThreadPool(2);
         categoryFu = executor.submit(() -> CategoryQuery.getInstance().getCategoriesName());
         documentFu = executor.submit(() -> ServiceQuery.getInstance().getOverdueDocuments(getUser().getId()));
-        initCategory();
-        initRedirect();
-        initNotification();
-        initSearchBox();
         executor.shutdown();
+
+        try {
+            initRedirect();
+            initUser();
+            ExecutorService executorService = Executors.newFixedThreadPool(3);
+            executorService.submit(this::initCategory);
+            executorService.submit(this::initSearchBox);
+            executorService.submit(this::initNotification);
+            executorService.shutdown();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Platform.runLater(() -> {
+            stage.getScene().setOnMousePressed(event -> {
+                if (!notificationBell.getBoundsInParent().contains(event.getX(), event.getY())
+                        && !notificationPane.getBoundsInParent().contains(event.getX(), event.getY())) {
+                    Common.disable(notificationPane);
+                }
+
+                if (!userBtn.getBoundsInParent().contains(event.getX(), event.getY())
+                && !userPane.getBoundsInParent().contains(event.getX(), event.getY())) {
+                    Common.disable(userPane);
+                }
+
+                if (!searchBox.getBoundsInParent().contains(event.getX(), event.getY())) {
+                    suggestionsScrollPane.setVisible(false);
+                    pane.requestFocus();
+                }
+            });
+        });
     }
 
     private void displaySuggestionPane(Trie.Node first, Trie.Node last) {
@@ -195,6 +258,4 @@ public class TopbarController extends ControllerWrapper {
         suggestionsBox.setPrefHeight(size * buttonH);
         suggestionsScrollPane.setPrefHeight(Math.min(size * buttonH, 300));
     }
-
-
 }

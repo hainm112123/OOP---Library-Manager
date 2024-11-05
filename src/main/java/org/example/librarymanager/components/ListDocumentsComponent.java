@@ -76,7 +76,7 @@ public class ListDocumentsComponent {
         grid.getColumnConstraints().clear();
         for (int c = 0; c < columns; ++ c) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setPrefWidth(1200 / columns);
+            columnConstraints.setPrefWidth(1185 / columns);
             grid.getColumnConstraints().add(columnConstraints);
         }
     }

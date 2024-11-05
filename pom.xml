@@ -117,6 +117,12 @@
             <artifactId>ikonli-antdesignicons-pack</artifactId>
             <version>12.3.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>de.jensd</groupId>
+            <artifactId>fontawesomefx-fontawesome</artifactId>
+            <version>4.7.0-9.1.2</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -46,7 +47,7 @@ public class TopbarController extends ControllerWrapper {
     @FXML
     StackPane pane;
     @FXML
-    ImageView notificationBell;
+    AnchorPane notificationBell;
     @FXML
     Label notificationBadge;
     @FXML
@@ -71,6 +72,8 @@ public class TopbarController extends ControllerWrapper {
     HBox mydocBtn;
     @FXML
     HBox newdocBtn;
+    @FXML
+    HBox manageBtn;
     @FXML
     HBox signoutBtn;
 
@@ -120,20 +123,13 @@ public class TopbarController extends ControllerWrapper {
             }
             for (Document document : documents) {
                 notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
             }
             notificationBell.setOnMouseClicked(event -> {
-               Common.enable(notificationPane);
+               if (notificationPane.isDisable()) {
+                   Common.enable(notificationPane);
+               } else {
+                   Common.disable(notificationPane);
+               }
             });
             DropShadow ds = new DropShadow();
             ds.setRadius(10);
@@ -151,6 +147,7 @@ public class TopbarController extends ControllerWrapper {
         bookshelfBtn.setOnMouseClicked(event -> safeSwitchScene("borrowing-documents.fxml"));
         mydocBtn.setOnMouseClicked(event -> safeSwitchScene("my-documents.fxml"));
         newdocBtn.setOnMouseClicked(event -> safeSwitchScene("new-document.fxml"));
+        manageBtn.setOnMouseClicked(event -> safeSwitchScene("admin.fxml"));
         signoutBtn.setOnMouseClicked(event -> {
             safeSwitchScene("login.fxml");
             setUser(null);
@@ -166,11 +163,21 @@ public class TopbarController extends ControllerWrapper {
             }
         }
         if (getUser().getPermission() == User.TYPE_USER) {
-            userBox.getChildren().subList(7, 9).clear();
-            userBox.setPrefHeight(380);
-            userBox.setMaxHeight(380);
+            userBox.getChildren().subList(7, 10).clear();
+            userBox.setPrefHeight(400);
+            userBox.setMaxHeight(400);
+        } else if (getUser().getPermission() == User.TYPE_MODERATOR) {
+            userBox.getChildren().subList(9, 10).clear();
+            userBox.setPrefHeight(480);
+            userBox.setMaxHeight(480);
         }
-        userBtn.setOnMouseClicked(e -> Common.enable(userPane));
+        userBtn.setOnMouseClicked(e -> {
+            if (userPane.isDisable()) {
+                Common.enable(userPane);
+            } else {
+                Common.disable(userPane);
+            }
+        });
         Common.disable(userPane);
     }
 

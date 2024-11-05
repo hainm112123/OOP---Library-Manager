@@ -2,8 +2,8 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
-<?import javafx.geometry.Point3D?>
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -86,16 +86,20 @@
                         <Image url="@../image/UserProfile.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="notificationBell" fitHeight="36.0" fitWidth="36.0" layoutX="1040.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../image/bell.png" />
-                     </image>
-                  </ImageView>
-                  <Label fx:id="notificationBadge" alignment="CENTER" layoutX="1058.0" layoutY="44.0" prefHeight="24.0" prefWidth="24.0" style="-fx-background-color: #fff; -fx-border-radius: 12; -fx-background-radius: 12; -fx-background-color: #f63100;" text="3" textFill="WHITE">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
+                  <AnchorPane fx:id="notificationBell" layoutX="1040.0" layoutY="44.0">
+                     <children>
+                        <ImageView fitHeight="36.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../image/bell.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="notificationBadge" alignment="CENTER" layoutX="18.0" prefHeight="24.0" prefWidth="24.0" style="-fx-background-color: #fff; -fx-border-radius: 12; -fx-background-radius: 12; -fx-background-color: #f63100;" text="3" textFill="WHITE">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
                </children>
             </AnchorPane>
          </children>
@@ -105,21 +109,21 @@
             <VBox fx:id="notificationBox" prefHeight="358.0" prefWidth="290.0" style="-fx-background-radius: 8; -fx-background-color: #f0f0f0;" />
          </content>
       </MFXScrollPane>
-      <MFXScrollPane fx:id="userPane" disable="true" hbarPolicy="NEVER" layoutX="878.0" layoutY="94.0" mouseTransparent="true" prefHeight="360.0" prefWidth="300.0" style="-fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: transparent;" visible="false">
+      <MFXScrollPane fx:id="userPane" hbarPolicy="NEVER" layoutX="878.0" layoutY="94.0" prefHeight="360.0" prefWidth="300.0" style="-fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: transparent;">
          <content>
-            <VBox fx:id="userBox" alignment="TOP_CENTER" layoutX="15.0" prefHeight="460.0" prefWidth="290.0" style="-fx-background-radius: 8; -fx-background-color: #f0f0f0;">
+            <VBox fx:id="userBox" alignment="TOP_CENTER" layoutX="15.0" prefHeight="520.0" prefWidth="290.0" style="-fx-background-radius: 8; -fx-background-color: #f0f0f0;">
                <children>
                   <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../image/UserProfile.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="usernameLabel" alignment="CENTER" prefHeight="37.0" prefWidth="266.0" style="-fx-font-weight: 700;" text="username">
+                  <Label fx:id="usernameLabel" alignment="CENTER" prefHeight="40.0" prefWidth="266.0" style="-fx-font-weight: 700;" text="username">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <Label fx:id="usertypeLabel" alignment="CENTER" prefHeight="34.0" prefWidth="80.0" style="-fx-background-color: #5C1C00;" text="Moderator" textFill="WHITE">
+                  <Label fx:id="usertypeLabel" alignment="CENTER" prefHeight="40.0" prefWidth="80.0" style="-fx-background-color: #5C1C00;" text="Moderator" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -181,6 +185,19 @@
                      <children>
                         <FontAwesomeIconView glyphName="FILE" size="24" wrappingWidth="48.0" />
                         <Label prefHeight="26.0" prefWidth="222.0" style="-fx-font-weight: 700;" text="Add a new book">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="8.0" right="8.0" />
+                     </padding>
+                  </HBox>
+                  <HBox fx:id="manageBtn" alignment="CENTER" layoutX="22.0" layoutY="338.0" prefHeight="40.0" prefWidth="254.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="DATABASE" size="24" wrappingWidth="48.0" />
+                        <Label prefHeight="26.0" prefWidth="222.0" style="-fx-font-weight: 700;" text="Manage">
                            <font>
                               <Font size="14.0" />
                            </font>

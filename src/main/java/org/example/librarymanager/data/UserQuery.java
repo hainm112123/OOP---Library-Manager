@@ -3,6 +3,7 @@ package org.example.librarymanager.data;
 import org.example.librarymanager.models.User;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserQuery implements DataAccessObject<User> {
@@ -22,7 +23,19 @@ public class UserQuery implements DataAccessObject<User> {
 
     @Override
     public List<User> getAll() {
-        return List.of();
+        List<User> users = new ArrayList<>();
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM users");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                users.add(new User(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     /**
@@ -71,12 +84,39 @@ public class UserQuery implements DataAccessObject<User> {
     }
 
     @Override
-    public boolean update(User entity) {
-        return false;
+    public boolean update(User user) {
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("update users set " +
+                    "password = ?, firstname = ?, lastname = ?, gender = ?, dateOfBirth = ?, permission = ? " +
+                    "where id = ?"
+            );
+            ps.setString(1, user.getPassword());
+            ps.setString(2, user.getFirstname());
+            ps.setString(3, user.getLastname());
+            ps.setString(4, user.getGender());
+            ps.setDate(5, Date.valueOf(user.getDateOfBirth()));
+            ps.setInt(6, user.getPermission());
+            ps.setInt(7, user.getId());
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
-    public boolean delete(User entity) {
-        return false;
+    public boolean delete(User user) {
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("delete from users where id = ?");
+            ps.setInt(1, user.getId());
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

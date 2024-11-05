@@ -156,6 +156,6 @@
                 <DatePicker fx:id="dateOfBirth" prefHeight="26.0" prefWidth="334.0" GridPane.columnIndex="1" />
          </children>
       </GridPane>
-      <MFXProgressSpinner fx:id="loader" layoutX="286.0" layoutY="467.0" prefHeight="26.0" prefWidth="26.0" />
+      <MFXProgressSpinner fx:id="loader" layoutX="286.0" layoutY="465.0" prefHeight="26.0" prefWidth="26.0" />
     </children>
 </AnchorPane>

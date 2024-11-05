@@ -215,7 +215,7 @@ public class DocumentQuery implements DataAccessObject<Document> {
     @Override
     public boolean update(Document document) {
         try (Connection connection = databaseConnection.getConnection();) {
-            Trie.addTrie(document.getTitle(), document.getId());
+            Trie.getInstance().addTrie(document.getTitle(), document.getId());
             PreparedStatement ps = connection.prepareStatement("update documents set " +
                     "categoryId = ?, author = ?, title = ?, description = ?, imageLink = ?, " +
                     "quantity = ?, quantityInStock = ?, borrowedTimes = ? " +
@@ -245,7 +245,7 @@ public class DocumentQuery implements DataAccessObject<Document> {
     @Override
     public boolean delete(Document document) {
         try (Connection connection = databaseConnection.getConnection()) {
-            Trie.delTrie(document.getTitle());
+            Trie.getInstance().delTrie(document.getTitle());
             PreparedStatement ps = connection.prepareStatement("delete from documents where id = ?");
             ps.setInt(1, document.getId());
             ps.executeUpdate();

@@ -17,4 +17,10 @@ public class ServiceTest {
         int documentId = 13;
         Assertions.assertTrue(ServiceQuery.getInstance().returnDocument(userId, DocumentQuery.getInstance().getById(documentId)));
     }
+
+    @Test
+    public void testGetOverdueDocuments() {
+        int userId = 4;
+        Assertions.assertNotNull(ServiceQuery.getInstance().getOverdueDocuments(userId));
+    }
 }

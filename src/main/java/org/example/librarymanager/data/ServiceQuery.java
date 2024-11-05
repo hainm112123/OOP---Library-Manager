@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceQuery implements DataAccessObject<Service> {
+    private static final int EXPIRATION_DAYS = 1;
     private static ServiceQuery instance;
     private DatabaseConnection databaseConnection;
 
@@ -160,5 +161,26 @@ public class ServiceQuery implements DataAccessObject<Service> {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<Document> getOverdueDocuments(int userId) {
+        List<Document> documents = new ArrayList<>();
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("select d.* from documents as d " +
+                    "join services as s on s.documentId = d.id " +
+                    "where s.userId = ? and s.returnDate is null and datediff(CURRENT_DATE, s.borrowDate) > ?"
+            );
+            ps.setInt(1, userId);
+            ps.setInt(2, EXPIRATION_DAYS);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                documents.add(new Document(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return documents;
     }
 }

@@ -1,6 +1,7 @@
 package org.example.librarymanager.data;
 
 import org.example.librarymanager.models.Document;
+import org.example.librarymanager.models.Rating;
 import org.example.librarymanager.models.Service;
 
 import java.sql.Connection;
@@ -76,7 +77,19 @@ public class ServiceQuery implements DataAccessObject<Service> {
 
     @Override
     public List<Service> getAll() {
-        return List.of();
+        List<Service> services = new ArrayList<Service>();
+        try (Connection connection = databaseConnection.getConnection();) {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM services");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                services.add(new Service(resultSet));
+            }
+            resultSet.close();
+            statement.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return services;
     }
 
     @Override

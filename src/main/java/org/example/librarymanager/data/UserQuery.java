@@ -3,6 +3,7 @@ package org.example.librarymanager.data;
 import org.example.librarymanager.models.User;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserQuery implements DataAccessObject<User> {
@@ -22,7 +23,20 @@ public class UserQuery implements DataAccessObject<User> {
 
     @Override
     public List<User> getAll() {
-        return List.of();
+//        return List.of();
+        List<User> users = new ArrayList<User>();
+        try (Connection connection = databaseConnection.getConnection();) {
+            PreparedStatement ps = connection.prepareStatement("select * from users");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                users.add(new User(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     /**

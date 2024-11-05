@@ -1,9 +1,13 @@
 package org.example.librarymanager.app;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import org.example.librarymanager.data.CategoryQuery;
@@ -31,6 +35,10 @@ public class TopbarController extends ControllerWrapper {
     VBox suggestionsBox;
     @FXML
     ScrollPane suggestionsScrollPane;
+    @FXML
+    StackPane pane;
+//    @FXML
+//    AnchorPane overlayPane;
 
     /**
      * Initialization.
@@ -60,9 +68,26 @@ public class TopbarController extends ControllerWrapper {
             Pair<Trie.Node, Trie.Node> range = Trie.getRange(searchBox.getText());
             displaySuggestionPane(range.getKey(), range.getValue());
             suggestionsScrollPane.setVisible(true);
+//            overlayPane.setVisible(true);
 //            System.out.println(searchBox.getText());
         });
-
+//        overlayPane.setVisible(false);
+//        overlayPane.setOnMouseClicked(event -> {
+//            overlayPane.setVisible(false);
+//            suggestionsScrollPane.setVisible(false);
+//        });
+        Platform.runLater(() -> {
+            getStage().getScene().setOnMousePressed(event -> {
+                System.out.println(event.getX() + " " + event.getY());
+                if (!searchBox.isFocused()) {
+                    return;
+                }
+                if (!searchBox.getBoundsInParent().contains(event.getX(), event.getY())) {
+                    suggestionsScrollPane.setVisible(false);
+                    pane.requestFocus(); // Chuyển focus ra ngoài TextField
+                }
+            });
+        });
     }
 
     private void displaySuggestionPane(Trie.Node first, Trie.Node last) {

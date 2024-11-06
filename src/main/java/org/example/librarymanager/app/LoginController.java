@@ -1,6 +1,9 @@
 package org.example.librarymanager.app;
 
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,19 +16,15 @@ import java.util.ResourceBundle;
 
 public class LoginController extends ControllerWrapper {
     @FXML
-    private TextField username;
+    private MFXTextField username;
     @FXML
-    private PasswordField password;
-    @FXML
-    private Label usernameLabel;
-    @FXML
-    private Label passwordLabel;
+    private MFXPasswordField password;
     @FXML
     private Hyperlink registerHyperlink;
     @FXML
     private Label loginMessageLabel;
     @FXML
-    private Button submitBtn;
+    private MFXButton submitBtn;
     @FXML
     private MFXProgressSpinner progressSpinner;
     @FXML

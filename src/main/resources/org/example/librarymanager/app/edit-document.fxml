@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
@@ -16,10 +16,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.EditDocumentController">
+<AnchorPane prefHeight="720.0" prefWidth="1200.0" stylesheets="@../css/form.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.EditDocumentController">
     <children>
-        <AnchorPane prefHeight="550.0" prefWidth="1200.0" AnchorPane.topAnchor= "170.0" AnchorPane.rightAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.bottomAnchor="0.0">
-            <ScrollPane prefHeight="720.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
+        <AnchorPane prefHeight="550.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="170.0">
+            <ScrollPane prefHeight="720.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="1184.0">
                         <children>
@@ -27,7 +27,7 @@
                                 <children>
                                     <VBox alignment="CENTER" prefHeight="78.0" prefWidth="1200.0">
                                         <children>
-                                            <Label alignment="CENTER" prefHeight="30.0" prefWidth="1200.0" text="Edit document">
+                                            <Label alignment="CENTER" prefHeight="30.0" prefWidth="1200.0" styleClass="form-title" text="Edit document">
                                                 <font>
                                                     <Font size="28.0" />
                                                 </font>
@@ -56,50 +56,54 @@
                                                             <RowConstraints maxHeight="164.60000000000002" minHeight="10.0" prefHeight="52.80000000000001" vgrow="SOMETIMES" />
                                                         </rowConstraints>
                                                         <children>
-                                                            <Label contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" text="Title">
+                                                            <Label contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" styleClass="form-label" text="Title">
                                                                 <font>
                                                                     <Font size="14.0" />
                                                                 </font>
                                                             </Label>
-                                                            <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" text="Author" GridPane.rowIndex="1">
+                                                            <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" styleClass="form-label" text="Author" GridPane.rowIndex="1">
                                                                 <font>
                                                                     <Font size="14.0" />
                                                                 </font>
                                                             </Label>
-                                                            <Label prefHeight="18.0" prefWidth="166.0" text="Category" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                                            <Label prefHeight="18.0" prefWidth="166.0" styleClass="form-label" text="Category" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                                                 <font>
                                                                     <Font size="14.0" />
                                                                 </font>
                                                             </Label>
-                                                            <Label contentDisplay="CENTER" layoutX="10.0" layoutY="36.0" prefHeight="18.0" prefWidth="166.0" text="Description" GridPane.rowIndex="3">
+                                                            <Label contentDisplay="CENTER" layoutX="10.0" layoutY="36.0" prefHeight="18.0" prefWidth="166.0" styleClass="form-label" text="Description" GridPane.rowIndex="3">
                                                                 <font>
                                                                     <Font size="14.0" />
                                                                 </font>
                                                             </Label>
-                                                            <Label contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" text="Quantity" GridPane.rowIndex="5">
+                                                            <Label contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" styleClass="form-label" text="Image link" GridPane.rowIndex="4">
                                                                 <font>
                                                                     <Font size="14.0" />
                                                                 </font>
                                                             </Label>
-                                                            <TextField fx:id="docTitle" prefHeight="35.0" prefWidth="635.0" GridPane.columnIndex="1" />
-                                                            <TextField fx:id="docAuthor" prefHeight="35.0" prefWidth="613.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                            <TextField fx:id="docQuantity" prefHeight="35.0" prefWidth="613.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                                            <ComboBox fx:id="docCategories" prefHeight="26.0" prefWidth="827.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                            <TextArea fx:id="docDescription" prefHeight="105.0" prefWidth="613.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                            <Label contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" styleClass="form-label" text="Quantity" GridPane.rowIndex="5">
+                                                                <font>
+                                                                    <Font size="14.0" />
+                                                                </font>
+                                                            </Label>
+                                                            <MFXTextField fx:id="docTitle" floatMode="DISABLED" prefHeight="35.0" prefWidth="849.0" styleClass="form-text-field" GridPane.columnIndex="1" />
+                                                            <MFXTextField fx:id="docAuthor" floatMode="DISABLED" prefHeight="35.0" prefWidth="878.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                            <MFXComboBox fx:id="docCategories" floatMode="DISABLED" prefHeight="26.0" prefWidth="827.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                <stylesheets>
+                                                   <URL value="@../css/MFXComboBox.css" />
+                                                   <URL value="@../css/MFXComboBoxCell.css" />
+                                                </stylesheets></MFXComboBox>
+                                                            <TextArea fx:id="docDescription" prefHeight="105.0" prefWidth="613.0" styleClass="form-text-area" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                            <MFXTextField fx:id="docImageLink" floatMode="DISABLED" prefHeight="35.0" prefWidth="882.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                            <MFXTextField fx:id="docQuantity" floatMode="DISABLED" prefHeight="35.0" prefWidth="832.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                            <Label fx:id="submitMessage" prefHeight="18.0" prefWidth="635.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                                             <StackPane prefHeight="129.0" prefWidth="613.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                                                 <children>
-                                                                    <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="28.0" prefWidth="819.0" text="Update" StackPane.alignment="CENTER" />
+                                                                    <MFXButton alignment="CENTER" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="28.0" prefWidth="819.0" rippleColor="#5c1c00" styleClass="form-primary-button" text="Update" StackPane.alignment="CENTER" />
                                                                 </children>
                                                             </StackPane>
-                                                            <Label fx:id="submitMessage" prefHeight="18.0" prefWidth="635.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                                            <Label contentDisplay="CENTER" prefHeight="18.0" prefWidth="166.0" text="Image link" GridPane.rowIndex="4">
-                                                                <font>
-                                                                    <Font size="14.0" />
-                                                                </font>
-                                                            </Label>
-                                                            <TextField fx:id="docImageLink" prefHeight="35.0" prefWidth="613.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handleCancel" prefHeight="28.0" prefWidth="819.0" text="Cancel" textFill="#1100ff" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                                                            <Button alignment="CENTER" layoutX="212.0" layoutY="471.0" mnemonicParsing="false" onAction="#handleDelete" prefHeight="28.0" prefWidth="819.0" text="Delete" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                                                            <MFXButton alignment="CENTER" mnemonicParsing="false" onAction="#handleCancel" prefHeight="28.0" prefWidth="819.0" rippleColor="#787878" styleClass="form-cancel-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                                            <MFXButton alignment="CENTER" layoutX="212.0" layoutY="471.0" mnemonicParsing="false" onAction="#handleDelete" prefHeight="28.0" prefWidth="819.0" styleClass="form-delete-button" text="Delete" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                                                         </children>
                                                     </GridPane>
                                                 </children>

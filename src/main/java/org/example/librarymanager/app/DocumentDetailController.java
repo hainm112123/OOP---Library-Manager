@@ -28,40 +28,40 @@ import java.util.concurrent.*;
 
 public class DocumentDetailController extends ControllerWrapper {
     @FXML
-    ImageView imageView;
+    private ImageView imageView;
     @FXML
-    Label title;
+    private Label title;
     @FXML
-    Label author;
+    private Label author;
     @FXML
-    Label category;
+    private Label category;
     @FXML
-    Label numberAvailable;
+    private Label numberAvailable;
     @FXML
-    Label addDate;
+    private Label addDate;
     @FXML
-    Label owner;
+    private Label owner;
     @FXML
-    Label borrowedTimes;
+    private Label borrowedTimes;
     @FXML
-    Label rating;
+    private Label rating;
     @FXML
-    MFXButton borrowBtn;
+    private MFXButton borrowBtn;
     @FXML
-    MFXButton returnBtn;
+    private MFXButton returnBtn;
     @FXML
-    MFXButton editBtn;
+    private MFXButton editBtn;
     @FXML
-    TextArea description;
+    private TextArea description;
 
     @FXML
-    VBox ratingsBox;
+    private VBox ratingsBox;
     @FXML
-    Pagination pagination;
+    private Pagination pagination;
     @FXML
-    MFXScrollPane scrollScreen;
+    private MFXScrollPane scrollScreen;
     @FXML
-    MFXProgressSpinner loader;
+    private MFXProgressSpinner loader;
 
     /**
      * Set rating box.

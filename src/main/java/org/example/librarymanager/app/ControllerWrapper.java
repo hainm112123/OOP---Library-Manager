@@ -6,6 +6,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.User;
 
@@ -21,7 +22,7 @@ public class ControllerWrapper implements Initializable {
     private static User user;
     private static Document currentDocument;
     private static List<String> urls = new ArrayList<>();
-    private static String currentCategory = "";
+    private static Category currentCategory;
     protected ExecutorService executor;
 
     static {
@@ -92,11 +93,11 @@ public class ControllerWrapper implements Initializable {
         ControllerWrapper.currentDocument = currentDocument;
     }
 
-    public static String getCurrentCategory() {
+    public static Category getCurrentCategory() {
         return currentCategory;
     }
 
-    public static void setCurrentCategory(String currentCategory) {
+    public static void setCurrentCategory(Category currentCategory) {
         ControllerWrapper.currentCategory = currentCategory;
     }
 

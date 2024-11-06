@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,9 +22,9 @@ import java.util.concurrent.*;
 
 public class HomeController extends ControllerWrapper{
     @FXML
-    AnchorPane mostPopularContainer;
+    private AnchorPane mostPopularContainer;
     @FXML
-    AnchorPane highestRatedContainer;
+    private AnchorPane highestRatedContainer;
 
     /**
      * Display documents as document components on a scroll pane.
@@ -32,11 +33,12 @@ public class HomeController extends ControllerWrapper{
      * @param container the pane in which the documents are displayed
      */
     private void display(List<Document> documents, AnchorPane container) {
-        container.setPrefWidth(documents.size() * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET));
+        container.setPrefWidth(documents.size() * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET) + 48);
         for (int i = 0; i < documents.size(); ++ i) {
             Document document = documents.get(i);
-            VBox doc = new DocumentComponent(document, this).getElement();
-            AnchorPane.setLeftAnchor(doc, (double)(i * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET)));
+            Node doc = new DocumentComponent(document, this).getElement();
+            AnchorPane.setTopAnchor(doc, 30.0);
+            AnchorPane.setLeftAnchor(doc, (double)(i * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET)) + 24);
             container.getChildren().add(doc);
         }
     }

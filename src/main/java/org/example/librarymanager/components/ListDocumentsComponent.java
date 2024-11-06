@@ -1,6 +1,10 @@
 package org.example.librarymanager.components;
 
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Pagination;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -59,8 +63,9 @@ public class ListDocumentsComponent {
         int column = 0;
         for (int i = start; i < end; ++ i) {
             Document document = documents.get(i);
-            VBox doc = new DocumentComponent(document, controller).getElement();
+            Node doc = new DocumentComponent(document, controller).getElement();
             grid.add(doc, column, row);
+            GridPane.setFillWidth(doc, false);
             column++;
             if (column == columns) {
                 column = 0;
@@ -70,15 +75,17 @@ public class ListDocumentsComponent {
         grid.getRowConstraints().clear();
         for (int r = 0; r < rows; r++) {
             RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setPrefHeight(200);
+            rowConstraints.setPrefHeight(DocumentComponent.DOC_COMPONENT_HEIGHT);
             grid.getRowConstraints().add(rowConstraints);
         }
         grid.getColumnConstraints().clear();
         for (int c = 0; c < columns; ++ c) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setPrefWidth(1185 / columns);
+            columnConstraints.setHalignment(HPos.CENTER);
             grid.getColumnConstraints().add(columnConstraints);
         }
+        GridPane.setHalignment(grid, HPos.CENTER);
     }
 
     public VBox getContainer() {

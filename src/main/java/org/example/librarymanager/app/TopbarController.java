@@ -251,7 +251,7 @@ public class TopbarController extends ControllerWrapper {
             button.setMaxHeight(buttonH);
             button.setUserData((Integer)first.getId());
             button.setStyle("-fx-background-color: #FFFFFF;");
-            button.setPrefWidth(450);
+            button.setPrefWidth(460);
             button.setAlignment(Pos.CENTER_LEFT);
             button.setOnAction(event -> {
                 Button clickedButton = (Button) event.getSource();
@@ -272,7 +272,7 @@ public class TopbarController extends ControllerWrapper {
             first = first.getNex();
         }
 //        buttonH += 10;
-        suggestionsBox.setPrefHeight(size * buttonH);
-        suggestionsScrollPane.setPrefHeight(Math.min(size * buttonH, 300));
+        suggestionsBox.setPrefHeight(size * buttonH + 10);
+        suggestionsScrollPane.setPrefHeight(Math.min(size * buttonH + 10, 300));
     }
 }

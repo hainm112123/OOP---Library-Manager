@@ -200,6 +200,7 @@ public class DocumentQuery implements DataAccessObject<Document> {
             ResultSet generatedKeys = ps.getGeneratedKeys();
             if (generatedKeys.next()) {
                 documentEntity = getById(generatedKeys.getInt(1));
+                Trie.getInstance().addTrie(documentEntity.getTitle(), documentEntity.getId());
             }
             generatedKeys.close();
             ps.close();

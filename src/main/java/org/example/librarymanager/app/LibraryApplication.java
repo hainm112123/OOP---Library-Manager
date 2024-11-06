@@ -29,7 +29,7 @@ public class LibraryApplication extends Application {
         stage.setResizable(false);
 
         ControllerWrapper.setStage(stage);
-        FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("register.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
         stage.show();

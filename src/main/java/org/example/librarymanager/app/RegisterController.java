@@ -1,6 +1,6 @@
 package org.example.librarymanager.app;
 
-import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
+import io.github.palexdev.materialfx.controls.*;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,19 +14,19 @@ import java.util.ResourceBundle;
 
 public class RegisterController extends ControllerWrapper {
     @FXML
-    private TextField firstname;
+    private MFXTextField firstname;
     @FXML
-    private TextField lastname;
+    private MFXTextField lastname;
     @FXML
-    private ComboBox<String> gender;
+    private MFXComboBox<String> gender;
     @FXML
-    private DatePicker dateOfBirth;
+    private MFXDatePicker dateOfBirth;
     @FXML
-    private TextField username;
+    private MFXTextField username;
     @FXML
-    private PasswordField password;
+    private MFXPasswordField password;
     @FXML
-    private PasswordField confirmPassword;
+    private MFXPasswordField confirmPassword;
     @FXML
     private Label registerMessageLabel;
     @FXML
@@ -34,7 +34,7 @@ public class RegisterController extends ControllerWrapper {
     @FXML
     private MFXProgressSpinner loader;
     @FXML
-    private Button submitBtn;
+    private MFXButton submitBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

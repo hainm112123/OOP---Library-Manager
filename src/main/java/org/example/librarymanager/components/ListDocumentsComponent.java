@@ -1,6 +1,7 @@
 package org.example.librarymanager.components;
 
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
+import javafx.scene.Node;
 import javafx.scene.control.Pagination;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -59,7 +60,7 @@ public class ListDocumentsComponent {
         int column = 0;
         for (int i = start; i < end; ++ i) {
             Document document = documents.get(i);
-            VBox doc = new DocumentComponent(document, controller).getElement();
+            Node doc = new DocumentComponent(document, controller).getElement();
             grid.add(doc, column, row);
             column++;
             if (column == columns) {

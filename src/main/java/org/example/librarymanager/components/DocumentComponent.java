@@ -1,24 +1,37 @@
 package org.example.librarymanager.components;
 
+import javafx.animation.TranslateTransition;
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.models.Document;
 
 public class DocumentComponent {
-    private VBox container;
+    private AnchorPane container;
+    private VBox box;
     private ImageView imageView;
     private Label title;
     private ControllerWrapper controller;
 
-    private static final int IMAGE_WIDTH = 128;
-    private static final int IMAGE_HEIGHT = 192;
-    public static final int DOC_COMPONENT_WITDH = 200;
+    private static final int IMAGE_WIDTH = 144;
+    private static final int IMAGE_HEIGHT = 216;
+    public static final int DOC_COMPONENT_WITDH = 144;
     public static final int DOC_COMPONENT_OFFSET = 30;
+    private static final DropShadow ds = new DropShadow();
+    private static final DropShadow ds_hover = new DropShadow();
+
+    static {
+        ds.setRadius(15);
+        ds_hover.setRadius(30);
+    }
 
     /**
      * Construct a component of document details in a VBox.
@@ -27,7 +40,8 @@ public class DocumentComponent {
      * @param controller current controller
      */
     public DocumentComponent(Document document, ControllerWrapper controller) {
-        container = new VBox();
+        box = new VBox();
+        container = new AnchorPane();
 
         imageView = new ImageView(new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg")));
         if (document.getImageLink() != null) {
@@ -47,7 +61,7 @@ public class DocumentComponent {
         }
         imageView.setFitWidth(IMAGE_WIDTH);
         imageView.setFitHeight(IMAGE_HEIGHT);
-        container.getChildren().add(imageView);
+        box.getChildren().add(imageView);
 
         title = new Label(document.getTitle());
         title.getStyleClass().add("title");
@@ -56,20 +70,35 @@ public class DocumentComponent {
         title.setMaxWidth(DOC_COMPONENT_WITDH);
         title.setEllipsisString("...");
         title.alignmentProperty().set(Pos.CENTER);
-        container.getChildren().add(title);
-
-        container.setAlignment(Pos.CENTER);
+        box.getChildren().add(title);
+        box.setAlignment(Pos.CENTER);
+        container.getChildren().add(box);
+        container.getStylesheets().add(getClass().getResource("/org/example/librarymanager/css/document.css").toExternalForm());
 
         container.setOnMouseClicked((event) -> {
             ControllerWrapper.setCurrentDocument(document);
             controller.safeSwitchScene("document-detail.fxml");
+        });
+
+        TranslateTransition up = new TranslateTransition(Duration.millis(200), imageView);
+        up.setToY(-10);
+        TranslateTransition down = new TranslateTransition(Duration.millis(200), imageView);
+        down.setToY(0);
+        imageView.setEffect(ds);
+        container.setOnMouseEntered(e -> {
+            imageView.setEffect(ds_hover);
+            up.playFromStart();
+        });
+        container.setOnMouseExited(e -> {
+            imageView.setEffect(ds);
+            down.playFromStart();
         });
     }
 
     /**
      * Return container.
      */
-    public VBox getElement() {
+    public Node getElement() {
         return container;
     }
 }

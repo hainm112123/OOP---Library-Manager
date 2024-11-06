@@ -3,6 +3,7 @@ package org.example.librarymanager.app;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 
 import java.net.URL;
@@ -51,7 +52,7 @@ public class CategoriesController extends ControllerWrapper {
         int column = 0;
         for (int i = start; i < end; ++ i) {
             Document document = documents.get(i);
-            VBox doc = new DocumentComponent(document, this).getElement();
+            Node doc = new DocumentComponent(document, this).getElement();
             currentCategoryPane.add(doc, column, row);
             column++;
             if (column == columns) {

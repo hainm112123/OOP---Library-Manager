@@ -102,11 +102,11 @@ public class TopbarController extends ControllerWrapper {
         if (Trie.getInstance().getCnt() == 0) {
             Trie.getInstance().buildTrie();
         }
-        suggestionsScrollPane.setVisible(false);
+        Common.disable(suggestionsScrollPane);
         searchBox.setOnKeyReleased(event -> {
             Pair<Trie.Node, Trie.Node> range = Trie.getInstance().getRange(searchBox.getText());
             displaySuggestionPane(range.getKey(), range.getValue());
-            suggestionsScrollPane.setVisible(true);
+            Common.enable(suggestionsScrollPane);
         });
     }
 
@@ -218,7 +218,7 @@ public class TopbarController extends ControllerWrapper {
                 }
 
                 if (!searchBox.getBoundsInParent().contains(event.getX(), event.getY())) {
-                    suggestionsScrollPane.setVisible(false);
+                    Common.disable(suggestionsScrollPane);
                     pane.requestFocus();
                 }
             });

@@ -1,5 +1,6 @@
 package org.example.librarymanager.app;
 
+import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -10,10 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Pair;
@@ -23,9 +21,11 @@ import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.data.ServiceQuery;
 import org.example.librarymanager.data.Trie;
+import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.User;
 
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -34,63 +34,94 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class TopbarController extends ControllerWrapper {
-    @FXML
-    Button topbarHomeBtn;
-    @FXML
-    private ComboBox<String> topbarCategoryBtn;
-    @FXML
-    ImageView userBtn;
-    @FXML
-    TextField searchBox;
-    @FXML
-    VBox suggestionsBox;
-    @FXML
-    ScrollPane suggestionsScrollPane;
-    @FXML
-    StackPane pane;
-    @FXML
-    AnchorPane notificationBell;
-    @FXML
-    Label notificationBadge;
-    @FXML
-    VBox notificationPane;
-    @FXML
-    VBox notificationBox;
-    @FXML
-    MFXScrollPane userPane;
-    @FXML
-    Label usernameLabel;
-    @FXML
-    Label usertypeLabel;
-    @FXML
-    VBox userBox;
-    @FXML
-    HBox profileBtn;
-    @FXML
-    HBox changePasswordBtn;
-    @FXML
-    HBox bookshelfBtn;
-    @FXML
-    HBox mydocBtn;
-    @FXML
-    HBox newdocBtn;
-    @FXML
-    HBox manageBtn;
-    @FXML
-    HBox signoutBtn;
+    private static final int CATEGORY_CHOICE_WIDTH = 150;
+    private static final int CATEGORY_CHOICE_HEIGHT = 42;
 
-    private Future<List<String>> categoryFu;
+    @FXML
+    private Button topbarHomeBtn;
+    @FXML
+    private Button topbarCategoryBtn;
+    @FXML
+    private AnchorPane categoryPane;
+    @FXML
+    private GridPane categoryGrid;
+    @FXML
+    private ImageView userBtn;
+    @FXML
+    private TextField searchBox;
+    @FXML
+    private VBox suggestionsBox;
+    @FXML
+    private ScrollPane suggestionsScrollPane;
+    @FXML
+    private StackPane pane;
+    @FXML
+    private AnchorPane notificationBell;
+    @FXML
+    private Label notificationBadge;
+    @FXML
+    private VBox notificationPane;
+    @FXML
+    private VBox notificationBox;
+    @FXML
+    private MFXScrollPane userPane;
+    @FXML
+    private Label usernameLabel;
+    @FXML
+    private Label usertypeLabel;
+    @FXML
+    private VBox userBox;
+    @FXML
+    private HBox profileBtn;
+    @FXML
+    private HBox changePasswordBtn;
+    @FXML
+    private HBox bookshelfBtn;
+    @FXML
+    private HBox mydocBtn;
+    @FXML
+    private HBox newdocBtn;
+    @FXML
+    private HBox manageBtn;
+    @FXML
+    private HBox signoutBtn;
+
+    private Future<List<Category>> categoryFu;
     private Future<List<Document>> documentFu;
 
     private void initCategory() {
         try {
-            List<String> categoryList = categoryFu.get();
-            ObservableList<String> list = FXCollections.observableArrayList(categoryList);
-            topbarCategoryBtn.setItems(list);
-            topbarCategoryBtn.setOnAction((event) -> {
-                ControllerWrapper.setCurrentCategory(topbarCategoryBtn.getValue());
-                safeSwitchScene("category.fxml");
-            });
+            List<Category> categoryList = categoryFu.get();
+            int cols = 5;
+            int rows = Math.max((categoryList.size() - 1) / cols + 1, 5);
+            categoryGrid.setPrefHeight(rows * CATEGORY_CHOICE_HEIGHT);
+            categoryPane.setPrefHeight(rows * CATEGORY_CHOICE_HEIGHT);
+            categoryGrid.getChildren().clear();
+            for (int i = 0; i < categoryList.size(); i++) {
+                int r = i / cols, c = i % cols;
+                Label label = new Label(categoryList.get(i).getName());
+                label.getStyleClass().add("category-label");
+                categoryGrid.add(label, c, r);
+                label.setPrefWidth(CATEGORY_CHOICE_WIDTH);
+                label.setPrefHeight(CATEGORY_CHOICE_HEIGHT);
+                Category category = categoryList.get(i);
+                label.setOnMouseClicked(e -> {
+                    setCurrentCategory(category);
+                    safeSwitchScene("category.fxml");
+                });
+            }
+            categoryGrid.getRowConstraints().clear();
+            for (int r = 0; r < rows; r++) {
+                RowConstraints rowConstraints = new RowConstraints();
+                rowConstraints.setPrefHeight(CATEGORY_CHOICE_HEIGHT);
+                categoryGrid.getRowConstraints().add(rowConstraints);
+            }
+            DropShadow ds = new DropShadow();
+            ds.setRadius(15);
+            ds.setOffsetY(5);
+            categoryGrid.setEffect(ds);
+            Common.disable(categoryPane);
+            topbarCategoryBtn.setOnMouseEntered(event -> Common.enable(categoryPane));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -191,7 +222,7 @@ public class TopbarController extends ControllerWrapper {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         executor = Executors.newFixedThreadPool(2);
-        categoryFu = executor.submit(() -> CategoryQuery.getInstance().getCategoriesName());
+        categoryFu = executor.submit(() -> CategoryQuery.getInstance().getAll());
         documentFu = executor.submit(() -> ServiceQuery.getInstance().getOverdueDocuments(getUser().getId()));
         executor.shutdown();
 
@@ -222,6 +253,14 @@ public class TopbarController extends ControllerWrapper {
                 if (!searchBox.getBoundsInParent().contains(event.getX(), event.getY())) {
                     Common.disable(suggestionsScrollPane);
                     pane.requestFocus();
+                }
+            });
+
+            stage.getScene().setOnMouseMoved(e -> {
+                if (!topbarCategoryBtn.getBoundsInParent().contains(e.getX(), e.getY())
+                && !categoryPane.getBoundsInParent().contains(e.getX(), e.getY())
+                && !categoryPane.isDisable()) {
+                    Common.disable(categoryPane);
                 }
             });
         });

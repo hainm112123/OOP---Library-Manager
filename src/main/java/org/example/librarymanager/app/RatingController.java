@@ -18,15 +18,15 @@ import java.util.concurrent.Future;
 
 public class RatingController extends ControllerWrapper {
     @FXML
-    Rating rating;
+    private Rating rating;
     @FXML
-    TextArea content;
+    private TextArea content;
     @FXML
-    MFXProgressSpinner loader;
+    private MFXProgressSpinner loader;
     @FXML
-    MFXButton submitButton;
+    private MFXButton submitButton;
     @FXML
-    Label ratingLabel;
+    private Label ratingLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

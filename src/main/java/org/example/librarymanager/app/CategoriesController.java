@@ -76,9 +76,9 @@ public class CategoriesController extends ControllerWrapper {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        currentCategoryLabel.setText(ControllerWrapper.getCurrentCategory());
+        currentCategoryLabel.setText(ControllerWrapper.getCurrentCategory().getName());
         executor = Executors.newFixedThreadPool(1);
-        Future<List<Document>> documentsFu = executor.submit(() -> DocumentQuery.getInstance().getDocumentsByCategory(ControllerWrapper.getCurrentCategory(), 50));
+        Future<List<Document>> documentsFu = executor.submit(() -> DocumentQuery.getInstance().getDocumentsByCategory(ControllerWrapper.getCurrentCategory().getId()));
         try {
             List<Document> documents = documentsFu.get();
             pagination.setPageCount((documents.size() - 1) / 20 + 1);

@@ -6,6 +6,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.books.Books;
 import com.google.api.services.books.model.Volume;
 import com.google.api.services.books.model.Volumes;
+import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.Rating;
 
@@ -105,18 +106,11 @@ public class DocumentQuery implements DataAccessObject<Document> {
     /**
      * Get documents by category.
      */
-    public List<Document> getDocumentsByCategory(String order, int limit) {
+    public List<Document> getDocumentsByCategory(int categoryId) {
         List<Document> documents = new ArrayList<Document>();
         try (Connection connection = databaseConnection.getConnection();) {
-
-            String query = "select d.* from documents d join categories c on d.categoryId = c.id";
-            if (order != null && !order.isEmpty()) {
-                query += " where c.name = '" + order + "'";
-            }
-            if (limit > 0) {
-                query += " limit " + limit;
-            }
-            PreparedStatement ps = connection.prepareStatement(query);
+            PreparedStatement ps = connection.prepareStatement("select * from documents where categoryId = ?");
+            ps.setInt(1, categoryId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 documents.add(new Document(rs));

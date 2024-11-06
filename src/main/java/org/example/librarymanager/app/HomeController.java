@@ -22,9 +22,9 @@ import java.util.concurrent.*;
 
 public class HomeController extends ControllerWrapper{
     @FXML
-    AnchorPane mostPopularContainer;
+    private AnchorPane mostPopularContainer;
     @FXML
-    AnchorPane highestRatedContainer;
+    private AnchorPane highestRatedContainer;
 
     /**
      * Display documents as document components on a scroll pane.

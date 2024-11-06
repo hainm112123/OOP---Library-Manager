@@ -21,10 +21,12 @@ public class DocumentComponent {
     private Label title;
     private ControllerWrapper controller;
 
+    public static final int DOC_COMPONENT_WITDH = 144;
+    public static final int DOC_COMPONENT_HEIGHT = 300;
+    public static final int DOC_COMPONENT_OFFSET = 30;
+
     private static final int IMAGE_WIDTH = 144;
     private static final int IMAGE_HEIGHT = 216;
-    public static final int DOC_COMPONENT_WITDH = 144;
-    public static final int DOC_COMPONENT_OFFSET = 30;
     private static final DropShadow ds = new DropShadow();
     private static final DropShadow ds_hover = new DropShadow();
 

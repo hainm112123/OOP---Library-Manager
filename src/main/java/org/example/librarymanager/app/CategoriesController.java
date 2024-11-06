@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.*;
@@ -15,6 +16,7 @@ import javafx.scene.control.Pagination;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
 import org.example.librarymanager.components.DocumentComponent;
+import org.example.librarymanager.components.ListDocumentsComponent;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Rating;
@@ -27,46 +29,7 @@ public class CategoriesController extends ControllerWrapper {
     @FXML
     private Label currentCategoryLabel;
     @FXML
-    private GridPane currentCategoryPane;
-    @FXML
-    private Pagination pagination;
-    @FXML
     private MFXScrollPane scrollPane;
-    /**
-     * Display documents in one page controlled by pagination.
-     * A page has a grid pane, display max 5 column 4 row.
-     * @param documents documents to display
-     * @param pageIndex index of display page
-     */
-    private void setDocumentsGridPane(List<Document> documents, int pageIndex) {
-        currentCategoryPane.getChildren().clear();
-        int start = pageIndex * 20;
-        int end = Math.min(start + 20, documents.size());
-        int actualItems = end - start;
-
-        int columns = 5;
-        int rows = (int) Math.ceil((double) actualItems / columns);
-        currentCategoryPane.setVgap(60);
-
-        int row = 0;
-        int column = 0;
-        for (int i = start; i < end; ++ i) {
-            Document document = documents.get(i);
-            Node doc = new DocumentComponent(document, this).getElement();
-            currentCategoryPane.add(doc, column, row);
-            column++;
-            if (column == columns) {
-                column = 0;
-                row++;
-            }
-        }
-        currentCategoryPane.getRowConstraints().clear();
-        for (int r = 0; r < rows; r++) {
-            RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setPrefHeight(200);
-            currentCategoryPane.getRowConstraints().add(rowConstraints);
-        }
-    }
 
     /**
      * Initialization.
@@ -77,23 +40,20 @@ public class CategoriesController extends ControllerWrapper {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         currentCategoryLabel.setText(ControllerWrapper.getCurrentCategory().getName());
-        executor = Executors.newFixedThreadPool(1);
-        Future<List<Document>> documentsFu = executor.submit(() -> DocumentQuery.getInstance().getDocumentsByCategory(ControllerWrapper.getCurrentCategory().getId()));
+        executor = Executors.newSingleThreadExecutor();
+        Future<List<Document>> future = executor.submit(() -> DocumentQuery.getInstance().getDocumentsByCategory(getCurrentCategory().getId()));
+        executor.shutdown();
+        List<Document> documents = new ArrayList<>();
         try {
-            List<Document> documents = documentsFu.get();
-            pagination.setPageCount((documents.size() - 1) / 20 + 1);
-            pagination.setCurrentPageIndex(0);
-            pagination.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
-                setDocumentsGridPane(documents, newIndex.intValue());
-                scrollPane.setVvalue(0);
-            });
-            setDocumentsGridPane(documents, pagination.getCurrentPageIndex());
-        } catch (ExecutionException | InterruptedException e) {
+            documents = future.get();
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+        VBox container = new VBox();
+        StackPane stackPane = new StackPane();
+        stackPane.setPrefHeight(30);
+        container.getChildren().addAll(stackPane, new ListDocumentsComponent(documents, scrollPane, this).getContainer());
+        scrollPane.setContent(container);
     }
-
-
-
-
 }

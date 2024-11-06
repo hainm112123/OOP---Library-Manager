@@ -245,7 +245,7 @@
             </VBox>
          </content>
       </MFXScrollPane>
-      <AnchorPane fx:id="categoryPane" layoutX="225.0" layoutY="160.0" prefHeight="210.0" prefWidth="750.0">
+      <AnchorPane fx:id="categoryPane" disable="true" layoutX="225.0" layoutY="160.0" mouseTransparent="true" prefHeight="210.0" prefWidth="750.0" visible="false">
          <children>
             <GridPane fx:id="categoryGrid" layoutY="10.0" prefHeight="200.0" prefWidth="750.0" styleClass="category-grid">
               <columnConstraints>

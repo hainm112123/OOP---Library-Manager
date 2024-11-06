@@ -1,6 +1,9 @@
 package org.example.librarymanager.app;
 
 import com.google.api.services.books.model.Volume;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -20,22 +23,22 @@ public class NewDocumentController extends ControllerWrapper {
     @FXML
     private TextField docTitle;
     @FXML
-    private TextField docAuthor;
+    private MFXTextField docAuthor;
     @FXML
     private TextArea docDescription;
     @FXML
-    private TextField docImageLink;
+    private MFXTextField docImageLink;
     @FXML
-    private TextField docQuantity;
+    private MFXTextField docQuantity;
     @FXML
-    private ComboBox<Common.Choice> docCategories;
+    private MFXComboBox<Common.Choice> docCategories;
     @FXML
-    private Button docSubmit;
+    private MFXButton docSubmit;
 
     @FXML
-    private TextField docISBN;
+    private MFXTextField docISBN;
     @FXML
-    private Button docSearch;
+    private MFXButton docSearch;
     @FXML
     private Label searchMessage;
     @FXML
@@ -47,8 +50,8 @@ public class NewDocumentController extends ControllerWrapper {
      * @param message label object
      */
     private void hideMessage(Object o, Object message) {
-        if (o instanceof TextField && message instanceof Label) {
-            ((TextField) o).textProperty().addListener((observable, oldValue, newValue) -> {
+        if (o instanceof MFXTextField && message instanceof Label) {
+            ((MFXTextField) o).textProperty().addListener((observable, oldValue, newValue) -> {
                 ((Label) message).setVisible(false);
             });
         }
@@ -95,7 +98,7 @@ public class NewDocumentController extends ControllerWrapper {
             String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
             Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
             if (opt.isPresent()) {
-                docCategories.getSelectionModel().select(opt.get());
+                docCategories.getSelectionModel().selectItem(opt.get());
             } else {
                 docCategories.getSelectionModel().selectLast();
             }

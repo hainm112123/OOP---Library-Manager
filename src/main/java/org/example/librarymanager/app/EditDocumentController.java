@@ -1,5 +1,6 @@
 package org.example.librarymanager.app;
 
+import io.github.palexdev.materialfx.controls.MFXComboBox;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
@@ -27,7 +28,7 @@ public class EditDocumentController extends ControllerWrapper {
     @FXML
     private TextField docQuantity;
     @FXML
-    private ComboBox<Common.Choice> docCategories;
+    private MFXComboBox<Common.Choice> docCategories;
     @FXML
     private Label submitMessage;
 
@@ -72,7 +73,7 @@ public class EditDocumentController extends ControllerWrapper {
         docQuantity.setText(String.valueOf(document.getQuantity()));
         Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getValue() ==  document.getCategoryId()).findFirst();
         if (opt.isPresent()) {
-            docCategories.getSelectionModel().select(opt.get());
+            docCategories.getSelectionModel().selectItem(opt.get());
         } else {
             docCategories.getSelectionModel().selectLast();
         }

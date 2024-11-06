@@ -1,0 +1,54 @@
+@import "MFXTextField.css";
+
+.form-text-field {
+    -fx-pref-height: 36;
+    -fx-font-size: 14px;
+    -mfx-floating-text: false;
+}
+
+.form-primary-button {
+    -fx-background-color: #5C1C00cc;
+    -mfx-ripple-color: #5c1c00;
+    -fx-text-fill: #fff;
+}
+
+.form-text-area {
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-border-color: lightgray;
+    -fx-focus-color: #5c1c00;
+}
+
+.form-text-area:focused {
+    -fx-border-width: 1.5;
+    -fx-border-color: #5c1c00;
+}
+
+.mfx-button .form-primary-button {
+    -mfx-ripple-color: #5c1c00;
+}
+
+.form-cancel-button {
+    -fx-background-color: #787878cc;
+    -fx-text-fill: #fff;
+}
+
+.form-delete-button {
+    -fx-background-color: #B22222cc;
+    -fx-text-fill: #fff;
+}
+
+.form-label {
+    -fx-font-weight: 700;
+    -fx-font-size: 14px;
+}
+
+.form-title {
+    -fx-font-size: 28;
+    -fx-font-weight: 700;
+    -fx-text-fill: #5c1c00;
+}
+
+.form-container {
+    -fx-alignment: center;
+}

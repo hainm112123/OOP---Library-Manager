@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -14,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Pair;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.NotificationComponent;
@@ -234,7 +236,7 @@ public class TopbarController extends ControllerWrapper {
             button.setPrefHeight(buttonH);
             button.setMinHeight(buttonH);
             button.setMaxHeight(buttonH);
-            button.setStyle("-fx-background-color: #FFFFFF;-fx-padding: 0 0 0 0;");
+            button.setStyle("-fx-background-color: #FFFFFF;");
             suggestionsBox.getChildren().add(button);
             suggestionsBox.setPrefHeight(buttonH);
             suggestionsScrollPane.setPrefHeight(buttonH);
@@ -248,14 +250,22 @@ public class TopbarController extends ControllerWrapper {
             button.setMinHeight(buttonH);
             button.setMaxHeight(buttonH);
             button.setUserData((Integer)first.getId());
-            button.setStyle("-fx-background-color: #FFFFFF;-fx-padding: 0 0 0 0;");
+            button.setStyle("-fx-background-color: #FFFFFF;");
+            button.setPrefWidth(450);
+            button.setAlignment(Pos.CENTER_LEFT);
             button.setOnAction(event -> {
                 Button clickedButton = (Button) event.getSource();
                 int id = (Integer)clickedButton.getUserData();
                 setCurrentDocument(DocumentQuery.getInstance().getById(id));
                 safeSwitchScene("document-detail.fxml");
                 //System.out.println("On clicked");
-            } );
+            });
+            button.setOnMouseEntered(e -> {
+                button.setStyle("-fx-background-color: #5C1C0033;");
+            });
+            button.setOnMouseExited(e -> {
+                button.setStyle("-fx-background-color: #FFF;");
+            });
             suggestionsBox.getChildren().add(button);
             size ++;
             if (first == last) break;

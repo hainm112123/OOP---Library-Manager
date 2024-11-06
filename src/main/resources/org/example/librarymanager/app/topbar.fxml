@@ -95,9 +95,9 @@
             </AnchorPane>
          </children>
       </StackPane>
-      <MFXScrollPane fx:id="suggestionsScrollPane" hbarPolicy="NEVER" layoutX="448.0" layoutY="86.0" prefHeight="36.0" prefWidth="462.0" style="-fx-background-color: #FFFFFF;">
+      <MFXScrollPane fx:id="suggestionsScrollPane" hbarPolicy="NEVER" layoutX="448.0" layoutY="86.0" prefHeight="36.0" prefWidth="462.0" style="-fx-background-color: #FFFFFF; -fx-border-radius: 4; -fx-background-radius: 4;">
          <content>
-            <VBox fx:id="suggestionsBox" prefHeight="0.0" prefWidth="201.0" />
+            <VBox fx:id="suggestionsBox" prefHeight="30.0" prefWidth="450.0" />
          </content>
       </MFXScrollPane>
       <VBox fx:id="notificationPane" disable="true" layoutX="878.0" layoutY="94.0" mouseTransparent="true" prefHeight="360.0" style="-fx-background-color: #f0f0f0; -fx-background-radius: 8;" visible="false">

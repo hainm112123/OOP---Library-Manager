@@ -1,5 +1,6 @@
 package org.example.librarymanager.data;
 
+import org.checkerframework.checker.units.qual.A;
 import org.example.librarymanager.models.User;
 
 import java.sql.*;
@@ -98,6 +99,31 @@ public class AuthQuery {
             rs.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return result;
+    }
+
+    public AuthResult changePassword(User user, String currentPassword, String newPassword, String retypePassword) {
+        AuthResult result = new AuthResult();
+        if (!user.getPassword().equals(currentPassword)) {
+            result.setMessage("Wrong password!");
+            return result;
+        }
+        if (!newPassword.equals(retypePassword)) {
+            result.setMessage("Retyped password does not match!");
+            return result;
+        }
+        if (newPassword.length() < 6 || newPassword.length() > 16) {
+            result.setMessage("Password must be between 6 and 16 characters!");
+            return result;
+        }
+        user.setPassword(newPassword);
+        if (UserQuery.getInstance().update(user)) {
+            result.setMessage("Password successfully changed!");
+            result.setUser(user);
+        } else {
+            result.setMessage("Some errors occur, please try again!");
+            user.setPassword(currentPassword);
         }
         return result;
     }

@@ -127,11 +127,15 @@ public class EditDocumentController extends ControllerWrapper {
 
             if (DocumentQuery.getInstance().update(document)) {
                 submitMessage.setText("Successfully updated!");
-                submitMessage.setTextFill(Color.GREEN);
+//                submitMessage.setTextFill(Color.GREEN);
+                submitMessage.getStyleClass().clear();
+                submitMessage.getStyleClass().add("form-message--success");
             }
             else {
                 submitMessage.setText("Some errors occurred! Please try again!");
-                submitMessage.setTextFill(Color.RED);
+//                submitMessage.setTextFill(Color.RED);
+                submitMessage.getStyleClass().clear();
+                submitMessage.getStyleClass().add("form-message--error");
             }
         }
 

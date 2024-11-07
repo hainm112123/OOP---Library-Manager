@@ -55,9 +55,14 @@ public class LoginController extends ControllerWrapper {
             AuthResult loginResult = task.getValue();
             loginMessageLabel.setText(loginResult.getMessage());
             if(loginResult.getUser() != null) {
+                loginMessageLabel.getStyleClass().clear();
+                loginMessageLabel.getStyleClass().add("form-message--success");
                 setUser(loginResult.getUser());
                 safeSwitchScene("home.fxml");
                 stage.show();
+            } else {
+                loginMessageLabel.getStyleClass().clear();
+                loginMessageLabel.getStyleClass().add("form-message--error");
             }
         });
         new Thread(task).start();

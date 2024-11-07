@@ -1,10 +1,9 @@
 package org.example.librarymanager;
 
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
@@ -57,5 +56,23 @@ public class Common {
         node.setVisible(true);
         node.setMouseTransparent(false);
         node.setManaged(true);
+    }
+
+    /**
+     * Hide message when edit input.
+     * @param o text field object
+     * @param message label object
+     */
+    public static void hideMessage(Object o, Object message) {
+        if (o instanceof MFXTextField && message instanceof Label) {
+            ((MFXTextField) o).textProperty().addListener((observable, oldValue, newValue) -> {
+                ((Label) message).setVisible(false);
+            });
+        }
+        if (o instanceof MFXPasswordField && message instanceof Label) {
+            ((MFXPasswordField) o).textProperty().addListener((observable, oldValue, newValue) -> {
+                ((Label) message).setVisible(false);
+            });
+        }
     }
 }

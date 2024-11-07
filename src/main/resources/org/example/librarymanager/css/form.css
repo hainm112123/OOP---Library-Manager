@@ -52,3 +52,10 @@
 .form-container {
     -fx-alignment: center;
 }
+
+.form-message--success {
+    -fx-text-fill: #539058
+}
+.form-message--error {
+    -fx-text-fill: #B22222;
+}

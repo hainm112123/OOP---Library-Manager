@@ -88,7 +88,7 @@ public class NewDocumentController extends ControllerWrapper {
         Volume volume = DocumentQuery.getInstance().getDocumentByISBN(docISBN.getText());
         if (volume != null) {
             searchMessage.setText("Searching complete!");
-            searchMessage.setTextFill(Color.GREEN);
+//            searchMessage.setTextFill(Color.GREEN);
             docTitle.setText(volume.getVolumeInfo().getTitle());
             docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
             docDescription.setText(volume.getVolumeInfo().getDescription());
@@ -102,9 +102,13 @@ public class NewDocumentController extends ControllerWrapper {
             } else {
                 docCategories.getSelectionModel().selectLast();
             }
+            searchMessage.getStyleClass().clear();
+            searchMessage.getStyleClass().add("form-message--success");
         } else {
             searchMessage.setText("ISBN not found!");
-            searchMessage.setTextFill(Color.RED);
+//            searchMessage.setTextFill(Color.RED);
+            searchMessage.getStyleClass().clear();
+            searchMessage.getStyleClass().add("form-message--error");
         }
         searchMessage.setVisible(true);
     }
@@ -130,7 +134,8 @@ public class NewDocumentController extends ControllerWrapper {
         }
 
         if (!submitMessage.getText().isEmpty()) {
-            submitMessage.setTextFill(Color.RED);
+            submitMessage.getStyleClass().clear();
+            submitMessage.getStyleClass().add("form-message--error");
         }
         else {
             Document document = DocumentQuery.getInstance().add(new Document(
@@ -151,11 +156,13 @@ public class NewDocumentController extends ControllerWrapper {
                 docCategories.getSelectionModel().clearSelection();
 
                 submitMessage.setText("Successfully added!");
-                submitMessage.setTextFill(Color.GREEN);
+                submitMessage.getStyleClass().clear();
+                submitMessage.getStyleClass().add("form-message--success");
             }
             else {
                 submitMessage.setText("Some errors occurred! Please try again!");
-                submitMessage.setTextFill(Color.RED);
+                submitMessage.getStyleClass().clear();
+                submitMessage.getStyleClass().add("form-message--error");
             }
         }
 

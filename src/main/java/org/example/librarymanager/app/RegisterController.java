@@ -65,8 +65,13 @@ public class RegisterController extends ControllerWrapper {
             AuthResult authResult = task.getValue();
             registerMessageLabel.setText(authResult.getMessage());
             if (authResult.getUser() != null) {
+                registerMessageLabel.getStyleClass().clear();
+                registerMessageLabel.getStyleClass().add("success-message--error");
                 safeSwitchScene("login.fxml");
                 stage.show();
+            } else {
+                registerMessageLabel.getStyleClass().clear();
+                registerMessageLabel.getStyleClass().add("form-message--error");
             }
         });
         new Thread(task).start();

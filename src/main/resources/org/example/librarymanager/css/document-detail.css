@@ -1,14 +1,21 @@
+@import "common.css";
+
 .edit-button {
-    -fx-background-color: #2363d0;
+    -fx-background-color: #2363d0cc;
     -fx-text-fill: #fff;
+    -fx-font-weight: 700;
 }
 
 .borrow-button {
-    -fx-background-color: #58e821;
+    -fx-background-color: #58e821cc;
+    -fx-text-fill: #fff;
+    -fx-font-weight: 700;
 }
 
 .return-button {
-    -fx-background-color: #edf405;
+    -fx-background-color: #5C1C00cc;
+    -fx-text-fill: #fff;
+    -fx-font-weight: 700;
 }
 
 .info-label {

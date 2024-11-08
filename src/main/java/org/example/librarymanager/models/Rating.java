@@ -27,4 +27,14 @@ public class Rating {
         this.content = rs.getString("content");
         this.postedTime = rs.getTimestamp("postedTime").toLocalDateTime();
     }
+
+    @Override
+    public String toString() {
+        return "Id: " + id + "\n"
+                + "UserId: " + userId + "\n"
+                + "DocumentId: " + documentId + "\n"
+                + "Value: " + value + "\n"
+                + "Content: " + content + "\n"
+                + "PostedTime: " + postedTime + "\n";
+    }
 }

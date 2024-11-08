@@ -25,4 +25,11 @@ public class Category {
         this.name = rs.getString("name");
         this.description = rs.getString("description");
     }
+
+    @Override
+    public String toString() {
+        return "Id: " + id + "\n"
+                + "Name: " + name + "\n"
+                + "Description: " + description + "\n";
+    }
 }

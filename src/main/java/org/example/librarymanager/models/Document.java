@@ -65,6 +65,6 @@ public class Document {
                 + "Quantity: " + quantity + "\n"
                 + "Quantity In Stock: " + quantityInStock + "\n"
                 + "Borrowed Times: " + borrowedTimes + "\n"
-                + "Rating " + rating + "\n";
+                + "Rating: " + rating + "\n";,
     }
 }

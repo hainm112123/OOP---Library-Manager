@@ -1,6 +1,8 @@
 package org.example.librarymanager.app;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import org.example.librarymanager.components.DataTable;
 import org.example.librarymanager.data.*;
@@ -20,11 +22,14 @@ public class AdminController extends ControllerWrapper {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         userButtonOnClick();
-//        documentButtonOnClick();
+
     }
 
     public void userButtonOnClick() {
         root.getChildren().clear();
+        if (executor != null) {
+            executor.shutdownNow();
+        }
         executor = Executors.newFixedThreadPool(1);
         Future<List<User>> usersFu = executor.submit(() -> UserQuery.getInstance().getAll());
         try {
@@ -36,8 +41,12 @@ public class AdminController extends ControllerWrapper {
         }
         executor.shutdown();
     }
+
     public void documentButtonOnClick() {
         root.getChildren().clear();
+        if (executor != null) {
+            executor.shutdownNow();
+        }
         executor = Executors.newFixedThreadPool(1);
         Future<List<Document>> documentsFu = executor.submit(() -> DocumentQuery.getInstance().getAll());
         try {
@@ -52,6 +61,9 @@ public class AdminController extends ControllerWrapper {
 
     public void categoryButtonOnClick() {
         root.getChildren().clear();
+        if (executor != null) {
+            executor.shutdownNow();
+        }
         executor = Executors.newFixedThreadPool(1);
         Future<List<Category>> categoriesFu = executor.submit(() -> CategoryQuery.getInstance().getAll());
         try {
@@ -65,6 +77,9 @@ public class AdminController extends ControllerWrapper {
 
     public void ratingButtonOnClick() {
         root.getChildren().clear();
+        if (executor != null) {
+            executor.shutdownNow();
+        }
         executor = Executors.newFixedThreadPool(1);
         Future<List<Rating>> ratingsFu = executor.submit(() -> RatingQuery.getInstance().getAll());
         try {
@@ -78,6 +93,9 @@ public class AdminController extends ControllerWrapper {
 
     public void serviceButtonOnClick() {
         root.getChildren().clear();
+        if (executor != null) {
+            executor.shutdownNow();
+        }
         executor = Executors.newFixedThreadPool(1);
         Future<List<Service>> servicesFu = executor.submit(() -> ServiceQuery.getInstance().getAll());
         try {

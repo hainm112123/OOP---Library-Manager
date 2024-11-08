@@ -46,4 +46,16 @@ public class User {
         this.dateOfBirth = new Date(rs.getDate("dateOfBirth").getTime()).toLocalDate();
         this.permission = rs.getInt("permission");
     }
+
+    @Override
+    public String toString() {
+        return "Id: " + id + "\n"
+                + "Username: " + username + "\n"
+                + "Password: " + password + "\n"
+                + "Firstname: " + firstname + "\n"
+                + "Lastname: " + lastname + "\n"
+                + "Gender: " + gender + "\n"
+                + "DateOfBirth: " + dateOfBirth + "\n"
+                + "Permission: " + permission + "\n";
+    }
 }

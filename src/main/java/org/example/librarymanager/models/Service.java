@@ -26,4 +26,13 @@ public class Service {
         String date = rs.getString("returnDate");
         this.returnDate = date != null ? LocalDate.parse(date) : null;
     }
+
+    @Override
+    public String toString() {
+        return "Id: " + id + "\n"
+                + "UserId: " + userId + "\n"
+                + "DocumentId: " + documentId + "\n"
+                + "BorrowDate: " + borrowDate + "\n"
+                + "ReturnDate: " + returnDate + "\n";
+    }
 }

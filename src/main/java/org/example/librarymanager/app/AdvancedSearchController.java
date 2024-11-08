@@ -92,7 +92,7 @@ public class AdvancedSearchController extends ControllerWrapper {
 
         executor = Executors.newFixedThreadPool(2);
         Future<List<Category>> catFu = executor.submit(() -> CategoryQuery.getInstance().getAll());
-        Future<List<Document>> docFu = executor.submit(() -> DocumentQuery.getInstance().getAllWithFullInformation());
+        Future<List<Document>> docFu = executor.submit(() -> DocumentQuery.getInstance().getAll());
         try {
             categories = catFu.get();
             documents = docFu.get();

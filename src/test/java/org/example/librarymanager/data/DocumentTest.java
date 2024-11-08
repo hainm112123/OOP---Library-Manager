@@ -25,7 +25,7 @@ public class DocumentTest {
 
     @Test
     public void getDocumentsTest() {
-        List<Document> documents = DocumentQuery.getInstance().getHighestRatedDocuments(10);
+        List<Document> documents = DocumentQuery.getInstance().getDocuments("",10);
         for (Document document : documents) {
             System.out.println(document);
         }
@@ -54,7 +54,7 @@ public class DocumentTest {
     }
 
     @Test void getDocumentsByOwnerTest() {
-        List<Document> documents = DocumentQuery.getInstance().getDocumentsByOwner(1);
+        List<Document> documents = DocumentQuery.getInstance().getDocumentsByOwner(2);
         for (Document document : documents) {
             System.out.println(document);
         }
@@ -71,5 +71,14 @@ public class DocumentTest {
                 "magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco " +
                 "laboris nisi ut aliquip ex ea commodo consequat"
         );
+    }
+
+    @Test
+    public void getDocumentsByCategoryTest() {
+        List<Document> documents = DocumentQuery.getInstance().getDocumentsByCategory(2);
+        for (Document document : documents) {
+            System.out.println(document);
+        }
+        Assertions.assertNotNull(documents);
     }
 }

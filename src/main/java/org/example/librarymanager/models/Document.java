@@ -25,6 +25,7 @@ public class Document {
     private int borrowedTimes;
     private LocalDate addDate;
     private double rating;
+    private String categoryName;
 
     public Document(int categoryId, int owner, String author, String title, String description, String imageLink, int quantity) {
         this.categoryId = categoryId;
@@ -52,6 +53,11 @@ public class Document {
             this.rating = rs.getDouble("rating");
         } catch (Exception e) {
             this.rating = -1;
+        }
+        try {
+            this.categoryName = rs.getString("categoryName");
+        } catch (Exception e) {
+            this.categoryName = "";
         }
     }
 

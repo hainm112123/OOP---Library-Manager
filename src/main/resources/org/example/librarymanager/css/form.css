@@ -10,6 +10,7 @@
     -fx-background-color: #5C1C00cc;
     -mfx-ripple-color: #5c1c00;
     -fx-text-fill: #fff;
+    -fx-cursor: hand;
 }
 
 .form-text-area {
@@ -31,11 +32,13 @@
 .form-cancel-button {
     -fx-background-color: #787878cc;
     -fx-text-fill: #fff;
+    -fx-cursor: hand;
 }
 
 .form-delete-button {
     -fx-background-color: #B22222cc;
     -fx-text-fill: #fff;
+    -fx-cursor: hand;
 }
 
 .form-label {

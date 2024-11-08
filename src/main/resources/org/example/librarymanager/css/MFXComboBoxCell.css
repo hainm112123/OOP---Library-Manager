@@ -25,6 +25,7 @@
   -fx-background-color: transparent;
   -fx-background-radius: 5;
   -fx-padding: 5;
+  -fx-cursor: hand;
 }
 
 .mfx-combo-box-cell:hover {

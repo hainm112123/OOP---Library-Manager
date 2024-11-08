@@ -4,6 +4,7 @@ import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -137,6 +138,8 @@ public class TopbarController extends ControllerWrapper {
             Pair<Trie.Node, Trie.Node> range = Trie.getInstance().getRange(searchBox.getText());
             displaySuggestionPane(range.getKey(), range.getValue());
             Common.enable(suggestionsScrollPane);
+            Common.disable(notificationPane);
+            Common.disable(userPane);
         });
     }
 
@@ -190,6 +193,7 @@ public class TopbarController extends ControllerWrapper {
                 node.setOnMouseExited(e -> {
                     node.setStyle("-fx-background-color: " + Common.TOPBAR_DROPDOWN_BUTTON_BG + ";");
                 });
+                node.setCursor(Cursor.HAND);
             }
         }
         if (getUser().getPermission() == User.TYPE_USER) {
@@ -208,6 +212,7 @@ public class TopbarController extends ControllerWrapper {
                 Common.disable(userPane);
             }
         });
+        userBtn.setCursor(Cursor.HAND);
         Common.disable(userPane);
     }
 
@@ -293,6 +298,7 @@ public class TopbarController extends ControllerWrapper {
             button.setMaxHeight(buttonH);
             button.setUserData((Integer)first.getId());
             button.setStyle("-fx-background-color: #FFFFFF;");
+            button.setCursor(Cursor.HAND);
             button.setPrefWidth(460);
             button.setAlignment(Pos.CENTER_LEFT);
             button.setOnAction(event -> {

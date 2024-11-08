@@ -62,30 +62,10 @@ public class DocumentQuery implements DataAccessObject<Document> {
         List<Document> documents = new ArrayList<Document>();
         try (Connection connection = databaseConnection.getConnection();) {
 
-            String query = "select * from documents";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                documents.add(new Document(rs));
-            }
-            rs.close();
-            ps.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return documents;
-    }
-
-    /**
-     * Get all documents with full information (rating include)
-     * @return
-     */
-    public List<Document> getAllWithFullInformation() {
-        List<Document> documents = new ArrayList<>();
-        try (Connection connection = databaseConnection.getConnection();) {
-            String query = "select documents.*, avg(ratings.value) rating\n"
-                    + "from documents\n"
-                    + "left join ratings on documents.id = ratings.documentId\n"
+            String query = "select documents.*, avg(ratings.value) rating, categories.name categoryName"
+                    + " from documents"
+                    + " left join categories on documents.categoryId = categories.id"
+                    + " left join ratings on documents.id = ratings.documentId\n"
                     + "group by documents.id\n";
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -107,7 +87,10 @@ public class DocumentQuery implements DataAccessObject<Document> {
         List<Document> documents = new ArrayList<Document>();
         try (Connection connection = databaseConnection.getConnection();) {
 
-            String query = "select * from documents";
+            String query = "select documents.*, avg(ratings.value) rating, categories.name categoryName from documents"
+                    + " left join ratings on documents.id = ratings.documentId"
+                    + " left join categories on documents.categoryId = categories.id"
+                    + " group by documents.id";
             if (order != null && !order.isEmpty()) {
                 query += " order by " + order;
             }
@@ -133,7 +116,13 @@ public class DocumentQuery implements DataAccessObject<Document> {
     public List<Document> getDocumentsByCategory(int categoryId) {
         List<Document> documents = new ArrayList<Document>();
         try (Connection connection = databaseConnection.getConnection();) {
-            PreparedStatement ps = connection.prepareStatement("select * from documents where categoryId = ?");
+            PreparedStatement ps = connection.prepareStatement(
+                    "select documents.*, avg(ratings.value) rating, categories.name categoryName from documents"
+                    + " left join ratings on documents.id = ratings.documentId"
+                    + " left join categories on documents.categoryId = categories.id"
+                    + " where documents.categoryId = ?"
+                    + " group by documents.id"
+            );
             ps.setInt(1, categoryId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -185,7 +174,13 @@ public class DocumentQuery implements DataAccessObject<Document> {
     public List<Document> getDocumentsByOwner(int owner) {
         List<Document> documents = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement("select * from documents where owner = ?");
+            PreparedStatement ps = connection.prepareStatement(
+                    "select documents.*, avg(ratings.value) rating, categories.name categoryName from documents"
+                    + " left join ratings on documents.id = ratings.documentId"
+                    + " left join categories on documents.categoryId = categories.id"
+                    + " where owner = ?"
+                    + " group by documents.id"
+            );
             ps.setInt(1, owner);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -297,6 +292,7 @@ public class DocumentQuery implements DataAccessObject<Document> {
      * Get book's information from Google Books API by ISBN.
      */
     public Volume getDocumentByISBN(String ISBN) {
+        if (ISBN.length() != 10 && ISBN.length() != 13) return null;
         try {
             Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, null)
                     .setApplicationName(APPLICATION_NAME).build();

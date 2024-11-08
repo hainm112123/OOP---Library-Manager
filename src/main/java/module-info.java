@@ -18,6 +18,7 @@ module org.example.librarymanager {
     requires atlantafx.base;
     requires MaterialFX;
     requires org.kordamp.ikonli.antdesignicons;
+    requires de.jensd.fx.glyphs.fontawesome;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

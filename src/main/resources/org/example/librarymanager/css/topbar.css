@@ -5,6 +5,7 @@
     -fx-font-weight: bold;
     -fx-font-size: 24px;
     -fx-border-width: 0;
+    -fx-cursor: hand;
 }
 
 .category-label {
@@ -15,9 +16,14 @@
 }
 .category-label:hover {
     -fx-background-color: -fx-choice-color-hover;
+    -fx-cursor: hand;
 }
 .category-grid {
     -fx-background-color: #f0f0f0;
     -fx-background-radius: 6px;
     -fx-border-radius: 6px;
+}
+
+.clickable {
+    -fx-cursor: hand;
 }

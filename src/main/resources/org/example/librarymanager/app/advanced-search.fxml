@@ -3,9 +3,9 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -18,7 +18,7 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/advanced-search.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.AdvancedSearchController">
    <AnchorPane layoutY="170.0">
       <children>
-         <ScrollPane prefHeight="550.0" prefWidth="1200.0">
+         <MFXScrollPane fx:id="scrollPane" prefHeight="550.0" prefWidth="1200.0">
             <content>
                <VBox>
                   <children>
@@ -83,7 +83,10 @@
                            </GridPane>
                            <VBox alignment="BOTTOM_RIGHT" prefHeight="70.0" prefWidth="1154.0">
                               <children>
-                                 <MFXButton fx:id="searchButton" prefHeight="36.0" prefWidth="157.0" styleClass="primary-button" text="Search" />
+                                 <MFXButton fx:id="searchButton" prefHeight="36.0" prefWidth="157.0" styleClass="primary-button" text="Search">
+                                    <graphic>
+                                       <FontAwesomeIconView glyphName="SEARCH" wrappingWidth="16.742711067199707" />
+                                    </graphic></MFXButton>
                               </children>
                               <padding>
                                  <Insets right="16.0" />
@@ -98,7 +101,7 @@
                   </children>
                </VBox>
             </content>
-         </ScrollPane>
+         </MFXScrollPane>
       </children>
    </AnchorPane>
     <fx:include maxHeight="170.0" prefHeight="170.0" source="topbar.fxml" />

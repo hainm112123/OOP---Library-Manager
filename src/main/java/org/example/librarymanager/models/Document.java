@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Comparator;
 
 @Data
 @AllArgsConstructor
@@ -23,7 +24,7 @@ public class Document {
     private int quantityInStock;
     private int borrowedTimes;
     private LocalDate addDate;
-    private float rating;
+    private double rating;
 
     public Document(int categoryId, int owner, String author, String title, String description, String imageLink, int quantity) {
         this.categoryId = categoryId;
@@ -48,7 +49,7 @@ public class Document {
         this.borrowedTimes = rs.getInt("borrowedTimes");
         this.addDate = LocalDate.parse(rs.getString("addDate"));
         try {
-            this.rating = rs.getFloat("rating");
+            this.rating = rs.getDouble("rating");
         } catch (Exception e) {
             this.rating = -1;
         }
@@ -66,5 +67,29 @@ public class Document {
                 + "Quantity In Stock: " + quantityInStock + "\n"
                 + "Borrowed Times: " + borrowedTimes + "\n"
                 + "Rating: " + rating + "\n";
+    }
+
+    public static class SortByTitle implements Comparator<Document> {
+        public int compare(Document o1, Document o2) {
+            return o1.title.compareToIgnoreCase(o2.title);
+        }
+    }
+
+    public static class SortByRate implements Comparator<Document> {
+        public int compare(Document o1, Document o2) {
+            return Double.compare(o1.rating, o2.rating);
+        }
+    }
+
+    public static class SortByDate implements Comparator<Document> {
+        public int compare(Document o1, Document o2) {
+            return o1.addDate.compareTo(o2.addDate);
+        }
+    }
+
+    public static class SortByBorrowed implements Comparator<Document> {
+        public int compare(Document o1, Document o2) {
+            return Integer.compare(o1.borrowedTimes, o2.borrowedTimes);
+        }
     }
 }

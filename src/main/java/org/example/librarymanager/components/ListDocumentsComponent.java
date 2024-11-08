@@ -16,6 +16,8 @@ import org.example.librarymanager.models.Document;
 import java.util.List;
 
 public class ListDocumentsComponent {
+    private static final int DOCUMENTS_PER_PAGE = 10;
+
     private VBox container;
     private GridPane grid;
     private Pagination pagination;
@@ -31,7 +33,7 @@ public class ListDocumentsComponent {
 
         container.setPrefWidth(1185);
 
-        pagination.setPageCount((documents.size() - 1) / 20 + 1);
+        pagination.setPageCount((documents.size() - 1) / DOCUMENTS_PER_PAGE + 1);
         pagination.setCurrentPageIndex(0);
         pagination.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
             setDocumentsGridPane(documents, newIndex.intValue());
@@ -40,7 +42,7 @@ public class ListDocumentsComponent {
         setDocumentsGridPane(documents, pagination.getCurrentPageIndex());
 
         container.getChildren().addAll(grid);
-        if (documents.size() > 20) {
+        if (documents.size() > DOCUMENTS_PER_PAGE) {
             container.getChildren().add(pagination);
         }
     }
@@ -53,8 +55,8 @@ public class ListDocumentsComponent {
      */
     private void setDocumentsGridPane(List<Document> documents, int pageIndex) {
         grid.getChildren().clear();
-        int start = pageIndex * 20;
-        int end = Math.min(start + 20, documents.size());
+        int start = pageIndex * DOCUMENTS_PER_PAGE;
+        int end = Math.min(start + DOCUMENTS_PER_PAGE, documents.size());
         int actualItems = end - start;
 
         int columns = 5;

@@ -77,6 +77,30 @@ public class DocumentQuery implements DataAccessObject<Document> {
     }
 
     /**
+     * Get all documents with full information (rating include)
+     * @return
+     */
+    public List<Document> getAllWithFullInformation() {
+        List<Document> documents = new ArrayList<>();
+        try (Connection connection = databaseConnection.getConnection();) {
+            String query = "select documents.*, avg(ratings.value) rating\n"
+                    + "from documents\n"
+                    + "left join ratings on documents.id = ratings.documentId\n"
+                    + "group by documents.id\n";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                documents.add(new Document(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return documents;
+    }
+
+    /**
      * Get documents by order and limit.
      */
     public List<Document> getDocuments(String order, int limit) {

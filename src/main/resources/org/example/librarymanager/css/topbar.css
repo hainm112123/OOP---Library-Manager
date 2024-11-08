@@ -6,6 +6,11 @@
     -fx-font-size: 24px;
     -fx-border-width: 0;
     -fx-cursor: hand;
+    -fx-background-color:  #FFE7BA;
+}
+
+.topbar-button:hover {
+    -fx-background-color: #FFE7BA;
 }
 
 .category-label {
@@ -26,4 +31,28 @@
 
 .clickable {
     -fx-cursor: hand;
+}
+
+.search-box-container {
+    -fx-background-color: #fff;
+    -fx-background-radius: 5;
+    -fx-border-color: lightgray;
+    -fx-border-radius: 5;
+    -fx-border-width: 1.5;
+}
+
+.search-box.text-field {
+    -fx-text-box-border: transparent;
+    -fx-background-color: #fff;
+    -fx-backrgound-insets: 0;
+    -fx-padding: 0 12 0 12;
+}
+.search-box.text-field:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.search-box-container--focused {
+    -fx-border-color: -fx-color-main;
+    -fx-boder-with: 2;
 }

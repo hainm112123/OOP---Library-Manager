@@ -4,6 +4,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.geometry.HPos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
@@ -80,6 +81,7 @@ public class ListDocumentsComponent {
         container.getStylesheets().add(getClass().getResource("/org/example/librarymanager/css/list-document.css").toExternalForm());
         if (documents.size() > DOCUMENTS_PER_PAGE) {
             container.getChildren().add(pagination);
+            pagination.setCursor(Cursor.HAND);
         }
     }
 

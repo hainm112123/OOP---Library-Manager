@@ -47,6 +47,8 @@ public class TopbarController extends ControllerWrapper {
     @FXML
     private TextField searchBox;
     @FXML
+    private HBox searchBoxContainer;
+    @FXML
     private VBox suggestionsBox;
     @FXML
     private ScrollPane suggestionsScrollPane;
@@ -223,6 +225,15 @@ public class TopbarController extends ControllerWrapper {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        searchBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                searchBoxContainer.getStyleClass().add("search-box-container--focused");
+            }
+            else {
+                searchBoxContainer.getStyleClass().remove("search-box-container--focused");
+            }
+        });
+
         executor = Executors.newFixedThreadPool(2);
         categoryFu = executor.submit(() -> CategoryQuery.getInstance().getAll());
         documentFu = executor.submit(() -> ServiceQuery.getInstance().getOverdueDocuments(getUser().getId()));
@@ -299,7 +310,7 @@ public class TopbarController extends ControllerWrapper {
             button.setUserData((Integer)first.getId());
             button.setStyle("-fx-background-color: #FFFFFF;");
             button.setCursor(Cursor.HAND);
-            button.setPrefWidth(460);
+            button.setPrefWidth(500);
             button.setAlignment(Pos.CENTER_LEFT);
             button.setOnAction(event -> {
                 Button clickedButton = (Button) event.getSource();

@@ -66,12 +66,12 @@ public class DocumentComponent {
         box.getChildren().add(imageView);
 
         title = new Label(document.getTitle());
-        title.getStyleClass().add("title");
+        title.getStyleClass().add("document-title");
         title.setMinWidth(DOC_COMPONENT_WITDH);
         title.setPrefWidth(DOC_COMPONENT_WITDH);
         title.setMaxWidth(DOC_COMPONENT_WITDH);
         title.setEllipsisString("...");
-        title.alignmentProperty().set(Pos.CENTER);
+//        title.alignmentProperty().set(Pos.CENTER);
         box.getChildren().add(title);
         box.setAlignment(Pos.CENTER);
         container.getChildren().add(box);

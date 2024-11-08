@@ -1,10 +1,7 @@
 package org.example.librarymanager.app;
 
-import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -12,8 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Pair;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.NotificationComponent;
@@ -25,7 +20,6 @@ import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.User;
 
-import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -38,9 +32,11 @@ public class TopbarController extends ControllerWrapper {
     private static final int CATEGORY_CHOICE_HEIGHT = 42;
 
     @FXML
-    private Button topbarHomeBtn;
+    private Button homeBtn;
     @FXML
-    private Button topbarCategoryBtn;
+    private Button categoryBtn;
+    @FXML
+    private Button advancedSearchBtn;
     @FXML
     private AnchorPane categoryPane;
     @FXML
@@ -121,14 +117,15 @@ public class TopbarController extends ControllerWrapper {
             ds.setOffsetY(5);
             categoryGrid.setEffect(ds);
             Common.disable(categoryPane);
-            topbarCategoryBtn.setOnMouseEntered(event -> Common.enable(categoryPane));
+            categoryBtn.setOnMouseEntered(event -> Common.enable(categoryPane));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void initRedirect() {
-        topbarHomeBtn.setOnAction((event) -> safeSwitchScene("home.fxml"));
+        homeBtn.setOnAction((event) -> safeSwitchScene("home.fxml"));
+        advancedSearchBtn.setOnAction((event) -> safeSwitchScene("advanced-search.fxml"));
     }
 
     private void initSearchBox() {
@@ -257,9 +254,15 @@ public class TopbarController extends ControllerWrapper {
             });
 
             stage.getScene().setOnMouseMoved(e -> {
-                if (!topbarCategoryBtn.getBoundsInParent().contains(e.getX(), e.getY())
+                if (!categoryBtn.localToScene(categoryBtn.getBoundsInLocal()).contains(e.getSceneX(), e.getSceneY())
                 && !categoryPane.getBoundsInParent().contains(e.getX(), e.getY())
                 && !categoryPane.isDisable()) {
+                    Common.disable(categoryPane);
+                }
+            });
+
+            categoryBtn.setOnMouseExited(e -> {
+                if (!categoryPane.localToScene(categoryPane.getBoundsInLocal()).contains(e.getSceneX(), e.getSceneY()) && !categoryPane.isDisable()) {
                     Common.disable(categoryPane);
                 }
             });

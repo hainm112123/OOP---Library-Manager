@@ -39,7 +39,10 @@ public class ListDocumentsComponent {
         });
         setDocumentsGridPane(documents, pagination.getCurrentPageIndex());
 
-        container.getChildren().addAll(grid, pagination);
+        container.getChildren().addAll(grid);
+        if (documents.size() > 20) {
+            container.getChildren().add(pagination);
+        }
     }
 
     /**

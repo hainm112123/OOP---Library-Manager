@@ -1,0 +1,27 @@
+@import 'common.css';
+@import 'MFXComboBox.css';
+@import 'MFXComboBoxCell.css';
+@import 'MFXFilterComboBox.css';
+
+.search-box-container {
+    -fx-background-radius: 5;
+    -fx-border-color: lightgray;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+}
+
+.search-box.text-field {
+    -fx-text-box-border: transparent;
+    -fx-background-color: transparent;
+    -fx-backrgound-insets: 0;
+    -fx-padding: 0;
+}
+.search-box.text-field:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.search-box-container--focused {
+    -fx-border-color: -fx-color-main;
+    -fx-boder-with: 1.5;
+}

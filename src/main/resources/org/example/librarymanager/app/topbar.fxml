@@ -36,12 +36,17 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Button fx:id="topbarHomeBtn" mnemonicParsing="false" prefHeight="54.0" prefWidth="186.0" style="-fx-background-color: #FFE7BA;" styleClass="topbar-button" text="Home" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <Button fx:id="homeBtn" mnemonicParsing="false" prefHeight="54.0" prefWidth="186.0" style="-fx-background-color: #FFE7BA;" styleClass="topbar-button" text="Home" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <font>
                               <Font size="23.0" />
                            </font>
                         </Button>
-                        <Button fx:id="topbarCategoryBtn" layoutX="48.0" layoutY="12.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="223.0" style="-fx-background-color: #FFE7BA;" styleClass="topbar-button" text="Categories" GridPane.columnIndex="1">
+                        <Button fx:id="categoryBtn" layoutX="48.0" layoutY="12.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="223.0" style="-fx-background-color: #FFE7BA;" styleClass="topbar-button" text="Categories" GridPane.columnIndex="1">
+                           <font>
+                              <Font size="23.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="advancedSearchBtn" layoutX="186.0" layoutY="10.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="283.0" style="-fx-background-color: #FFE7BA;" styleClass="topbar-button" text="Advanced search" GridPane.columnIndex="2">
                            <font>
                               <Font size="23.0" />
                            </font>

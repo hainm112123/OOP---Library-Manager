@@ -1,9 +1,7 @@
 package org.example.librarymanager.app;
 
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 
 import java.net.URL;
@@ -12,18 +10,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.*;
 
-import javafx.scene.control.Pagination;
 import javafx.scene.layout.*;
-import javafx.util.Callback;
-import org.example.librarymanager.components.DocumentComponent;
 import org.example.librarymanager.components.ListDocumentsComponent;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.data.DocumentQuery;
-import org.example.librarymanager.models.Rating;
-
-import javax.print.Doc;
-
-import static org.example.librarymanager.data.DocumentQuery.*;
 
 public class CategoriesController extends ControllerWrapper {
     @FXML
@@ -53,7 +43,7 @@ public class CategoriesController extends ControllerWrapper {
         VBox container = new VBox();
         StackPane stackPane = new StackPane();
         stackPane.setPrefHeight(30);
-        container.getChildren().addAll(stackPane, new ListDocumentsComponent(documents, scrollPane, this).getContainer());
+        container.getChildren().addAll(stackPane, new ListDocumentsComponent(documents, scrollPane, this).getElement());
         scrollPane.setContent(container);
     }
 }

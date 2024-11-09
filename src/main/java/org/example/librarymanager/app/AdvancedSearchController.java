@@ -12,7 +12,6 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
@@ -120,7 +119,7 @@ public class AdvancedSearchController extends ControllerWrapper {
         statusFilter.getSelectionModel().selectFirst();
 
         documentsContainer.getChildren().clear();
-        documentsContainer.getChildren().add(new ListDocumentsComponent(documents, scrollPane, this).getContainer());
+        documentsContainer.getChildren().add(new ListDocumentsComponent(documents, scrollPane, this).getElement());
 
         searchButton.setOnAction(e -> search());
     }
@@ -220,6 +219,6 @@ public class AdvancedSearchController extends ControllerWrapper {
             }
         }
         documentsContainer.getChildren().clear();
-        documentsContainer.getChildren().add(new ListDocumentsComponent(result, scrollPane, this).getContainer());
+        documentsContainer.getChildren().add(new ListDocumentsComponent(result, scrollPane, this).getElement());
     }
 }

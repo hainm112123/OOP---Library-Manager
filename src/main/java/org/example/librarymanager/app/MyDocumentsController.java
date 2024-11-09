@@ -39,7 +39,7 @@ public class MyDocumentsController extends ControllerWrapper {
         VBox container = new VBox();
         StackPane stackPane = new StackPane();
         stackPane.setPrefHeight(50);
-        container.getChildren().addAll(stackPane, new ListDocumentsComponent(documents, scrollPane, this).getContainer());
+        container.getChildren().addAll(stackPane, new ListDocumentsComponent(documents, scrollPane, this).getElement());
         scrollPane.setContent(container);
     }
 }

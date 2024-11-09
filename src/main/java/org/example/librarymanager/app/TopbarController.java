@@ -157,7 +157,7 @@ public class TopbarController extends ControllerWrapper {
                 Common.enable(notificationBadge);
             }
             for (Document document : documents) {
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getContainer());
+                notificationBox.getChildren().add(new NotificationComponent(document, this).getElement());
             }
             notificationBell.setOnMouseClicked(event -> {
                if (notificationPane.isDisable()) {

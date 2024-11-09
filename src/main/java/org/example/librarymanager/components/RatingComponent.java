@@ -3,6 +3,7 @@ package org.example.librarymanager.components;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
@@ -17,8 +18,7 @@ import org.example.librarymanager.models.User;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Data
-public class RatingComponent {
+public class RatingComponent implements Component {
     private VBox container;
     private Rating rating;
     private TextArea content;
@@ -72,5 +72,10 @@ public class RatingComponent {
 
         container.getChildren().addAll(userContainer, rating, contentContainer);
         container.setPadding(new Insets(0, 0, 32, 0));
+    }
+
+    @Override
+    public Node getElement() {
+        return container;
     }
 }

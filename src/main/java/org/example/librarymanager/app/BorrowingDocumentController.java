@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.librarymanager.components.ListDocumentsComponent;
-import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.data.ServiceQuery;
 import org.example.librarymanager.models.Document;
 
@@ -39,7 +38,7 @@ public class BorrowingDocumentController extends ControllerWrapper {
         VBox container = new VBox();
         StackPane stackPane = new StackPane();
         stackPane.setPrefHeight(50);
-        container.getChildren().addAll(stackPane, new ListDocumentsComponent(documents, scrollPane, this).getContainer());
+        container.getChildren().addAll(stackPane, new ListDocumentsComponent(documents, scrollPane, this).getElement());
         scrollPane.setContent(container);
     }
 }

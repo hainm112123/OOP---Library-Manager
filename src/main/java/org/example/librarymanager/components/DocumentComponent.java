@@ -14,10 +14,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.example.librarymanager.Common;
 import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.models.Document;
 
-public class DocumentComponent {
+public class DocumentComponent implements Component {
     private Node container;
 
     private AnchorPane gridContainer;
@@ -53,6 +54,10 @@ public class DocumentComponent {
         ds_hover.setRadius(30);
     }
 
+    /**
+     * component to display in grid-view
+     * @param document
+     */
     public void initGridView(Document document) {
         gridBox = new VBox();
         gridContainer = new AnchorPane();
@@ -90,6 +95,10 @@ public class DocumentComponent {
         gridContainer.getStyleClass().add("document-container");
     }
 
+    /**
+     * component to display in list-view
+     * @param document
+     */
     public void initListView(Document document) {
         listContainer = new HBox();
         listContainer.setAlignment(Pos.CENTER);
@@ -124,14 +133,14 @@ public class DocumentComponent {
     }
 
     /**
-     * Construct a component of document details in a VBox.
+     * Construct a component of document details.
      * Image is loaded in a task which is executed in a new distinct thread.
      * @param document document to display
      * @param controller current controller
      */
     public DocumentComponent(Document document, ControllerWrapper controller, int type) {
         this.controller = controller;
-        imageView = new ImageView(new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg")));
+        imageView = new ImageView(Common.NO_IMAGE);
         if (document.getImageLink() != null) {
             Task<Image> task = new Task<Image>() {
                 @Override
@@ -140,11 +149,15 @@ public class DocumentComponent {
                         return new Image(document.getImageLink(), true);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        return new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg"));
+                        return null;
                     }
                 }
             };
-            task.setOnSucceeded((event) -> imageView.setImage(task.getValue()));
+            task.setOnSucceeded((event) -> {
+                if (task.getValue() != null) {
+                    imageView.setImage(task.getValue());
+                }
+            });
             new Thread(task).start();
         }
         imageView.setFitWidth(IMAGE_WIDTH);
@@ -161,8 +174,9 @@ public class DocumentComponent {
     }
 
     /**
-     * Return gridContainer.
+     * Return container.
      */
+    @Override
     public Node getElement() {
         return container;
     }

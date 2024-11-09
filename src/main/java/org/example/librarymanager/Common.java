@@ -4,15 +4,27 @@ import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.FileInputStream;
+
 public class Common {
     public static final String PRIMARY_COLOR = "#5C1C00";
     public static final String TOPBAR_DROPDOWN_BUTTON_BG = "#f0f0f0";
     public static final String TOPBAR_DROPDOWN_BUTTON_BG_HOVER = " #00000011";
+    public static Image NO_IMAGE;
+
+    static {
+        try {
+            NO_IMAGE = new Image("file:src/main/resources/org/example/librarymanager/image/no_image.jpg");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static boolean isInteger(String str) {
         try {

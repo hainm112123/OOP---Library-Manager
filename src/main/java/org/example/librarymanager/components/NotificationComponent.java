@@ -16,7 +16,7 @@ import org.example.librarymanager.models.Document;
 
 import java.awt.event.MouseEvent;
 
-public class NotificationComponent {
+public class NotificationComponent implements Component {
     private HBox container;
     private VBox content;
     private VBox imageWrapper;
@@ -82,7 +82,8 @@ public class NotificationComponent {
         });
     }
 
-    public Node getContainer() {
+    @Override
+    public Node getElement() {
         return container;
     }
 }

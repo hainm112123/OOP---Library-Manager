@@ -8,14 +8,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.*;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
+import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.ListDocumentsComponent;
 import org.example.librarymanager.data.CategoryQuery;
@@ -24,15 +24,12 @@ import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class AdvancedSearchController extends ControllerWrapper {
-    public static final int SORT_BY_NONE = 0;
+    public static final int SORT_BY_BEST_MATCH = 0;
     public static final int SORT_BY_TITLE_ASC = 1;
     public static final int SORT_BY_TITLE_DESC = 2;
     public static final int SORT_BY_RATE_ASC = 3;
@@ -69,7 +66,7 @@ public class AdvancedSearchController extends ControllerWrapper {
     private List<Category> categories;
 
     private Directory memoryIndex;
-    private Analyzer analyzer;
+    private PerFieldAnalyzerWrapper analyzer;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -83,7 +80,7 @@ public class AdvancedSearchController extends ControllerWrapper {
         });
 
         sortByFilter.getItems().addAll(
-                new Common.Choice(SORT_BY_NONE, "None"),
+                new Common.Choice(SORT_BY_BEST_MATCH, "Best Match"),
                 new Common.Choice(SORT_BY_TITLE_ASC, "Title Ascending"),
                 new Common.Choice(SORT_BY_TITLE_DESC, "Title Descending"),
                 new Common.Choice(SORT_BY_RATE_DESC, "Highest Rating"),
@@ -120,15 +117,20 @@ public class AdvancedSearchController extends ControllerWrapper {
         statusFilter.getSelectionModel().selectFirst();
 
         documentsContainer.getChildren().clear();
-        documentsContainer.getChildren().add(new ListDocumentsComponent(documents, scrollPane, this).getContainer());
+        documentsContainer.getChildren().add(new ListDocumentsComponent(documents, scrollPane, this).getElement());
 
         searchButton.setOnAction(e -> search());
     }
 
     private void initSearch() {
         try {
-            memoryIndex = new RAMDirectory();
-            analyzer = new StandardAnalyzer();
+            memoryIndex = new ByteBuffersDirectory();
+            Analyzer simpleAnalyzer = new SimpleAnalyzer();
+            Analyzer standardAnalyzer = new StandardAnalyzer();
+            Map<String, Analyzer> analyzers = new HashMap<>();
+            analyzers.put("title", simpleAnalyzer);
+            analyzers.put("description", standardAnalyzer);
+            analyzer = new PerFieldAnalyzerWrapper(standardAnalyzer, analyzers);
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
             IndexWriter writer = new IndexWriter(memoryIndex, config);
             for (Document document: documents) {
@@ -159,20 +161,29 @@ public class AdvancedSearchController extends ControllerWrapper {
         List<Document> result = documents;
         if (!searchBox.getText().isEmpty()) {
             try {
-                String[] fields = {"title", "description"};
-                Query query = new MultiFieldQueryParser(fields, analyzer).parse(searchBox.getText());
+//                String[] fields = {"title", "description"};
+//                Query query = new MultiFieldQueryParser(fields, analyzer).parse(searchBox.getText());
+                Term title_term = new Term("title", searchBox.getText() + "*");
+                Term description_term = new Term("description", searchBox.getText());
+                Query title_query = new WildcardQuery(title_term);
+                Query description_query = new TermQuery(description_term);
+                BooleanQuery query = new BooleanQuery.Builder()
+                        .add(title_query, BooleanClause.Occur.SHOULD)
+                        .add(description_query, BooleanClause.Occur.SHOULD)
+                        .build();
                 IndexReader indexReader = DirectoryReader.open(memoryIndex);
                 IndexSearcher searcher = new IndexSearcher(indexReader);
                 TopDocs topDocs = searcher.search(query, documents.size());
                 result = new ArrayList<>();
                 for (ScoreDoc doc: topDocs.scoreDocs) {
-                    result.add(new Document(searcher.doc(doc.doc)));
+                    result.add(new Document(searcher.getIndexReader().storedFields().document(doc.doc)));
 //                    System.out.println(searcher.doc(doc.doc));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
         int categoryId = categoryFilter.getSelectionModel().getSelectedItem().getValue();
         if (categoryId != FILTER_CATEGORY_ANY) {
             result = result.stream().filter(document -> document.getCategoryId() == categoryId).toList();
@@ -220,6 +231,6 @@ public class AdvancedSearchController extends ControllerWrapper {
             }
         }
         documentsContainer.getChildren().clear();
-        documentsContainer.getChildren().add(new ListDocumentsComponent(result, scrollPane, this).getContainer());
+        documentsContainer.getChildren().add(new ListDocumentsComponent(result, scrollPane, this).getElement());
     }
 }

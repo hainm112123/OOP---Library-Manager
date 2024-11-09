@@ -19,8 +19,9 @@ module org.example.librarymanager {
     requires MaterialFX;
     requires org.kordamp.ikonli.antdesignicons;
     requires de.jensd.fx.glyphs.fontawesome;
-    requires lucene.core;
-    requires lucene.queryparser;
+    requires org.apache.lucene.core;
+    requires org.apache.lucene.queryparser;
+    requires org.apache.lucene.analysis.common;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

@@ -3,12 +3,19 @@ package org.example.librarymanager.app;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.checkerframework.checker.units.qual.C;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.index.*;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.*;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.RAMDirectory;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.ListDocumentsComponent;
 import org.example.librarymanager.data.CategoryQuery;
@@ -17,13 +24,12 @@ import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 public class AdvancedSearchController extends ControllerWrapper {
     public static final int SORT_BY_NONE = 0;
@@ -62,6 +68,9 @@ public class AdvancedSearchController extends ControllerWrapper {
     private List<Document> documents;
     private List<Category> categories;
 
+    private Directory memoryIndex;
+    private Analyzer analyzer;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         searchBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -90,15 +99,17 @@ public class AdvancedSearchController extends ControllerWrapper {
                 new Common.Choice(FILTER_STATUS_NO_REMAIN, "None remain")
         );
 
-        executor = Executors.newFixedThreadPool(2);
+        executor = Executors.newFixedThreadPool(3);
         Future<List<Category>> catFu = executor.submit(() -> CategoryQuery.getInstance().getAll());
         Future<List<Document>> docFu = executor.submit(() -> DocumentQuery.getInstance().getAll());
         try {
             categories = catFu.get();
             documents = docFu.get();
+            executor.submit(this::initSearch);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        executor.shutdown();
         categoryFilter.getItems().add(new Common.Choice(FILTER_CATEGORY_ANY, "Any"));
         for (Category category : categories) {
             categoryFilter.getItems().add(new Common.Choice(category.getId(), category.getName()));
@@ -114,8 +125,54 @@ public class AdvancedSearchController extends ControllerWrapper {
         searchButton.setOnAction(e -> search());
     }
 
+    private void initSearch() {
+        try {
+            memoryIndex = new RAMDirectory();
+            analyzer = new StandardAnalyzer();
+            IndexWriterConfig config = new IndexWriterConfig(analyzer);
+            IndexWriter writer = new IndexWriter(memoryIndex, config);
+            for (Document document: documents) {
+                org.apache.lucene.document.Document luceneDocument = new org.apache.lucene.document.Document();
+                luceneDocument.add(new org.apache.lucene.document.TextField("id", String.valueOf(document.getId()), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("categoryId", String.valueOf(document.getCategoryId()), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("owner", String.valueOf(document.getOwner()), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("author", document.getAuthor(), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("title", document.getTitle(), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("description", document.getDescription(), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("imageLink", document.getImageLink(), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("quantity", String.valueOf(document.getQuantity()), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("quantityInStock", String.valueOf(document.getQuantityInStock()), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("borrowedTimes", String.valueOf(document.getBorrowedTimes()), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("addDate", String.valueOf(document.getAddDate()), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("rating", String.valueOf(document.getRating()), Field.Store.YES));
+                luceneDocument.add(new org.apache.lucene.document.TextField("categoryName", document.getCategoryName(), Field.Store.YES));
+                writer.addDocument(luceneDocument);
+            }
+
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void search() {
         List<Document> result = documents;
+        if (!searchBox.getText().isEmpty()) {
+            try {
+                String[] fields = {"title", "description"};
+                Query query = new MultiFieldQueryParser(fields, analyzer).parse(searchBox.getText());
+                IndexReader indexReader = DirectoryReader.open(memoryIndex);
+                IndexSearcher searcher = new IndexSearcher(indexReader);
+                TopDocs topDocs = searcher.search(query, documents.size());
+                result = new ArrayList<>();
+                for (ScoreDoc doc: topDocs.scoreDocs) {
+                    result.add(new Document(searcher.doc(doc.doc)));
+//                    System.out.println(searcher.doc(doc.doc));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         int categoryId = categoryFilter.getSelectionModel().getSelectedItem().getValue();
         if (categoryId != FILTER_CATEGORY_ANY) {
             result = result.stream().filter(document -> document.getCategoryId() == categoryId).toList();

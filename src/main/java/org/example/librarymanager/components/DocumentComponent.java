@@ -116,6 +116,11 @@ public class DocumentComponent {
         description.getStyleClass().add("document-description");
         detailBox.getStyleClass().add("document-detail-box");
         listContainer.getStyleClass().add("document-list-container");
+
+        listContainer.setOnMouseClicked((event) -> {
+            ControllerWrapper.setCurrentDocument(document);
+            controller.safeSwitchScene("document-detail.fxml");
+        });
     }
 
     /**

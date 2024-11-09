@@ -1,10 +1,19 @@
 package org.example.librarymanager.data;
 
 import com.google.api.services.books.model.Volume;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.*;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.*;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.RAMDirectory;
 import org.example.librarymanager.models.Document;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 public class DocumentTest {
@@ -80,5 +89,33 @@ public class DocumentTest {
             System.out.println(document);
         }
         Assertions.assertNotNull(documents);
+    }
+
+    public void addLucenceDocument(IndexWriter writer, String title) throws IOException {
+        org.apache.lucene.document.Document luceneDocument = new org.apache.lucene.document.Document();
+        luceneDocument.add(new TextField("title", title, Field.Store.YES));
+        writer.addDocument(luceneDocument);
+    }
+
+    @Test
+    public void lucenceDocumentTest() throws Exception {
+        Directory memoryIndex = new RAMDirectory();
+        StandardAnalyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        IndexWriter writer = new IndexWriter(memoryIndex, config);
+
+        addLucenceDocument(writer, "laid-back camp");
+        addLucenceDocument(writer, "attack on titan");
+        addLucenceDocument(writer, "sound! euphonium");
+
+        writer.close();
+
+        Query query = new QueryParser("title", analyzer).parse("euphonium");
+        IndexReader indexReader = DirectoryReader.open(memoryIndex);
+        IndexSearcher searcher = new IndexSearcher(indexReader);
+        TopDocs topDocs = searcher.search(query, 1);
+        for (ScoreDoc doc: topDocs.scoreDocs) {
+            System.out.println(searcher.doc(doc.doc));
+        }
     }
 }

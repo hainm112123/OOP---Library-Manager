@@ -61,6 +61,22 @@ public class Document {
         }
     }
 
+    public Document(org.apache.lucene.document.Document luceneDocument) {
+        this.id = Integer.parseInt(luceneDocument.get("id"));
+        this.categoryId = Integer.parseInt(luceneDocument.get("categoryId"));
+        this.owner = Integer.parseInt(luceneDocument.get("owner"));
+        this.author = luceneDocument.get("author");
+        this.title = luceneDocument.get("title");
+        this.description = luceneDocument.get("description");
+        this.imageLink = luceneDocument.get("imageLink");
+        this.quantity = Integer.parseInt(luceneDocument.get("quantity"));
+        this.quantityInStock = Integer.parseInt(luceneDocument.get("quantityInStock"));
+        this.borrowedTimes = Integer.parseInt(luceneDocument.get("borrowedTimes"));
+        this.addDate = LocalDate.parse(luceneDocument.get("addDate"));
+        this.rating = Double.parseDouble(luceneDocument.get("rating"));
+        this.categoryName = luceneDocument.get("categoryName");
+    }
+
     @Override
     public String toString() {
         return "Id: " + id + "\n"

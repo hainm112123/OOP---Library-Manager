@@ -1,10 +1,14 @@
 package org.example.librarymanager.data;
 
 import com.google.api.services.books.model.Volume;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.*;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
@@ -14,7 +18,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DocumentTest {
     @Test
@@ -91,26 +97,43 @@ public class DocumentTest {
         Assertions.assertNotNull(documents);
     }
 
-    public void addLucenceDocument(IndexWriter writer, String title) throws IOException {
+    public void addLucenceDocument(IndexWriter writer, String title, String description) throws IOException {
         org.apache.lucene.document.Document luceneDocument = new org.apache.lucene.document.Document();
         luceneDocument.add(new TextField("title", title, Field.Store.YES));
+        luceneDocument.add(new TextField("description", description, Field.Store.YES));
         writer.addDocument(luceneDocument);
     }
 
     @Test
     public void lucenceDocumentTest() throws Exception {
         Directory memoryIndex = new RAMDirectory();
-        StandardAnalyzer analyzer = new StandardAnalyzer();
-        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        SimpleAnalyzer simpleAnalyzer = new SimpleAnalyzer();
+        StandardAnalyzer standardAnalyzer = new StandardAnalyzer();
+        Map<String, Analyzer> analyzers = new HashMap<String, Analyzer>();
+        analyzers.put("title", simpleAnalyzer);
+        analyzers.put("description", standardAnalyzer);
+        PerFieldAnalyzerWrapper wrapper = new PerFieldAnalyzerWrapper(standardAnalyzer, analyzers);
+
+        IndexWriterConfig config = new IndexWriterConfig(wrapper);
         IndexWriter writer = new IndexWriter(memoryIndex, config);
 
-        addLucenceDocument(writer, "laid-back camp");
-        addLucenceDocument(writer, "attack on titan");
-        addLucenceDocument(writer, "sound! euphonium");
+        addLucenceDocument(writer, "laid-back camp", "rin rin rin rin rin rin");
+        addLucenceDocument(writer, "attack on titan", "mikasa mikasa mikasa");
+        addLucenceDocument(writer, "sound! euphonium", "kumiko kumiko reina reina kaede kaede mayu mayu mauy");
 
         writer.close();
 
-        Query query = new QueryParser("title", analyzer).parse("euphonium");
+        String[] fields = {"title", "description"};
+//        Query query = new MultiFieldQueryParser(fields, wrapper).parse("tit*");
+        Term term1 = new Term("title", "abcdfe");
+        Term term2 = new Term("description", "kumiko");
+        Query query1 = new WildcardQuery(term1);
+        Query query2 = new TermQuery(term2);
+        BooleanQuery query = new BooleanQuery.Builder()
+                .add(query1, BooleanClause.Occur.SHOULD)
+                .add(query2, BooleanClause.Occur.SHOULD)
+                .build();
+
         IndexReader indexReader = DirectoryReader.open(memoryIndex);
         IndexSearcher searcher = new IndexSearcher(indexReader);
         TopDocs topDocs = searcher.search(query, 1);

@@ -14,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import org.example.librarymanager.Common;
 import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.models.Document;
 
@@ -139,7 +140,7 @@ public class DocumentComponent implements Component {
      */
     public DocumentComponent(Document document, ControllerWrapper controller, int type) {
         this.controller = controller;
-        imageView = new ImageView(new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg")));
+        imageView = new ImageView(Common.NO_IMAGE);
         if (document.getImageLink() != null) {
             Task<Image> task = new Task<Image>() {
                 @Override
@@ -148,11 +149,15 @@ public class DocumentComponent implements Component {
                         return new Image(document.getImageLink(), true);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        return new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg"));
+                        return null;
                     }
                 }
             };
-            task.setOnSucceeded((event) -> imageView.setImage(task.getValue()));
+            task.setOnSucceeded((event) -> {
+                if (task.getValue() != null) {
+                    imageView.setImage(task.getValue());
+                }
+            });
             new Thread(task).start();
         }
         imageView.setFitWidth(IMAGE_WIDTH);

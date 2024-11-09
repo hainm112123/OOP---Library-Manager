@@ -17,7 +17,7 @@ import javafx.util.Duration;
 import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.models.Document;
 
-public class DocumentComponent {
+public class DocumentComponent implements Component {
     private Node container;
 
     private AnchorPane gridContainer;
@@ -53,6 +53,10 @@ public class DocumentComponent {
         ds_hover.setRadius(30);
     }
 
+    /**
+     * component to display in grid-view
+     * @param document
+     */
     public void initGridView(Document document) {
         gridBox = new VBox();
         gridContainer = new AnchorPane();
@@ -90,6 +94,10 @@ public class DocumentComponent {
         gridContainer.getStyleClass().add("document-container");
     }
 
+    /**
+     * component to display in list-view
+     * @param document
+     */
     public void initListView(Document document) {
         listContainer = new HBox();
         listContainer.setAlignment(Pos.CENTER);
@@ -124,7 +132,7 @@ public class DocumentComponent {
     }
 
     /**
-     * Construct a component of document details in a VBox.
+     * Construct a component of document details.
      * Image is loaded in a task which is executed in a new distinct thread.
      * @param document document to display
      * @param controller current controller
@@ -161,8 +169,9 @@ public class DocumentComponent {
     }
 
     /**
-     * Return gridContainer.
+     * Return container.
      */
+    @Override
     public Node getElement() {
         return container;
     }

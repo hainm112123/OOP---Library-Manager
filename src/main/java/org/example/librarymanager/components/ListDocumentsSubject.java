@@ -18,6 +18,13 @@ public class ListDocumentsSubject implements Subject {
     private FontAwesomeIconView listIcon;
     private List<Observer> observers = new ArrayList<>();
 
+    /**
+     * list documents' subject: a button-group that can change view-type between grid-view and list-view
+     * @param gridViewBtn
+     * @param listViewBtn
+     * @param gridIcon
+     * @param listIcon
+     */
     public ListDocumentsSubject(Label gridViewBtn, Label listViewBtn, FontAwesomeIconView gridIcon, FontAwesomeIconView listIcon) {
         this.gridViewBtn = gridViewBtn;
         this.listViewBtn = listViewBtn;
@@ -42,6 +49,10 @@ public class ListDocumentsSubject implements Subject {
         }
     }
 
+    /**
+     * change view type
+     * @param displayType
+     */
     public void changeDisplayType(int displayType) {
         if (this.displayType != displayType) {
             this.displayType = displayType;

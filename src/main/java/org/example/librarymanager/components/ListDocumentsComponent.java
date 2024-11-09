@@ -3,6 +3,7 @@ package org.example.librarymanager.components;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
+import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -17,7 +18,7 @@ import org.example.librarymanager.models.Document;
 import java.util.List;
 
 @Data
-public class ListDocumentsComponent {
+public class ListDocumentsComponent implements Component {
     private static final int DOCUMENTS_PER_PAGE = 10;
 
     private VBox container;
@@ -32,6 +33,12 @@ public class ListDocumentsComponent {
     private ListDocumentsSubject subject;
     private ListDocumentsObserver observer;
 
+    /**
+     * display a lists of documents in grid view or list view with pagination
+     * @param documents
+     * @param wrapper
+     * @param controller
+     */
     public ListDocumentsComponent(List<Document> documents, MFXScrollPane wrapper, ControllerWrapper controller) {
         container = new VBox();
         grid = new GridPane();
@@ -126,6 +133,7 @@ public class ListDocumentsComponent {
         }
     }
 
+    @Override
     public Node getElement() {
         return container;
     }

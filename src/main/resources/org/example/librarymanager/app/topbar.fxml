@@ -36,38 +36,21 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Button fx:id="topbarHomeBtn" mnemonicParsing="false" prefHeight="54.0" prefWidth="186.0" style="-fx-background-color: #FFE7BA;" styleClass="topbar-button" text="Home" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <Button fx:id="homeBtn" mnemonicParsing="false" prefHeight="54.0" prefWidth="186.0" styleClass="topbar-button" text="Home" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <font>
                               <Font size="23.0" />
                            </font>
                         </Button>
-                        <Button fx:id="topbarCategoryBtn" layoutX="48.0" layoutY="12.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="223.0" style="-fx-background-color: #FFE7BA;" styleClass="topbar-button" text="Categories" GridPane.columnIndex="1">
+                        <Button fx:id="categoryBtn" layoutX="48.0" layoutY="12.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="223.0" styleClass="topbar-button" text="Categories" GridPane.columnIndex="1">
                            <font>
                               <Font size="23.0" />
                            </font>
                         </Button>
-                     </children>
-                  </GridPane>
-                  <GridPane layoutX="448.0" layoutY="44.0" prefHeight="42.0" prefWidth="517.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="461.59998779296876" minWidth="10.0" prefWidth="460.8" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.77777099609375" minWidth="0.0" prefWidth="44.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <TextField fx:id="searchBox" prefHeight="42.0" prefWidth="245.0" />
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="56.0" GridPane.columnIndex="1">
+                        <Button fx:id="advancedSearchBtn" layoutX="186.0" layoutY="10.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="283.0" styleClass="topbar-button" text="Advanced search" GridPane.columnIndex="2">
                            <font>
-                              <Font name="Arial Bold" size="12.0" />
+                              <Font size="23.0" />
                            </font>
                         </Button>
-                        <ImageView fitHeight="33.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <image>
-                              <Image url="@../image/SearchIcon.png" />
-                           </image>
-                        </ImageView>
                      </children>
                   </GridPane>
                   <ImageView accessibleRole="BUTTON" fitHeight="56.0" fitWidth="290.0" layoutX="50.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
@@ -75,12 +58,12 @@
                         <Image url="@../image/TinyIcon.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="userBtn" fitHeight="48.0" fitWidth="48.0" layoutX="1100.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="userBtn" fitHeight="48.0" fitWidth="48.0" layoutX="1100.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
                      <image>
                         <Image url="@../image/UserProfile.png" />
                      </image>
                   </ImageView>
-                  <AnchorPane fx:id="notificationBell" layoutX="1040.0" layoutY="44.0">
+                  <AnchorPane fx:id="notificationBell" layoutX="1040.0" layoutY="44.0" style="-fx-cursor: hand;">
                      <children>
                         <ImageView fitHeight="36.0" fitWidth="36.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -94,13 +77,19 @@
                         </Label>
                      </children>
                   </AnchorPane>
+                  <HBox fx:id="searchBoxContainer" alignment="CENTER" layoutX="448.0" layoutY="44.0" styleClass="search-box-container">
+                     <children>
+                        <TextField fx:id="searchBox" prefHeight="42.0" prefWidth="460.0" promptText="Search" styleClass="search-box" />
+                        <FontAwesomeIconView glyphName="SEARCH" size="32" text="" wrappingWidth="40.0" />
+                     </children>
+                  </HBox>
                </children>
             </AnchorPane>
          </children>
       </StackPane>
-      <MFXScrollPane fx:id="suggestionsScrollPane" hbarPolicy="NEVER" layoutX="448.0" layoutY="86.0" prefHeight="36.0" prefWidth="462.0" style="-fx-background-color: transparent; -fx-border-radius: 4; -fx-background-radius: 4;">
+      <MFXScrollPane fx:id="suggestionsScrollPane" hbarPolicy="NEVER" layoutX="448.0" layoutY="90.0" prefHeight="36.0" prefWidth="500.0" style="-fx-background-color: transparent; -fx-border-radius: 4; -fx-background-radius: 4;">
          <content>
-            <VBox fx:id="suggestionsBox" prefHeight="30.0" prefWidth="475.0" style="-fx-background-radius: 4; -fx-border-radius: 4; -fx-background-color: #fff;" />
+            <VBox fx:id="suggestionsBox" prefHeight="30.0" prefWidth="515.0" style="-fx-background-radius: 4; -fx-border-radius: 4; -fx-background-color: #fff;" />
          </content>
       </MFXScrollPane>
       <VBox fx:id="notificationPane" disable="true" layoutX="878.0" layoutY="94.0" mouseTransparent="true" prefHeight="360.0" style="-fx-background-color: #f0f0f0; -fx-background-radius: 8;" visible="false">

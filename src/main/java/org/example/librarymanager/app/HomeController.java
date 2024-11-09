@@ -1,20 +1,12 @@
 package org.example.librarymanager.app;
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import org.example.librarymanager.components.DocumentComponent;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Document;
 
-import javax.print.Doc;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -33,12 +25,12 @@ public class HomeController extends ControllerWrapper{
      * @param container the pane in which the documents are displayed
      */
     private void display(List<Document> documents, AnchorPane container) {
-        container.setPrefWidth(documents.size() * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET) + 48);
+        container.setPrefWidth(documents.size() * (DocumentComponent.DOC_COMPONENT_WITDH_GRID + DocumentComponent.DOC_COMPONENT_OFFSET) + 48);
         for (int i = 0; i < documents.size(); ++ i) {
             Document document = documents.get(i);
-            Node doc = new DocumentComponent(document, this).getElement();
+            Node doc = new DocumentComponent(document, this, DocumentComponent.VIEW_TYPE_GRID).getElement();
             AnchorPane.setTopAnchor(doc, 30.0);
-            AnchorPane.setLeftAnchor(doc, (double)(i * (DocumentComponent.DOC_COMPONENT_WITDH + DocumentComponent.DOC_COMPONENT_OFFSET)) + 24);
+            AnchorPane.setLeftAnchor(doc, (double)(i * (DocumentComponent.DOC_COMPONENT_WITDH_GRID + DocumentComponent.DOC_COMPONENT_OFFSET)) + 24);
             container.getChildren().add(doc);
         }
     }

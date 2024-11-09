@@ -1,10 +1,19 @@
 package org.example.librarymanager.data;
 
 import com.google.api.services.books.model.Volume;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.*;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.*;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.RAMDirectory;
 import org.example.librarymanager.models.Document;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 public class DocumentTest {
@@ -25,7 +34,7 @@ public class DocumentTest {
 
     @Test
     public void getDocumentsTest() {
-        List<Document> documents = DocumentQuery.getInstance().getHighestRatedDocuments(10);
+        List<Document> documents = DocumentQuery.getInstance().getDocuments("",10);
         for (Document document : documents) {
             System.out.println(document);
         }
@@ -54,7 +63,7 @@ public class DocumentTest {
     }
 
     @Test void getDocumentsByOwnerTest() {
-        List<Document> documents = DocumentQuery.getInstance().getDocumentsByOwner(1);
+        List<Document> documents = DocumentQuery.getInstance().getDocumentsByOwner(2);
         for (Document document : documents) {
             System.out.println(document);
         }
@@ -71,5 +80,42 @@ public class DocumentTest {
                 "magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco " +
                 "laboris nisi ut aliquip ex ea commodo consequat"
         );
+    }
+
+    @Test
+    public void getDocumentsByCategoryTest() {
+        List<Document> documents = DocumentQuery.getInstance().getDocumentsByCategory(2);
+        for (Document document : documents) {
+            System.out.println(document);
+        }
+        Assertions.assertNotNull(documents);
+    }
+
+    public void addLucenceDocument(IndexWriter writer, String title) throws IOException {
+        org.apache.lucene.document.Document luceneDocument = new org.apache.lucene.document.Document();
+        luceneDocument.add(new TextField("title", title, Field.Store.YES));
+        writer.addDocument(luceneDocument);
+    }
+
+    @Test
+    public void lucenceDocumentTest() throws Exception {
+        Directory memoryIndex = new RAMDirectory();
+        StandardAnalyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        IndexWriter writer = new IndexWriter(memoryIndex, config);
+
+        addLucenceDocument(writer, "laid-back camp");
+        addLucenceDocument(writer, "attack on titan");
+        addLucenceDocument(writer, "sound! euphonium");
+
+        writer.close();
+
+        Query query = new QueryParser("title", analyzer).parse("euphonium");
+        IndexReader indexReader = DirectoryReader.open(memoryIndex);
+        IndexSearcher searcher = new IndexSearcher(indexReader);
+        TopDocs topDocs = searcher.search(query, 1);
+        for (ScoreDoc doc: topDocs.scoreDocs) {
+            System.out.println(searcher.doc(doc.doc));
+        }
     }
 }

@@ -1,0 +1,23 @@
+.btn-group {
+    -fx-alignment: top-right;
+    -fx-pref-width: 1185;
+    -fx-padding: 0 49.25 48 0;
+}
+
+.view-type-btn {
+    -fx-pref-width: 30;
+    -fx-padding: 6;
+    -fx-background-color: #f0f0f3;
+}
+
+.view-type-btn:hover {
+    -fx-background-color: rgb(197, 197, 197);
+    -fx-cursor: hand;
+}
+
+.view-type-btn--active {
+    -fx-background-color: #000101;
+}
+.view-type-btn--active:hover {
+    -fx-background-color: #000101;
+}

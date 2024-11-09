@@ -2,3 +2,10 @@
     -fx-color-main: #5C1C00;
     -fx-choice-color-hover: #5C1C0033;
 }
+
+.primary-button {
+    -fx-background-color: #5C1C00cc;
+    -mfx-ripple-color: #5c1c00;
+    -fx-text-fill: #fff;
+    -fx-cursor: hand;
+}

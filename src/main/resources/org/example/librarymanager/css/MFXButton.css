@@ -21,6 +21,7 @@
 .mfx-button {
   -fx-font-family: "Open Sans Regular";
   -fx-text-fill: -mfx-text-he;
+  -fx-cursor: hand;
 }
 
 .mfx-button:armed,

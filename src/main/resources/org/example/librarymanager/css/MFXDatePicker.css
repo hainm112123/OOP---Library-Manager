@@ -25,6 +25,7 @@ Date Picker
 ********************/
 .mfx-date-picker {
   -fx-padding: 3 5 3 5;
+  -fx-cursor: hand;
 }
 
 .mfx-date-picker .mfx-icon-wrapper .mfx-ripple-generator {

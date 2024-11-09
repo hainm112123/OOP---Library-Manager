@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/advanced-search.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.AdvancedSearchController">
+   <AnchorPane layoutY="170.0">
+      <children>
+         <MFXScrollPane fx:id="scrollPane" prefHeight="550.0" prefWidth="1200.0">
+            <content>
+               <VBox>
+                  <children>
+                     <VBox prefHeight="300.0" prefWidth="1186.0">
+                        <children>
+                           <VBox prefHeight="58.0" prefWidth="1185.0" stylesheets="@../css/home.css">
+                              <children>
+                                 <Label prefHeight="58.0" prefWidth="552.0" styleClass="title" text="Advanced search" />
+                              </children>
+                           </VBox>
+                           <HBox fx:id="searchBoxContainer" alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="1154.0" styleClass="search-box-container">
+                              <children>
+                                 <FontAwesomeIconView glyphName="SEARCH" size="24" text="">
+                                    <HBox.margin>
+                                       <Insets left="8.0" right="8.0" />
+                                    </HBox.margin>
+                                 </FontAwesomeIconView>
+                                 <TextField fx:id="searchBox" prefHeight="44.0" prefWidth="1114.0" promptText="Search" styleClass="search-box" />
+                              </children>
+                              <VBox.margin>
+                                 <Insets left="32.0" right="16.0" />
+                              </VBox.margin>
+                           </HBox>
+                           <GridPane alignment="CENTER" prefHeight="86.0" prefWidth="1154.0">
+                             <columnConstraints>
+                               <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
+                                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="66.40003662109376" minWidth="0.0" percentWidth="5.0" prefWidth="5.599972534179699" />
+                                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="239.2000274658203" minWidth="10.0" percentWidth="30.0" prefWidth="239.2000274658203" />
+                                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.0" prefWidth="100.0" />
+                               <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="100.0" />
+                             </columnConstraints>
+                             <rowConstraints>
+                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                             </rowConstraints>
+                              <children>
+                                 <MFXComboBox fx:id="sortByFilter" floatMode="DISABLED" prefHeight="40.0" prefWidth="372.0" GridPane.rowIndex="1" />
+                                 <MFXComboBox fx:id="categoryFilter" floatMode="DISABLED" prefHeight="40.0" prefWidth="361.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 <MFXComboBox fx:id="statusFilter" floatMode="DISABLED" prefHeight="40.0" prefWidth="347.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                 <Label text="Sort by">
+                                    <font>
+                                       <Font size="14.0" />
+                                    </font>
+                                 </Label>
+                                 <Label text="Category" GridPane.columnIndex="2">
+                                    <font>
+                                       <Font size="14.0" />
+                                    </font>
+                                 </Label>
+                                 <Label text="Status" GridPane.columnIndex="4">
+                                    <font>
+                                       <Font size="14.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                              <padding>
+                                 <Insets left="32.0" right="16.0" />
+                              </padding>
+                              <VBox.margin>
+                                 <Insets top="12.0" />
+                              </VBox.margin>
+                           </GridPane>
+                           <VBox alignment="BOTTOM_RIGHT" prefHeight="70.0" prefWidth="1154.0">
+                              <children>
+                                 <MFXButton fx:id="searchButton" prefHeight="36.0" prefWidth="157.0" styleClass="primary-button" text="Search">
+                                    <graphic>
+                                       <FontAwesomeIconView glyphName="SEARCH" wrappingWidth="16.742711067199707" />
+                                    </graphic></MFXButton>
+                              </children>
+                              <padding>
+                                 <Insets right="16.0" />
+                              </padding>
+                           </VBox>
+                        </children>
+                        <padding>
+                           <Insets left="16.0" right="16.0" />
+                        </padding>
+                     </VBox>
+                     <VBox fx:id="documentsContainer" prefHeight="200.0" prefWidth="100.0" />
+                  </children>
+               </VBox>
+            </content>
+         </MFXScrollPane>
+      </children>
+   </AnchorPane>
+    <fx:include maxHeight="170.0" prefHeight="170.0" source="topbar.fxml" />
+</AnchorPane>

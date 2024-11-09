@@ -24,6 +24,7 @@
   -mfx-thumb-hover-color: rgb(89, 88, 91);
   -mfx-gap: 0;
   -fx-padding: 3 5 3 5;
+  -fx-cursor: hand;
 }
 
 .mfx-combo-box .caret .mfx-ripple-generator {

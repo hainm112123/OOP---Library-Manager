@@ -1,8 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.ProfileController">
+   <AnchorPane layoutX="3.0" layoutY="170.0" prefHeight="574.0" prefWidth="1200.0">
+      <children>
+         <ScrollPane prefHeight="574.0" prefWidth="1200.0">
+           <content>
+             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="574.0" prefWidth="1200.0">
+                  <children>
+                     <GridPane layoutX="293.0" layoutY="51.0" prefHeight="262.0" prefWidth="758.0">
+                       <columnConstraints>
+                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="214.79998779296875" minWidth="10.0" prefWidth="133.6" />
+                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="533.6000122070312" minWidth="10.0" prefWidth="330.4" />
+                       </columnConstraints>
+                       <rowConstraints>
+                           <RowConstraints maxHeight="61.6" minHeight="10.0" prefHeight="44.799981689453126" vgrow="SOMETIMES" />
+                         <RowConstraints maxHeight="55.200018310546874" minHeight="10.0" prefHeight="45.6000244140625" vgrow="SOMETIMES" />
+                         <RowConstraints maxHeight="67.20001831054687" minHeight="10.0" prefHeight="40.600012207031256" vgrow="SOMETIMES" />
+                         <RowConstraints maxHeight="62.399987792968744" minHeight="10.0" prefHeight="42.399987792968744" vgrow="SOMETIMES" />
+                           <RowConstraints maxHeight="63.20001220703125" minHeight="10.0" prefHeight="38.40001525878907" vgrow="SOMETIMES" />
+                           <RowConstraints maxHeight="52.0000061035156" minHeight="4.599987792968761" prefHeight="37.0" vgrow="SOMETIMES" />
+                           <RowConstraints maxHeight="60.60001220703123" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+                       </rowConstraints>
+                        <children>
+                           <Label prefHeight="30.0" prefWidth="131.0" text="First Name : ">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </Label>
+                           <Label prefHeight="30.0" prefWidth="143.0" text="Last Name :" textAlignment="RIGHT" GridPane.rowIndex="1">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </Label>
+                           <Label prefHeight="30.0" prefWidth="155.0" text="Gender :" textAlignment="RIGHT" GridPane.rowIndex="2">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </Label>
+                           <Label prefHeight="30.0" prefWidth="152.0" text="Average Rate :" GridPane.rowIndex="3">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </Label>
+                           <Label prefHeight="30.0" prefWidth="148.0" text="Favourite Category :" GridPane.rowIndex="4">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="Gender" prefHeight="30.0" prefWidth="534.0" text="Gender" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </Label>
+                           <Label prefHeight="30.0" prefWidth="534.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                           <Label prefHeight="30.0" prefWidth="534.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                           <Label fx:id="FirstName" prefHeight="30.0" prefWidth="534.0" text="FirstName" GridPane.columnIndex="1">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </Label>
+                           <Label fx:id="LastName" prefHeight="30.0" prefWidth="534.0" text="LastName" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </Label>
+                           <MFXButton fx:id="ChangeName" prefHeight="26.0" prefWidth="543.0" rippleAnimateShadow="true" styleClass="form-primary-button" text="Change Your Name" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </MFXButton>
+                           <MFXButton fx:id="Cancel" prefHeight="32.0" prefWidth="534.0" text="Cancel" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </MFXButton>
+                           <MFXButton fx:id="SaveName" prefHeight="33.0" prefWidth="534.0" text="Save" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </MFXButton>
+                           <MFXTextField fx:id="FName" minHeight="30.0" prefHeight="30.0" prefWidth="566.0" visible="false" GridPane.columnIndex="1" />
+                           <MFXTextField fx:id="LName" minHeight="30.0" prefHeight="30.0" prefWidth="566.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        </children>
+                     </GridPane>
+                  </children>
+               </AnchorPane>
+           </content>
+         </ScrollPane>
+      </children>
+   </AnchorPane>
     <fx:include source="topbar.fxml" />
 
 </AnchorPane>

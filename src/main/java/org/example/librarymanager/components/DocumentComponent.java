@@ -130,6 +130,7 @@ public class DocumentComponent implements Component {
             ControllerWrapper.setCurrentDocument(document);
             controller.safeSwitchScene("document-detail.fxml");
         });
+        listContainer.setEffect(ds);
     }
 
     /**

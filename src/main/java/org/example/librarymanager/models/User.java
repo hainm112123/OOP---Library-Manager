@@ -26,6 +26,7 @@ public class User {
     private String gender;
     private LocalDate dateOfBirth;
     private int permission;
+    private String imageLink;
 
     public User(String username, String password, String firstname, String lastname, String gender, LocalDate dateOfBirth) {
         this.username = username;
@@ -45,6 +46,7 @@ public class User {
         this.gender = rs.getString("gender");
         this.dateOfBirth = new Date(rs.getDate("dateOfBirth").getTime()).toLocalDate();
         this.permission = rs.getInt("permission");
+        this.imageLink = rs.getString("imageLink");
     }
 
     @Override

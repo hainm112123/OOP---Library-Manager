@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import org.example.librarymanager.data.DataAccessObject;
 import org.example.librarymanager.data.DatabaseConnection;
 import org.example.librarymanager.data.UserQuery;
 import org.example.librarymanager.models.*;
@@ -27,7 +28,7 @@ import java.util.ResourceBundle;
 
 public class EditDataController<E> extends ControllerWrapper {
     @FXML
-    GridPane gridPane;
+    protected GridPane gridPane;
     @FXML
     Label title;
     @FXML
@@ -40,9 +41,9 @@ public class EditDataController<E> extends ControllerWrapper {
     Label message;
 
 
-    private E data;
-    private Class<E> clazz;
-    private String editableAttribute;
+    protected E data;
+    protected Class<E> clazz;
+    protected String editableAttribute;
 
     public void setData(E data, Class<E> clazz) {
         this.data = data;
@@ -106,79 +107,59 @@ public class EditDataController<E> extends ControllerWrapper {
                         editableAttribute = "permission";
                         break;
                     case "Document":
-                        editableAttribute = "author,title,description";
+                        editableAttribute = "";
                         break;
                     case "Rating":
-                        editableAttribute = "value";
+                        editableAttribute = "";
                         break;
                     case "Service":
                         editableAttribute = "";
                         break;
                     case "Category":
-                        editableAttribute = "description";
+                        editableAttribute = "name,description";
                         break;
                     default:
                         break;
                 }
                 //if(!editableAttribute.isBlank() || !editableAttribute.isEmpty()) {
                 enableEdit();
-                enableApply();
-                enableDelete();
+//                enableApply();
+//                enableDelete();
                 //}
             }
 
         });
     }
 
-    private void enableEdit() {
-//        System.out.println(editableAttribute);
+    protected void enableEdit() {
         for (int index = 0; index < gridPane.getChildren().size(); index += 2) {
             Label label = (Label)gridPane.getChildren().get(index);
             TextField textField = (TextField)gridPane.getChildren().get(index + 1);
             String value = label.getText().toLowerCase();
-            if (editableAttribute.contentEquals(value)) {
+            if (editableAttribute.contains(value)) {
                 textField.setEditable(true);
             }
         }
     }
 
-    private void enableApply() {
-        switch (clazz.getSimpleName()) {
-            case "User":
-                applyBtn.setOnAction(e -> {
-                    TextField text = (TextField)gridPane.getChildren().get(15);
-                    String value = text.getText().trim();
-                    if (!"0".equals(value) && !"1".equals(value) && !"2".equals(value)) {
-                        message.setText("Please enter a valid permission value: 1 for User, 2 for Moderator, and 3 for Admin.");
-                        return;
-                    }
-                    applyQuery();
-                });
-                break;
-            case "Document":
-                editableAttribute = "author,title,description";
-                break;
-            case "Rating":
-                editableAttribute = "value";
-                break;
-            case "Service":
-                editableAttribute = "";
-                break;
-            case "Category":
-                editableAttribute = "description";
-                break;
-            default:
-                break;
-        }
+    protected void enableApply() {
+        applyBtn.setOnAction(e -> {
+            applyQuery();
+        });
     }
 
-    private void applyQuery() {
+    protected void applyQuery() {
+
         DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
         try (Connection connection = databaseConnection.getConnection()) {
             Field[] fields = clazz.getDeclaredFields();
             int fIndex = 0;
             StringBuffer sqlQuery = new StringBuffer();
-            sqlQuery.append("UPDATE " + clazz.getSimpleName() + "s");
+            if (clazz.getSimpleName().equals("Category")) {
+                sqlQuery.append("UPDATE categories");
+            } else {
+                sqlQuery.append("UPDATE " + clazz.getSimpleName() + "s");
+            }
             sqlQuery.append(" SET ");
             for (int index = 0; index < gridPane.getChildren().size(); index += 2) {
                 String label = ((Label)gridPane.getChildren().get(index)).getText().toLowerCase();
@@ -201,7 +182,7 @@ public class EditDataController<E> extends ControllerWrapper {
             }
             sqlQuery.append(" WHERE id = " + ((TextField) gridPane.getChildren().get(1)).getText() + ";");
             PreparedStatement ps = connection.prepareStatement(sqlQuery.toString());
-            System.out.println(sqlQuery.toString());
+//            System.out.println(sqlQuery.toString());
             ps.executeUpdate();
             ps.close();
             message.setText("Successfully applied!");
@@ -211,7 +192,13 @@ public class EditDataController<E> extends ControllerWrapper {
         }
     }
 
-    private void enableDelete() {
+    protected void enableDelete() {
 
+    }
+
+    protected void replaceGridPane(int row, int column, Node node) {
+        gridPane.getChildren().set(column + row*2, node);
+        GridPane.setRowIndex(node, row);
+        GridPane.setColumnIndex(node, column);
     }
 }

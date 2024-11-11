@@ -53,40 +53,8 @@ public class DataTable<E> {
         table.setMinHeight(TABLE_HEGIHT);
         table.setPrefHeight(TABLE_HEGIHT);
         table.setMaxWidth(TABLE_WIDTH);
-        TableColumn<E, Void> actionColumn = new TableColumn<>("");
-        actionColumn.setCellFactory(colCell -> new TableCell<E, Void>() {
-            private final Button button = new Button("Edit");
-            {
-                button.setOnAction(event -> {
-                    try {
-                        Stage subStage = new Stage();
-                        subStage.initModality(Modality.WINDOW_MODAL);
-                        subStage.initOwner(container.getScene().getWindow());
-                        FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("edit-data.fxml"));
-                        Scene subScene = new Scene(fxmlLoader.load());
-                        EditDataController<E> controller = fxmlLoader.getController();
-                        E tmp = (E) table.getItems().get(getTableRow().getIndex());
-                        controller.setData(tmp, clazz);
-                        subStage.setScene(subScene);
 
-                        subStage.showAndWait();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(button);
-                }
-            }
-        });
-        table.getColumns().add(actionColumn);
+        addEditColumn();
 
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) if(!Modifier.isStatic(field.getModifiers())) {
@@ -123,5 +91,64 @@ public class DataTable<E> {
 
     public VBox getContainer() {
         return container;
+    }
+
+    private void addEditColumn() {
+        String fxmlFile = "edit-data.fxml";
+        switch (clazz.getSimpleName()) {
+            case "Service":
+                return;
+            case "User":
+                fxmlFile = "edit-data-user.fxml";
+                break;
+            case "Document":
+                fxmlFile = "edit-data-document.fxml";
+                break;
+            case "Rating":
+                fxmlFile = "edit-data-rating.fxml";
+                break;
+            case "Category":
+                fxmlFile = "edit-data-category.fxml";
+                break;
+            default:
+                break;
+        }
+        TableColumn<E, Void> actionColumn = new TableColumn<>("");
+        String finalFxmlFile = fxmlFile;
+        actionColumn.setCellFactory(colCell -> new TableCell<E, Void>() {
+            private final Button button = new Button("Edit");
+
+            {
+                button.setOnAction(event -> {
+                    try {
+                        Stage subStage = new Stage();
+                        subStage.initModality(Modality.WINDOW_MODAL);
+                        subStage.initOwner(container.getScene().getWindow());
+                        FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource(finalFxmlFile));
+                        Scene subScene = new Scene(fxmlLoader.load());
+                        EditDataController<E> controller = fxmlLoader.getController();
+                        E tmp = (E) table.getItems().get(getTableRow().getIndex());
+                        controller.setData(tmp, clazz);
+                        subStage.setScene(subScene);
+
+                        subStage.showAndWait();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(button);
+                }
+            }
+        });
+        table.getColumns().add(actionColumn);
     }
 }

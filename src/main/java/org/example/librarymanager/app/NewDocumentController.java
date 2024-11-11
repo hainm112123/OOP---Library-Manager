@@ -3,21 +3,28 @@ package org.example.librarymanager.app;
 import com.google.api.services.books.model.Volume;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 
+import javax.print.Doc;
+import javax.swing.text.DocumentFilter;
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class NewDocumentController extends ControllerWrapper {
     @FXML
@@ -43,6 +50,15 @@ public class NewDocumentController extends ControllerWrapper {
     private Label searchMessage;
     @FXML
     private Label submitMessage;
+
+    @FXML
+    private MFXButton uploadBtn;
+    @FXML
+    private Label uploadlabel;
+    @FXML
+    private MFXProgressSpinner loader;
+
+    private File imageFile;
 
     /**
      * Hide message when edit input.
@@ -78,6 +94,18 @@ public class NewDocumentController extends ControllerWrapper {
         hideMessage(docAuthor, submitMessage);
 
         hideMessage(docISBN, searchMessage);
+
+        Common.disable(loader);
+
+        uploadBtn.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            imageFile = fileChooser.showOpenDialog(stage);
+            if (imageFile != null) {
+                uploadlabel.setText(imageFile.getAbsolutePath());
+            } else {
+                uploadlabel.setText("No file chosen");
+            }
+        });
     }
 
     /**
@@ -138,31 +166,48 @@ public class NewDocumentController extends ControllerWrapper {
             submitMessage.getStyleClass().add("form-message--error");
         }
         else {
-            Document document = DocumentQuery.getInstance().add(new Document(
-                    docCategories.getSelectionModel().getSelectedItem().getValue(),
-                    getUser().getId(),
-                    docAuthor.getText(),
-                    docTitle.getText(),
-                    docDescription.getText(),
-                    docImageLink.getText(),
-                    Integer.parseInt(docQuantity.getText())
-            ));
-            if (document != null) {
-                docTitle.clear();
-                docAuthor.clear();
-                docDescription.clear();
-                docImageLink.clear();
-                docQuantity.clear();
-                docCategories.getSelectionModel().clearSelection();
+            Common.disable(docSubmit);
+            Common.enable(loader);
+            executor = Executors.newSingleThreadExecutor();
+            Future<Document> documentFu = executor.submit(() -> {
+                String imageLink = docImageLink.getText();
+                if (imageFile != null) {
 
-                submitMessage.setText("Successfully added!");
-                submitMessage.getStyleClass().clear();
-                submitMessage.getStyleClass().add("form-message--success");
-            }
-            else {
-                submitMessage.setText("Some errors occurred! Please try again!");
-                submitMessage.getStyleClass().clear();
-                submitMessage.getStyleClass().add("form-message--error");
+                }
+                return DocumentQuery.getInstance().add(new Document(
+                        docCategories.getSelectionModel().getSelectedItem().getValue(),
+                        getUser().getId(),
+                        docAuthor.getText(),
+                        docTitle.getText(),
+                        docDescription.getText(),
+                        imageLink,
+                        Integer.parseInt(docQuantity.getText())
+                ));
+            });
+            executor.shutdown();
+            try {
+                Document document = documentFu.get();
+                Common.enable(docSubmit);
+                Common.disable(loader);
+                if (document != null) {
+                    docTitle.clear();
+                    docAuthor.clear();
+                    docDescription.clear();
+                    docImageLink.clear();
+                    docQuantity.clear();
+                    docCategories.getSelectionModel().clearSelection();
+
+                    submitMessage.setText("Successfully added!");
+                    submitMessage.getStyleClass().clear();
+                    submitMessage.getStyleClass().add("form-message--success");
+                }
+                else {
+                    submitMessage.setText("Some errors occurred! Please try again!");
+                    submitMessage.getStyleClass().clear();
+                    submitMessage.getStyleClass().add("form-message--error");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

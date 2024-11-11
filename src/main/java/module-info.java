@@ -22,6 +22,9 @@ module org.example.librarymanager {
     requires org.apache.lucene.core;
     requires org.apache.lucene.queryparser;
     requires org.apache.lucene.analysis.common;
+    requires software.amazon.awssdk.services.s3;
+    requires software.amazon.awssdk.regions;
+    requires software.amazon.awssdk.auth;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

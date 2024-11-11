@@ -2,8 +2,17 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -13,9 +22,9 @@
 <AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.ProfileController">
    <AnchorPane layoutY="170.0" prefHeight="574.0" prefWidth="1200.0">
       <children>
-         <ScrollPane prefHeight="574.0" prefWidth="1200.0">
+         <ScrollPane layoutX="7.0" prefHeight="574.0" prefWidth="1200.0">
            <content>
-             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="574.0" prefWidth="1185.0">
+             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="750.0" prefWidth="1185.0">
                   <children>
                      <GridPane layoutX="293.0" layoutY="51.0" prefHeight="291.0" prefWidth="758.0">
                        <columnConstraints>
@@ -93,6 +102,38 @@
                            <MFXTextField fx:id="LName" minHeight="30.0" prefHeight="30.0" prefWidth="566.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         </children>
                      </GridPane>
+                     <AreaChart fx:id="StatisticalTimeUse" layoutX="293.0" layoutY="378.0" prefHeight="330.0" prefWidth="757.0" title="Usage period within the last 30 days">
+                       <xAxis>
+                         <CategoryAxis endMargin="100.0" label="Days" side="BOTTOM" startMargin="1.0">
+                              <opaqueInsets>
+                                 <Insets />
+                              </opaqueInsets>
+                           </CategoryAxis>
+                       </xAxis>
+                       <yAxis>
+                         <NumberAxis label="Times (hours)" lowerBound="1.0" minorTickCount="4" minorTickLength="4.0" side="LEFT" tickLabelGap="4.0" tickLength="4.0" upperBound="21.0" />
+                       </yAxis>
+                        <effect>
+                           <Lighting>
+                              <bumpInput>
+                                 <Shadow />
+                              </bumpInput>
+                              <light>
+                                 <Light.Distant />
+                              </light>
+                           </Lighting>
+                        </effect>
+                     </AreaChart>
+                     <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="43.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                           <Image url="@../image/UserProfile.png" />
+                        </image>
+                     </ImageView>
+                     <Label fx:id="UserName" alignment="CENTER" layoutX="43.0" layoutY="270.0" prefHeight="30.0" prefWidth="197.0" text="\@User AAAAAA">
+                        <font>
+                           <Font name="System Bold Italic" size="15.0" />
+                        </font>
+                     </Label>
                   </children>
                </AnchorPane>
            </content>

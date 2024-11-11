@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.control.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -37,17 +38,20 @@ public class ProfileController extends ControllerWrapper {
     private MFXTextField FName;
     @FXML
     private MFXTextField LName;
-
+    @FXML
+    private AreaChart<String,Number> StatisticalTimeUse;
+    @FXML
+    private Label UserName;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         resetName();
+        UserName.setText((String)("@User " + getUser().getUsername()));
 
         Cancel.setRippleColor(Paint.valueOf(Common.PRIMARY_COLOR));
         SaveName.setRippleColor(Paint.valueOf(Common.PRIMARY_COLOR));
         ChangeName.setRippleColor(Paint.valueOf(Common.PRIMARY_COLOR));
 
         ChangeName.setOnAction(event -> {
-            System.out.println(1);
             ChangeStatus();
         });
 
@@ -57,14 +61,15 @@ public class ProfileController extends ControllerWrapper {
         });
 
         SaveName.setOnAction(event -> {
-            Task<User> task = new Task<User>() {
+            getUser().setFirstname(FName.getText());
+            getUser().setLastname(LName.getText());
+            Task<Boolean> task = new Task<Boolean>() {
                 @Override
-                protected User call() throws Exception {
-                    return UserQuery.getInstance().ChangeName(getUser(),FName.getText(),LName.getText());
+                protected Boolean call() throws Exception {
+                    return UserQuery.getInstance().update(getUser());
                 }
             };
             task.setOnSucceeded(e -> {
-                resetName();
                 NotChangeStatus();
             });
             new Thread(task).start();
@@ -75,10 +80,8 @@ public class ProfileController extends ControllerWrapper {
         FirstName.setText(getUser().getFirstname());
         LastName.setText(getUser().getLastname());
         Gender.setText(getUser().getGender());
-
         FName.setText(getUser().getFirstname());
         LName.setText(getUser().getLastname());
-
     }
 
     public void ChangeStatus(){
@@ -86,8 +89,8 @@ public class ProfileController extends ControllerWrapper {
         LName.setVisible(true);
         FirstName.setVisible(false);
         LastName.setVisible(false);
-        SaveName.setVisible(true);
         Cancel.setVisible(true);
+        SaveName.setVisible(true);
         ChangeName.setVisible(false);
     }
     public void NotChangeStatus(){

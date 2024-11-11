@@ -2,6 +2,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
@@ -108,8 +109,8 @@
                                                             <MFXTextField fx:id="docImageLink" floatMode="DISABLED" prefHeight="35.0" prefWidth="882.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                              <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                                 <children>
-                                                   <MFXButton prefHeight="26.0" prefWidth="160.0" styleClass="form-primary-button" text="Choose an image" />
-                                                   <Label prefHeight="18.0" prefWidth="600.0" text="No file choosen">
+                                                   <MFXButton fx:id="uploadBtn" prefHeight="26.0" prefWidth="160.0" styleClass="form-primary-button" text="Choose an image" />
+                                                   <Label fx:id="uploadlabel" prefHeight="18.0" prefWidth="600.0" text="No file choosen">
                                                       <HBox.margin>
                                                          <Insets left="12.0" />
                                                       </HBox.margin>
@@ -120,11 +121,12 @@
                                                             <Label fx:id="submitMessage" prefHeight="18.0" prefWidth="635.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                                             <StackPane prefHeight="129.0" prefWidth="613.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
                                                                 <children>
-                                                                    <MFXButton alignment="CENTER" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="28.0" prefWidth="819.0" rippleColor="#5c1c00" styleClass="form-primary-button" text="Update" StackPane.alignment="CENTER" />
+                                                                    <MFXButton fx:id="updateBtn" alignment="CENTER" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="28.0" prefWidth="819.0" rippleColor="#5c1c00" styleClass="form-primary-button" text="Update" StackPane.alignment="CENTER" />
+                                                   <MFXProgressSpinner fx:id="loader" prefHeight="28.0" prefWidth="50.0" />
                                                                 </children>
                                                             </StackPane>
-                                                            <MFXButton alignment="CENTER" mnemonicParsing="false" onAction="#handleCancel" prefHeight="28.0" prefWidth="819.0" rippleColor="#787878" styleClass="form-cancel-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                                                            <MFXButton alignment="CENTER" layoutX="212.0" layoutY="471.0" mnemonicParsing="false" onAction="#handleDelete" prefHeight="28.0" prefWidth="819.0" styleClass="form-delete-button" text="Delete" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                                                            <MFXButton fx:id="cancelBtn" alignment="CENTER" mnemonicParsing="false" onAction="#handleCancel" prefHeight="28.0" prefWidth="819.0" rippleColor="#787878" styleClass="form-cancel-button" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                                                            <MFXButton fx:id="deleteBtn" alignment="CENTER" layoutX="212.0" layoutY="471.0" mnemonicParsing="false" onAction="#handleDelete" prefHeight="28.0" prefWidth="819.0" styleClass="form-delete-button" text="Delete" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                                                         </children>
                                                     </GridPane>
                                                 </children>

@@ -1,20 +1,27 @@
 package org.example.librarymanager.app;
 
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.ButtonDialog;
+import org.example.librarymanager.data.Backblaze;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class EditDocumentController extends ControllerWrapper {
     @FXML
@@ -31,8 +38,21 @@ public class EditDocumentController extends ControllerWrapper {
     private MFXComboBox<Common.Choice> docCategories;
     @FXML
     private Label submitMessage;
+    @FXML
+    private MFXProgressSpinner loader;
+    @FXML
+    private MFXButton uploadBtn;
+    @FXML
+    private Label uploadlabel;
+    @FXML
+    private MFXButton updateBtn;
+    @FXML
+    private MFXButton cancelBtn;
+    @FXML
+    private MFXButton deleteBtn;
 
     private Document document;
+    private File imageFile;
 
     /**
      * Hide message when edit input.
@@ -64,6 +84,19 @@ public class EditDocumentController extends ControllerWrapper {
         hideMessage(docQuantity, submitMessage);
         hideMessage(docDescription, submitMessage);
         hideMessage(docAuthor, submitMessage);
+
+        Common.disable(loader);
+
+        uploadBtn.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png"));
+            imageFile = fileChooser.showOpenDialog(stage);
+            if (imageFile != null) {
+                uploadlabel.setText(imageFile.getAbsolutePath());
+            } else {
+                uploadlabel.setText("No file chosen");
+            }
+        });
 
         document = getCurrentDocument();
         docTitle.setText(document.getTitle());
@@ -105,41 +138,57 @@ public class EditDocumentController extends ControllerWrapper {
             submitMessage.setText("Please select a category!");
         }
 
-        if (docAuthor.getText().isEmpty()) {
-            docAuthor.setText(getUser().getFirstname() + " " + getUser().getLastname());
-        }
-
         if (!submitMessage.getText().isEmpty()) {
             submitMessage.setTextFill(Color.RED);
+            submitMessage.setVisible(true);
         }
         else {
-            document.setCategoryId(docCategories.getSelectionModel().getSelectedItem().getValue());
-            document.setAuthor(docAuthor.getText());
-            document.setTitle(docTitle.getText());
-            document.setDescription(docDescription.getText());
-            document.setImageLink(docImageLink.getText());
-            document.setQuantityInStock(
-                    document.getQuantityInStock()
-                    - document.getQuantity()
-                    + Integer.parseInt(docQuantity.getText())
-            );
-            document.setQuantity(Integer.parseInt(docQuantity.getText()));
+            if (docAuthor.getText().isEmpty()) {
+                docAuthor.setText(getUser().getFirstname() + " " + getUser().getLastname());
+            }
+            Common.disable(updateBtn);
+            Common.disable(cancelBtn);
+            Common.disable(deleteBtn);
+            Common.enable(loader);
 
-            if (DocumentQuery.getInstance().update(document)) {
-                submitMessage.setText("Successfully updated!");
-//                submitMessage.setTextFill(Color.GREEN);
-                submitMessage.getStyleClass().clear();
-                submitMessage.getStyleClass().add("form-message--success");
-            }
-            else {
-                submitMessage.setText("Some errors occurred! Please try again!");
-//                submitMessage.setTextFill(Color.RED);
-                submitMessage.getStyleClass().clear();
-                submitMessage.getStyleClass().add("form-message--error");
-            }
+            Task<Boolean> task = new Task<>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    document.setCategoryId(docCategories.getSelectionModel().getSelectedItem().getValue());
+                    document.setAuthor(docAuthor.getText());
+                    document.setTitle(docTitle.getText());
+                    document.setDescription(docDescription.getText());
+                    document.setImageLink(docImageLink.getText());
+                    document.setQuantityInStock(
+                            document.getQuantityInStock()
+                                    - document.getQuantity()
+                                    + Integer.parseInt(docQuantity.getText())
+                    );
+                    document.setQuantity(Integer.parseInt(docQuantity.getText()));
+                    if (imageFile != null) {
+                        document.setImageLink(Backblaze.getInstance().upload(String.format("document-%s-cover.png", UUID.randomUUID()), imageFile.getAbsolutePath()));
+                    }
+                    return DocumentQuery.getInstance().update(document);
+                }
+            };
+            task.setOnSucceeded(e -> {
+                if (task.getValue()) {
+                    submitMessage.setText("Successfully updated!");
+                    submitMessage.getStyleClass().clear();
+                    submitMessage.getStyleClass().add("form-message--success");
+                } else {
+                    submitMessage.setText("Some errors occurred! Please try again!");
+                    submitMessage.getStyleClass().clear();
+                    submitMessage.getStyleClass().add("form-message--error");
+                }
+                submitMessage.setVisible(true);
+                Common.enable(updateBtn);
+                Common.enable(cancelBtn);
+                Common.enable(deleteBtn);
+                Common.disable(loader);
+            });
+            new Thread(task).start();
         }
-
-        submitMessage.setVisible(true);
     }
 
     /**

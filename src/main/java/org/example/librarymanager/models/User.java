@@ -1,5 +1,6 @@
 package org.example.librarymanager.models;
 
+import javafx.util.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,11 +9,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User implements Model{
     public static final int TYPE_USER = 0;
     public static final int TYPE_MODERATOR = 1;
     public static final int TYPE_ADMIN = 2;
@@ -59,5 +62,25 @@ public class User {
                 + "Gender: " + gender + "\n"
                 + "DateOfBirth: " + dateOfBirth + "\n"
                 + "Permission: " + permission + "\n";
+    }
+
+    @Override
+    public List<Pair<String, String>> getData() {
+        List<Pair<String, String>> list = new ArrayList<>();
+        list.add(new Pair<>("id", String.valueOf(id)));
+        list.add(new Pair<>("username", username));
+        list.add(new Pair<>("password", password));
+        list.add(new Pair<>("firstname", firstname));
+        list.add(new Pair<>("lastname", lastname));
+        list.add(new Pair<>("gender", gender));
+        list.add(new Pair<>("dateOfBirth", dateOfBirth.toString()));
+        list.add(new Pair<>("permission", String.valueOf(permission)));
+        list.add(new Pair<>("imageLink", imageLink));
+        return list;
+    }
+
+    @Override
+    public void setData(List<Pair<String, String>> data) {
+
     }
 }

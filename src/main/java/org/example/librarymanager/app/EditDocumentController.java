@@ -3,13 +3,21 @@ package org.example.librarymanager.app;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
+import io.github.palexdev.materialfx.dialogs.MFXDialogs;
+import io.github.palexdev.materialfx.dialogs.MFXGenericDialog;
+import io.github.palexdev.materialfx.dialogs.MFXGenericDialogBuilder;
+import io.github.palexdev.materialfx.dialogs.MFXStageDialog;
+import io.github.palexdev.materialfx.enums.ScrimPriority;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.ButtonDialog;
+import org.example.librarymanager.components.DialogComponent;
 import org.example.librarymanager.data.Backblaze;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
@@ -18,12 +26,11 @@ import org.example.librarymanager.models.Document;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.*;
 
 public class EditDocumentController extends ControllerWrapper {
+    @FXML
+    private AnchorPane container;
     @FXML
     private TextField docTitle;
     @FXML
@@ -207,27 +214,40 @@ public class EditDocumentController extends ControllerWrapper {
      */
     @FXML
     private void handleDelete() {
-        ButtonDialog deleteDialog = new ButtonDialog(stage,
+        DialogComponent deleteDialog = new DialogComponent(
                 "Delete Document",
-                "Are you sure you want delete this document ?",
-                "This action can't be reverted",
-                true
+                "Are you sure you want delete this document ?\nThis action can't be reverted.",
+                DialogComponent.DIALOG_WARNING,
+                stage,
+                container
         );
-        Optional<ButtonType> result = deleteDialog.getDialog().showAndWait();
-        if (result.isPresent() && result.get() == deleteDialog.getCancelButton()) {
-            return;
-        }
-
-        String message = "";
-        if (DocumentQuery.getInstance().delete(document)) {
-            message = "Successfully deleted!";
-        } else {
-            message = "Some errors occurred! Please try again!";
-        }
-        ButtonDialog dialog = new ButtonDialog(stage, "Delete Document", message, "", false);
-        dialog.getDialog().showAndWait();
-
-        setCurrentDocument(null);
-        safeSwitchScene("home.fxml");
+        deleteDialog.addConfirmAction(e -> {
+            Task<Boolean> task = new Task<>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    return DocumentQuery.getInstance().delete(document);
+                }
+            };
+            task.setOnSucceeded(event -> {
+                deleteDialog.close();
+                String message = task.getValue() ? "Successfully deleted!" : "Some errors occurred! Please try again!";
+                DialogComponent infoDialog = new DialogComponent(
+                        "Delete Document",
+                        message,
+                        DialogComponent.DIALOG_INFO,
+                        stage,
+                        container
+                );
+                setCurrentDocument(null);
+                infoDialog.addConfirmAction(e1 -> {
+                    infoDialog.close();
+                    safeSwitchScene("home.fxml");
+                });
+                infoDialog.show();
+            });
+            new Thread(task).start();
+        });
+        deleteDialog.addCancelAction(null);
+        deleteDialog.show();
     }
 }

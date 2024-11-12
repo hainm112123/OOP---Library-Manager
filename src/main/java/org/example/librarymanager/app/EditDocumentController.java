@@ -60,6 +60,7 @@ public class EditDocumentController extends ControllerWrapper {
 
     private Document document;
     private File imageFile;
+    private String imageLink;
 
     /**
      * Hide message when edit input.
@@ -173,7 +174,8 @@ public class EditDocumentController extends ControllerWrapper {
                     );
                     document.setQuantity(Integer.parseInt(docQuantity.getText()));
                     if (imageFile != null) {
-                        document.setImageLink(Backblaze.getInstance().upload(String.format("document-%s-cover.png", UUID.randomUUID()), imageFile.getAbsolutePath()));
+                        imageLink = Backblaze.getInstance().upload(String.format("document-%s-cover.png", UUID.randomUUID()), imageFile.getAbsolutePath());
+                        document.setImageLink(imageLink);
                     }
                     return DocumentQuery.getInstance().update(document);
                 }
@@ -183,6 +185,9 @@ public class EditDocumentController extends ControllerWrapper {
                     submitMessage.setText("Successfully updated!");
                     submitMessage.getStyleClass().clear();
                     submitMessage.getStyleClass().add("form-message--success");
+                    docImageLink.setText(imageLink);
+                    uploadlabel.setText("No file chosen");
+                    imageFile = null;
                 } else {
                     submitMessage.setText("Some errors occurred! Please try again!");
                     submitMessage.getStyleClass().clear();

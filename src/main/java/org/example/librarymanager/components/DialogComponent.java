@@ -19,6 +19,7 @@ import java.util.Map;
 public class DialogComponent {
     public static final String DIALOG_WARNING = "warning";
     public static final String DIALOG_INFO = "info";
+    public static final String DIALOG_ERROR = "error";
 
     private MFXGenericDialog dialogContent;
     private MFXStageDialog dialog;
@@ -46,6 +47,10 @@ public class DialogComponent {
             MFXFontIcon infoIcon = new MFXFontIcon("fas-circle-exclamation", 18);
             dialogContent.setHeaderIcon(infoIcon);
             dialogContent.getStyleClass().add("mfx-warn-dialog");
+        } else if (style.equals(DIALOG_ERROR)) {
+            MFXFontIcon infoIcon = new MFXFontIcon("fas-circle-xmark", 18);
+            dialogContent.setHeaderIcon(infoIcon);
+            dialogContent.getStyleClass().add("mfx-error-dialog");
         }
         dialogContent.getStylesheets().add(getClass().getResource("/org/example/librarymanager/css/MFXDialogs.css").toExternalForm());
     }

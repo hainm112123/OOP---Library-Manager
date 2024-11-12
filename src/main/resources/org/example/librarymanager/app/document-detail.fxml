@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
@@ -11,6 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -18,7 +20,21 @@
 <AnchorPane fx:id="container" prefHeight="720.0" prefWidth="1200.0" stylesheets="@../css/document-detail.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.DocumentDetailController">
    <children>
       <AnchorPane prefHeight="550.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="170.0">
-         <MFXScrollPane fx:id="scrollScreen" prefHeight="550.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <AnchorPane prefHeight="40.0" prefWidth="1200.0">
+            <children>
+               <HBox fx:id="backBtn" alignment="CENTER_LEFT" layoutX="16.0" prefHeight="40.0" prefWidth="350.0">
+                  <children>
+                     <FontAwesomeIconView fill="#5c1c00" glyphName="ARROW_LEFT" size="24" wrappingWidth="27.771440505981445" />
+                     <Label fx:id="header" styleClass="header" text="Wandering witch: The journal of Elaina Vol 6.">
+                        <font>
+                           <Font size="14.0" />
+                        </font>
+                     </Label>
+                  </children>
+               </HBox>
+            </children>
+         </AnchorPane>
+         <MFXScrollPane fx:id="scrollScreen" layoutY="40.0" prefHeight="510.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <content>
                <VBox prefWidth="1185.0">
                   <children>

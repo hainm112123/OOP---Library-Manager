@@ -3,6 +3,7 @@ package org.example.librarymanager.app;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -12,7 +13,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.DialogComponent;
 import org.example.librarymanager.components.RatingComponent;
@@ -68,6 +71,11 @@ public class DocumentDetailController extends ControllerWrapper {
     @FXML
     private MFXProgressSpinner loader;
 
+    @FXML
+    private HBox backBtn;
+    @FXML
+    private Label header;
+
     /**
      * Set rating box.
      */
@@ -98,6 +106,14 @@ public class DocumentDetailController extends ControllerWrapper {
         borrowedTimes.setText(""+getCurrentDocument().getBorrowedTimes());
         description.setText(getCurrentDocument().getDescription());
         loader.setVisible(false);
+        header.setText(title.getText());
+        TranslateTransition left = new TranslateTransition(Duration.millis(200), backBtn);
+        left.setToX(-6);
+        TranslateTransition right = new TranslateTransition(Duration.millis(200), backBtn);
+        right.setToX(0);
+        backBtn.setOnMouseEntered(e -> left.playFromStart());
+        backBtn.setOnMouseExited(e -> right.playFromStart());
+        backBtn.setOnMouseClicked(e -> backScene());
 
         executor = Executors.newFixedThreadPool(5);
         Future<Boolean> borrowStatusFu = executor.submit(() -> ServiceQuery.getInstance().isBorrowingDocument(getUser().getId(), getCurrentDocument().getId()));

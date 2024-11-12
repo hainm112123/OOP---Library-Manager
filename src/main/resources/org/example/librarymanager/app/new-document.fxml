@@ -58,6 +58,7 @@
                                                    <MFXTextField fx:id="docISBN" floatMode="DISABLED" prefHeight="33.0" prefWidth="645.0" styleClass="form-text-field" GridPane.columnIndex="1" />
                                                    <MFXButton fx:id="docSearch" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onSearchByISBN" prefHeight="26.0" prefWidth="102.0" rippleColor="#5c1c00" styleClass="form-primary-button" text="Search" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
                                                    <Label fx:id="searchMessage" prefHeight="18.0" prefWidth="494.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                       <MFXProgressSpinner fx:id="isbnLoader" prefHeight="30.0" prefWidth="101.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
                                                </children>
                                            </GridPane>
                                        </children>

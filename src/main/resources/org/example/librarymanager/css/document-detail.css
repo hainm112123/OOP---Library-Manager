@@ -21,3 +21,9 @@
 .info-label {
     -fx-font-weight: 700;
 }
+
+.header {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-color-main;
+}

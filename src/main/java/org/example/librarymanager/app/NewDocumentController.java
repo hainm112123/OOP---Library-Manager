@@ -5,12 +5,14 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import org.example.librarymanager.Common;
+import org.example.librarymanager.data.Backblaze;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Category;
@@ -23,6 +25,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
@@ -57,6 +60,8 @@ public class NewDocumentController extends ControllerWrapper {
     private Label uploadlabel;
     @FXML
     private MFXProgressSpinner loader;
+    @FXML
+    private MFXProgressSpinner isbnLoader;
 
     private File imageFile;
 
@@ -96,9 +101,11 @@ public class NewDocumentController extends ControllerWrapper {
         hideMessage(docISBN, searchMessage);
 
         Common.disable(loader);
+        Common.disable(isbnLoader);
 
         uploadBtn.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png"));
             imageFile = fileChooser.showOpenDialog(stage);
             if (imageFile != null) {
                 uploadlabel.setText(imageFile.getAbsolutePath());
@@ -113,32 +120,43 @@ public class NewDocumentController extends ControllerWrapper {
      */
     @FXML
     private void onSearchByISBN(ActionEvent event) {
-        Volume volume = DocumentQuery.getInstance().getDocumentByISBN(docISBN.getText());
-        if (volume != null) {
-            searchMessage.setText("Searching complete!");
-//            searchMessage.setTextFill(Color.GREEN);
-            docTitle.setText(volume.getVolumeInfo().getTitle());
-            docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
-            docDescription.setText(volume.getVolumeInfo().getDescription());
-            if (volume.getVolumeInfo().getImageLinks() != null) {
-                docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
+        Common.enable(isbnLoader);
+        Common.disable(docSearch);
+        Task<Volume> task = new Task<Volume>() {
+            @Override
+            protected Volume call() throws Exception {
+                return DocumentQuery.getInstance().getDocumentByISBN(docISBN.getText());
             }
-            String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
-            Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
-            if (opt.isPresent()) {
-                docCategories.getSelectionModel().selectItem(opt.get());
+        };
+        task.setOnSucceeded((e) -> {
+            Volume volume = task.getValue();
+            if (volume != null) {
+                searchMessage.setText("Searching complete!");
+                docTitle.setText(volume.getVolumeInfo().getTitle());
+                docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
+                docDescription.setText(volume.getVolumeInfo().getDescription());
+                if (volume.getVolumeInfo().getImageLinks() != null) {
+                    docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
+                }
+                String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
+                Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
+                if (opt.isPresent()) {
+                    docCategories.getSelectionModel().selectItem(opt.get());
+                } else {
+                    docCategories.getSelectionModel().selectLast();
+                }
+                searchMessage.getStyleClass().clear();
+                searchMessage.getStyleClass().add("form-message--success");
             } else {
-                docCategories.getSelectionModel().selectLast();
+                searchMessage.setText("ISBN not found!");
+                searchMessage.getStyleClass().clear();
+                searchMessage.getStyleClass().add("form-message--error");
             }
-            searchMessage.getStyleClass().clear();
-            searchMessage.getStyleClass().add("form-message--success");
-        } else {
-            searchMessage.setText("ISBN not found!");
-//            searchMessage.setTextFill(Color.RED);
-            searchMessage.getStyleClass().clear();
-            searchMessage.getStyleClass().add("form-message--error");
-        }
-        searchMessage.setVisible(true);
+            searchMessage.setVisible(true);
+            Common.disable(isbnLoader);
+            Common.enable(docSearch);
+        });
+        new Thread(task).start();
     }
 
     /**
@@ -147,32 +165,34 @@ public class NewDocumentController extends ControllerWrapper {
     @FXML
     private void handleSubmit() {
         submitMessage.setText("");
+        submitMessage.setVisible(true);
+        submitMessage.getStyleClass().clear();
+        submitMessage.getStyleClass().add("form-message--error");
         if (docQuantity.getText().isEmpty() || !Common.isInteger(docQuantity.getText())) {
             submitMessage.setText("Please enter a valid quantity!");
+            return;
         }
         if (docTitle.getText().isEmpty()) {
             submitMessage.setText("Please enter a title!");
+            return;
         }
         if (docCategories.getSelectionModel().getSelectedItem() == null) {
             submitMessage.setText("Please select a category!");
+            return;
         }
 
         if (docAuthor.getText().isEmpty()) {
             docAuthor.setText(getUser().getFirstname() + " " + getUser().getLastname());
         }
 
-        if (!submitMessage.getText().isEmpty()) {
-            submitMessage.getStyleClass().clear();
-            submitMessage.getStyleClass().add("form-message--error");
-        }
-        else {
-            Common.disable(docSubmit);
-            Common.enable(loader);
-            executor = Executors.newSingleThreadExecutor();
-            Future<Document> documentFu = executor.submit(() -> {
+        Common.disable(docSubmit);
+        Common.enable(loader);
+        Task<Document> task = new Task<Document>() {
+            @Override
+            protected Document call() throws Exception {
                 String imageLink = docImageLink.getText();
                 if (imageFile != null) {
-
+                    imageLink = Backblaze.getInstance().upload(String.format("document-%s-cover.png", UUID.randomUUID()), imageFile.getAbsolutePath());
                 }
                 return DocumentQuery.getInstance().add(new Document(
                         docCategories.getSelectionModel().getSelectedItem().getValue(),
@@ -183,34 +203,33 @@ public class NewDocumentController extends ControllerWrapper {
                         imageLink,
                         Integer.parseInt(docQuantity.getText())
                 ));
-            });
-            executor.shutdown();
-            try {
-                Document document = documentFu.get();
-                Common.enable(docSubmit);
-                Common.disable(loader);
-                if (document != null) {
-                    docTitle.clear();
-                    docAuthor.clear();
-                    docDescription.clear();
-                    docImageLink.clear();
-                    docQuantity.clear();
-                    docCategories.getSelectionModel().clearSelection();
-
-                    submitMessage.setText("Successfully added!");
-                    submitMessage.getStyleClass().clear();
-                    submitMessage.getStyleClass().add("form-message--success");
-                }
-                else {
-                    submitMessage.setText("Some errors occurred! Please try again!");
-                    submitMessage.getStyleClass().clear();
-                    submitMessage.getStyleClass().add("form-message--error");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-        }
+        };
+        task.setOnSucceeded((e) -> {
+            Document document = task.getValue();
+            if (document != null) {
+                docTitle.clear();
+                docAuthor.clear();
+                docDescription.clear();
+                docImageLink.clear();
+                docQuantity.clear();
+                docCategories.getSelectionModel().clearSelection();
+                imageFile = null;
+                uploadlabel.setText("No file chosen");
 
-        submitMessage.setVisible(true);
+                submitMessage.setVisible(true);
+                submitMessage.setText("Successfully added!");
+                submitMessage.getStyleClass().clear();
+                submitMessage.getStyleClass().add("form-message--success");
+            } else {
+                submitMessage.setVisible(true);
+                submitMessage.setText("Some errors occurred! Please try again!");
+                submitMessage.getStyleClass().clear();
+                submitMessage.getStyleClass().add("form-message--error");
+            }
+            Common.enable(docSubmit);
+            Common.disable(loader);
+        });
+        new Thread(task).start();
     }
 }

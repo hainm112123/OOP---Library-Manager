@@ -11,8 +11,8 @@ import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.*;
+import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
 import org.example.librarymanager.models.Document;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -106,7 +106,7 @@ public class DocumentTest {
 
     @Test
     public void lucenceDocumentTest() throws Exception {
-        Directory memoryIndex = new RAMDirectory();
+        Directory memoryIndex = new ByteBuffersDirectory();
         SimpleAnalyzer simpleAnalyzer = new SimpleAnalyzer();
         StandardAnalyzer standardAnalyzer = new StandardAnalyzer();
         Map<String, Analyzer> analyzers = new HashMap<String, Analyzer>();

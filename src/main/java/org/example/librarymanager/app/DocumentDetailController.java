@@ -3,15 +3,21 @@ package org.example.librarymanager.app;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import org.example.librarymanager.Common;
+import org.example.librarymanager.components.DialogComponent;
 import org.example.librarymanager.components.RatingComponent;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
@@ -27,6 +33,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.*;
 
 public class DocumentDetailController extends ControllerWrapper {
+    @FXML
+    private AnchorPane container;
     @FXML
     private ImageView imageView;
     @FXML
@@ -63,6 +71,11 @@ public class DocumentDetailController extends ControllerWrapper {
     @FXML
     private MFXProgressSpinner loader;
 
+    @FXML
+    private HBox backBtn;
+    @FXML
+    private Label header;
+
     /**
      * Set rating box.
      */
@@ -93,6 +106,14 @@ public class DocumentDetailController extends ControllerWrapper {
         borrowedTimes.setText(""+getCurrentDocument().getBorrowedTimes());
         description.setText(getCurrentDocument().getDescription());
         loader.setVisible(false);
+        header.setText(title.getText());
+        TranslateTransition left = new TranslateTransition(Duration.millis(200), backBtn);
+        left.setToX(-6);
+        TranslateTransition right = new TranslateTransition(Duration.millis(200), backBtn);
+        right.setToX(0);
+        backBtn.setOnMouseEntered(e -> left.playFromStart());
+        backBtn.setOnMouseExited(e -> right.playFromStart());
+        backBtn.setOnMouseClicked(e -> backScene());
 
         executor = Executors.newFixedThreadPool(5);
         Future<Boolean> borrowStatusFu = executor.submit(() -> ServiceQuery.getInstance().isBorrowingDocument(getUser().getId(), getCurrentDocument().getId()));
@@ -152,32 +173,62 @@ public class DocumentDetailController extends ControllerWrapper {
             borrowBtn.setOnMouseClicked(e -> {
                 Common.disable(borrowBtn);
                 Common.enable(loader);
-                ExecutorService taskExe = Executors.newSingleThreadExecutor();
-                Future<Boolean> future = taskExe.submit(() -> ServiceQuery.getInstance().borrowDocument(getUser().getId(), getCurrentDocument()));
-                taskExe.shutdown();
-                try {
-                    if (future.get()) {
-                        Common.disable(loader);
-                        safeSwitchScene("document-detail.fxml");
+                Task<Boolean> task = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        return ServiceQuery.getInstance().borrowDocument(getUser().getId(), getCurrentDocument());
                     }
-                } catch (InterruptedException | ExecutionException exception) {
-                    exception.printStackTrace();
-                }
+                };
+                task.setOnSucceeded(event -> {
+                    Common.disable(loader);
+                    Common.enable(borrowBtn);
+                    if (task.getValue()) {
+                        safeSwitchScene("document-detail.fxml");
+                    } else {
+                        DialogComponent dialog = new DialogComponent(
+                                "",
+                                "There is no more book currently available. Please comback later.",
+                                DialogComponent.DIALOG_INFO,
+                                stage,
+                                container
+                        );
+                        dialog.addConfirmAction(e1 -> {
+                            dialog.close();
+                        });
+                        dialog.show();
+                    }
+                });
+                new Thread(task).start();
             });
             returnBtn.setOnAction(e -> {
-                Common.disable(borrowBtn);
+                Common.disable(returnBtn);
                 Common.enable(loader);
-                ExecutorService taskExe = Executors.newSingleThreadExecutor();
-                Future<Boolean> future = taskExe.submit(() -> ServiceQuery.getInstance().returnDocument(getUser().getId(), getCurrentDocument()));
-                taskExe.shutdown();
-                try {
-                    if (future.get()) {
-                        Common.disable(loader);
-                        safeSwitchScene("rating.fxml");
+                Task<Boolean> task = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        return ServiceQuery.getInstance().returnDocument(getUser().getId(), getCurrentDocument());
                     }
-                } catch (InterruptedException | ExecutionException exception) {
-                    exception.printStackTrace();
-                }
+                };
+                task.setOnSucceeded(event -> {
+                    Common.disable(loader);
+                    Common.enable(returnBtn);
+                    if (task.getValue()) {
+                        safeSwitchScene("rating.fxml");
+                    } else {
+                        DialogComponent dialog = new DialogComponent(
+                                "",
+                                "Some error occurs. Please try again.",
+                                DialogComponent.DIALOG_ERROR,
+                                stage,
+                                container
+                        );
+                        dialog.addConfirmAction(e1 -> {
+                            dialog.close();
+                        });
+                        dialog.show();
+                    }
+                });
+                new Thread(task).start();
             });
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package org.example.librarymanager.data;
 
 import org.example.librarymanager.models.Rating;
+import org.example.librarymanager.models.RecommendationData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -58,5 +59,21 @@ public class RatingQuery implements DataAccessObject<Rating> {
     @Override
     public boolean delete(Rating entity) {
         return false;
+    }
+
+    public List<RecommendationData> getDataModel() {
+        List<RecommendationData> dataModel = new ArrayList<>();
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("select ratings.userId, ratings.documentId, avg(ratings.value) as preference from ratings group by ratings.userId, ratings.documentId");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                dataModel.add(new RecommendationData(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dataModel;
     }
 }

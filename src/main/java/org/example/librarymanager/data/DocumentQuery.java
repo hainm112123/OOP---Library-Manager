@@ -346,4 +346,36 @@ public class DocumentQuery implements DataAccessObject<Document> {
         }
         return ratings;
     }
+
+    /**
+     * Get documents from a list of id
+     * @param ids
+     * @return
+     */
+    public List<Document> getDocumentsFromIds(List<Integer> ids) {
+        List<Document> documents = new ArrayList<>();
+        try (Connection connection = databaseConnection.getConnection()) {
+            String query = "select * from documents where id in (";
+            for (int i = 0; i < ids.size(); ++ i) {
+                query += "?";
+                if (i < ids.size() - 1) query += ", ";
+            }
+            query += ")";
+            PreparedStatement ps = connection.prepareStatement(query);
+            for (int i = 0; i < ids.size(); ++ i) ps.setInt(i + 1, ids.get(i));
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                documents.add(new Document(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return documents;
+    }
+
+    public List<Document> getNewestDocuments(int limit) {
+        return getDocuments("addDate desc", limit);
+    }
 }

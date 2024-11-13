@@ -10,14 +10,14 @@
 
 <AnchorPane prefHeight="720.0" prefWidth="1200.0" stylesheets="@../css/home.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.HomeController">
    <children>
-      <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="170.0">
-         <ScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane prefHeight="550.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="170.0">
+         <ScrollPane prefHeight="550.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
-               <VBox maxHeight="-Infinity" prefHeight="800.0" prefWidth="1184.0">
+               <VBox maxHeight="-Infinity" prefHeight="1508.0" prefWidth="1184.0">
                   <children>
                      <StackPane alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1184.0">
                         <children>
-                           <Label prefHeight="35.0" prefWidth="315.0" styleClass="title" text="Most popular books">
+                           <Label prefHeight="35.0" prefWidth="315.0" styleClass="title" text="New books">
                               <font>
                                  <Font size="24.0" />
                               </font>
@@ -29,7 +29,7 @@
                      </StackPane>
                      <ScrollPane prefHeight="320.0" prefWidth="200.0" vbarPolicy="NEVER">
                        <content>
-                         <AnchorPane fx:id="mostPopularContainer" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0" />
+                         <AnchorPane fx:id="newsContainer" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0" />
                        </content>
                         <padding>
                            <Insets left="36.0" right="36.0" />
@@ -37,7 +37,7 @@
                      </ScrollPane>
                      <StackPane alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1200.0">
                         <children>
-                           <Label prefHeight="35.0" prefWidth="319.0" styleClass="title" text="Highest rated books">
+                           <Label prefHeight="35.0" prefWidth="319.0" styleClass="title" text="You may like">
                               <font>
                                  <Font size="24.0" />
                               </font>
@@ -46,8 +46,42 @@
                      </StackPane>
                      <ScrollPane prefHeight="320.0" prefWidth="1200.0">
                        <content>
-                         <AnchorPane fx:id="highestRatedContainer" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0" />
+                         <AnchorPane fx:id="recommendationsContainer" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0" />
                        </content>
+                        <padding>
+                           <Insets left="36.0" right="36.0" />
+                        </padding>
+                     </ScrollPane>
+                     <StackPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="380.0" prefHeight="50.0" prefWidth="1200.0">
+                        <children>
+                           <Label prefHeight="35.0" prefWidth="319.0" styleClass="title" text="Most popular books">
+                              <font>
+                                 <Font size="24.0" />
+                              </font>
+                           </Label>
+                        </children>
+                     </StackPane>
+                     <ScrollPane layoutX="10.0" layoutY="431.0" prefHeight="320.0" prefWidth="1200.0">
+                        <content>
+                           <AnchorPane fx:id="mostPopularContainer" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0" />
+                        </content>
+                        <padding>
+                           <Insets left="36.0" right="36.0" />
+                        </padding>
+                     </ScrollPane>
+                     <StackPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="684.0" prefHeight="50.0" prefWidth="1200.0">
+                        <children>
+                           <Label prefHeight="35.0" prefWidth="319.0" styleClass="title" text="Highest rated books">
+                              <font>
+                                 <Font size="24.0" />
+                              </font>
+                           </Label>
+                        </children>
+                     </StackPane>
+                     <ScrollPane layoutX="10.0" layoutY="695.0" prefHeight="320.0" prefWidth="1184.0">
+                        <content>
+                           <AnchorPane fx:id="highestRatedContainer" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0" />
+                        </content>
                         <padding>
                            <Insets left="36.0" right="36.0" />
                         </padding>

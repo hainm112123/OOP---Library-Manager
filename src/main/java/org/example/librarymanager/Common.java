@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.FileInputStream;
+import java.util.Comparator;
 
 public class Common {
     public static final String PRIMARY_COLOR = "#5C1C00";
@@ -44,6 +45,25 @@ public class Common {
         @Override
         public String toString() {
             return label;
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class Item<T extends Comparable<T>, V extends Comparable<V>> implements Comparable<Item<T, V>> {
+        private T key;
+        private V value;
+
+        @Override
+        public int compareTo(Item<T, V> other) {
+            return key.compareTo(other.key);
+        }
+
+        public static class compareByValue<T extends Comparable<T>, V extends Comparable<V>> implements Comparator<Item<T, V>> {
+            @Override
+            public int compare(Item<T, V> o1, Item<T, V> o2) {
+                return o1.value.compareTo(o2.value);
+            }
         }
     }
 

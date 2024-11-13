@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,5 +141,18 @@ public class DocumentTest {
         for (ScoreDoc doc: topDocs.scoreDocs) {
             System.out.println(searcher.doc(doc.doc));
         }
+    }
+
+    @Test
+    public void getDocumentsFromIdsTest() {
+        List<Integer> ids = new ArrayList<>();
+        ids.add(28);
+        ids.add(29);
+        ids.add(30);
+        List<Document> documents = DocumentQuery.getInstance().getDocumentsFromIds(ids);
+        for (Document document : documents) {
+            System.out.println(document);
+        }
+        Assertions.assertNotNull(documents);
     }
 }

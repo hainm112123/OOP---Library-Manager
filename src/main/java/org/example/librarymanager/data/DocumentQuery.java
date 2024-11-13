@@ -347,12 +347,18 @@ public class DocumentQuery implements DataAccessObject<Document> {
         return ratings;
     }
 
+    /**
+     * Get documents from a list of id
+     * @param ids
+     * @return
+     */
     public List<Document> getDocumentsFromIds(List<Integer> ids) {
         List<Document> documents = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {
             String query = "select * from documents where id in (";
             for (int i = 0; i < ids.size(); ++ i) {
-                query += "?, ";
+                query += "?";
+                if (i < ids.size() - 1) query += ", ";
             }
             query += ")";
             PreparedStatement ps = connection.prepareStatement(query);
@@ -367,5 +373,9 @@ public class DocumentQuery implements DataAccessObject<Document> {
             e.printStackTrace();
         }
         return documents;
+    }
+
+    public List<Document> getNewestDocuments(int limit) {
+        return getDocuments("addDate desc", limit);
     }
 }

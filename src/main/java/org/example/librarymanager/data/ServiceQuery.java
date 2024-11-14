@@ -3,6 +3,7 @@ package org.example.librarymanager.data;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.Rating;
 import org.example.librarymanager.models.Service;
+import org.example.librarymanager.models.ServiceData;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -176,6 +177,11 @@ public class ServiceQuery implements DataAccessObject<Service> {
         }
     }
 
+    /**
+     * get overdue document of user
+     * @param userId
+     * @return
+     */
     public List<Document> getOverdueDocuments(int userId) {
         List<Document> documents = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {
@@ -195,5 +201,22 @@ public class ServiceQuery implements DataAccessObject<Service> {
             e.printStackTrace();
         }
         return documents;
+    }
+
+    public List<ServiceData> getServiceData(int userId) {
+        List<ServiceData> data = new ArrayList<>();
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("select userId, count(*) as count, borrowDate as date from services where userId = ? group by date");
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                data.add(new ServiceData(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 }

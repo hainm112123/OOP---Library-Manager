@@ -71,6 +71,9 @@ public class HomeController extends ControllerWrapper{
                 }
             }
         }
+        if (rate.isEmpty()) {
+            return;
+        }
         HashMap<Integer, Double> preference;
         if (!rate.containsKey(getUser().getId())) {
             List<Integer> keys = rate.keySet().stream().toList();

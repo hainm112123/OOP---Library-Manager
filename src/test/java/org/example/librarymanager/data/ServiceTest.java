@@ -1,7 +1,10 @@
 package org.example.librarymanager.data;
 
+import org.example.librarymanager.models.ServiceData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 public class ServiceTest {
     @Test
@@ -22,5 +25,15 @@ public class ServiceTest {
     public void testGetOverdueDocuments() {
         int userId = 4;
         Assertions.assertNotNull(ServiceQuery.getInstance().getOverdueDocuments(userId));
+    }
+
+    @Test
+    public void testGetServiceData() {
+        int userId = 2;
+        List<ServiceData> data = ServiceQuery.getInstance().getServiceData(userId);
+        for (ServiceData serviceData : data) {
+            System.out.println(serviceData);
+        }
+        Assertions.assertNotNull(data);
     }
 }

@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.AdminController">
@@ -52,9 +51,17 @@
                   <Font size="28.0" />
                </font>
             </Label>
-            <Label layoutX="69.0" layoutY="25.0" text="Administrator" />
+            <Label layoutX="54.0" layoutY="33.0" text="Administrator">
+               <font>
+                  <Font size="25.0" />
+               </font></Label>
+            <Button fx:id="exitBtn" layoutX="89.0" layoutY="629.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="82.0" text="Exit">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
-      <VBox fx:id="root" layoutX="250.0" prefHeight="720.0" prefWidth="950.0" />
+      <AnchorPane fx:id="root" layoutX="250.0" prefHeight="720.0" prefWidth="950.0" />
    </children>
 </AnchorPane>

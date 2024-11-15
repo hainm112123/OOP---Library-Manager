@@ -34,11 +34,12 @@ public class EditDataUserController extends EditDataController<User> {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
+        dataAccessObject = UserQuery.getInstance();
         Platform.runLater(() -> {
             enableApply();
             enableDelete();
 //            System.out.println(gridPane.getChildren().size());
-            Node permissionNode = gridPane.getChildren().get(15);
+            Node permissionNode = getGridPane(7, 1);
             ComboBox<Common.Choice> comboBox = new ComboBox<>();
 //            comboBox.getItems().addAll(User.USER_TYPE_STRING);
 //            comboBox.setValue(User.USER_TYPE_STRING[data.getPermission()]);
@@ -63,18 +64,18 @@ public class EditDataUserController extends EditDataController<User> {
         });
     }
 
-    @Override
-    protected void applyQuery() {
-        int id = Integer.parseInt(((TextField)gridPane.getChildren().get(1)).getText());
-        ComboBox text = (ComboBox)gridPane.getChildren().get(15);
-        String value = (String)text.getValue();
-        int t = 3;
-        for (int i = 0; i < 3; i++) if(value == User.USER_TYPE_STRING[i]) {
-            t = i;
-            break;
-        }
-        if (UserQuery.getInstance().updatePermissionById(id, t)) {
-            message.setText("Successfully applied!");
-        }
-    }
+//    @Override
+//    protected void applyQuery() {
+//        int id = Integer.parseInt(((TextField)gridPane.getChildren().get(1)).getText());
+//        ComboBox text = (ComboBox)gridPane.getChildren().get(15);
+//        String value = (String)text.getValue();
+//        int t = 3;
+//        for (int i = 0; i < 3; i++) if(value == User.USER_TYPE_STRING[i]) {
+//            t = i;
+//            break;
+//        }
+//        if (UserQuery.getInstance().updatePermissionById(id, t)) {
+//            message.setText("Successfully applied!");
+//        }
+//    }
 }

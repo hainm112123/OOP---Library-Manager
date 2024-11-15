@@ -62,9 +62,10 @@ public class DocumentQuery implements DataAccessObject<Document> {
         List<Document> documents = new ArrayList<Document>();
         try (Connection connection = databaseConnection.getConnection();) {
 
-            String query = "select documents.*, avg(ratings.value) rating, categories.name categoryName"
+            String query = "select documents.*, avg(ratings.value) rating, categories.name categoryName, users.username ownerName"
                     + " from documents"
                     + " left join categories on documents.categoryId = categories.id"
+                    + " left join users on documents.owner = users.id"
                     + " left join ratings on documents.id = ratings.documentId\n"
                     + "group by documents.id\n";
             PreparedStatement ps = connection.prepareStatement(query);
@@ -201,6 +202,7 @@ public class DocumentQuery implements DataAccessObject<Document> {
     public Document add(Document document) {
         Document documentEntity = null;
         try (Connection connection = databaseConnection.getConnection();){
+            Trie.getInstance().addTrie(document.getTitle(), document.getId());
             PreparedStatement ps = connection.prepareStatement("insert into documents (categoryId, owner, author, title, description, imageLink, quantity) values(?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, document.getCategoryId());
             ps.setInt(2, document.getOwner());

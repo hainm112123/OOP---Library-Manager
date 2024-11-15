@@ -80,7 +80,12 @@ public class ServiceQuery implements DataAccessObject<Service> {
     public List<Service> getAll() {
         List<Service> services = new ArrayList<Service>();
         try (Connection connection = databaseConnection.getConnection();) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM services");
+            String query = "select services.*, users.username borrowerName, documents.title documentName"
+                    + " from services"
+                    + " left join users on services.userId = users.id"
+                    + " left join documents on services.documentId = documents.id\n"
+                    + "group by services.id\n";
+            PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 services.add(new Service(resultSet));

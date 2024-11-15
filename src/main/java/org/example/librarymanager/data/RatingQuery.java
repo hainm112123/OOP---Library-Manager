@@ -27,7 +27,12 @@ public class RatingQuery implements DataAccessObject<Rating> {
     public List<Rating> getAll() {
         List<Rating> ratings = new ArrayList<Rating>();
         try (Connection connection = databaseConnection.getConnection();) {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM ratings");
+            String query = "select ratings.*, users.username userName, documents.title documentName"
+                    + " from ratings"
+                    + " left join users on ratings.userId = users.id"
+                    + " left join documents on ratings.documentId = documents.id\n"
+                    + "group by ratings.id\n";
+            PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 ratings.add(new Rating(resultSet));
@@ -56,7 +61,16 @@ public class RatingQuery implements DataAccessObject<Rating> {
     }
 
     @Override
-    public boolean delete(Rating entity) {
-        return false;
+    public boolean delete(Rating rating) {
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("delete from ratings where id = ?");
+            ps.setInt(1, rating.getId());
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

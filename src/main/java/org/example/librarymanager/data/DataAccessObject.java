@@ -3,6 +3,8 @@ package org.example.librarymanager.data;
 import java.util.List;
 
 public interface DataAccessObject<T> {
+
+
     public List<T> getAll();
 
     public T getById(int id);

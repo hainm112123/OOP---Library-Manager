@@ -2,6 +2,8 @@ package org.example.librarymanager.app;
 
 import javafx.application.Platform;
 import lombok.experimental.PackagePrivate;
+import org.example.librarymanager.data.DataAccessObject;
+import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Document;
 
 import java.net.URL;
@@ -12,11 +14,12 @@ public class EditDataDocumentController extends EditDataController<Document> {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
+        dataAccessObject = DocumentQuery.getInstance();
         Platform.runLater(this::enableDelete);
     }
 
-    @Override
-    protected void enableDelete() {
-        //super.enableDelete();
-    }
+//    @Override
+//    protected void enableDelete() {
+//        super.enableDelete();
+//    }
 }

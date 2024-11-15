@@ -27,16 +27,11 @@ public class LoginController extends ControllerWrapper {
     private MFXButton submitBtn;
     @FXML
     private MFXProgressSpinner progressSpinner;
-    @FXML
-    private Button test;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         progressSpinner.setVisible(false);
 
-        test.setOnAction(event -> {
-            safeSwitchScene("admin.fxml");
-        });
     }
 
     public void loginButtonOnAction(ActionEvent event) {

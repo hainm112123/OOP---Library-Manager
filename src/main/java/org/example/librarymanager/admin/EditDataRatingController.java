@@ -1,8 +1,7 @@
-package org.example.librarymanager.app;
+package org.example.librarymanager.admin;
 
 import javafx.application.Platform;
 import org.example.librarymanager.data.RatingQuery;
-import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.Rating;
 
 import java.net.URL;

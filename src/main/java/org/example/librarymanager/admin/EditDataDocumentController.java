@@ -1,8 +1,6 @@
-package org.example.librarymanager.app;
+package org.example.librarymanager.admin;
 
 import javafx.application.Platform;
-import lombok.experimental.PackagePrivate;
-import org.example.librarymanager.data.DataAccessObject;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Document;
 

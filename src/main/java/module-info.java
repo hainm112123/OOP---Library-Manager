@@ -29,4 +29,6 @@ module org.example.librarymanager {
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;
     opens org.example.librarymanager.models to javafx.base;
+    exports org.example.librarymanager.admin;
+    opens org.example.librarymanager.admin to javafx.fxml;
 }

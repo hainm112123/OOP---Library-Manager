@@ -1,12 +1,12 @@
-package org.example.librarymanager.app;
+package org.example.librarymanager.admin;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
@@ -14,19 +14,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.data.DataAccessObject;
-import org.example.librarymanager.data.DatabaseConnection;
-import org.example.librarymanager.data.UserQuery;
 import org.example.librarymanager.models.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.sql.*;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
-public class EditDataController<E> extends ControllerWrapper {
+public class EditDataController<E extends Model> extends ControllerWrapper {
     @FXML
     protected GridPane gridPane;
     @FXML
@@ -44,6 +42,7 @@ public class EditDataController<E> extends ControllerWrapper {
     protected E data;
     protected Class<E> clazz;
     protected String editableAttribute;
+    protected DataAccessObject dataAccessObject;
 
     public void setData(E data, Class<E> clazz) {
         this.data = data;
@@ -72,13 +71,13 @@ public class EditDataController<E> extends ControllerWrapper {
                 col2.setHalignment(HPos.CENTER);  // Căn giữa theo chiều ngang
                 gridPane.getColumnConstraints().addAll(col1, col2);
 
-                String dataString = data.toString();
-                String[] fields = dataString.split("\n");
+//                String dataString = data.toString();
+//                String[] fields = dataString.split("\n");
+                List<Pair<String, String>> attributes = data.getData();
                 int row = 0;
-                for (String field : fields) {
-                    String[] comps = field.split(": ");
-                    Label key = new Label(comps[0]);
-                    TextField value = new TextField(comps[1]);
+                for (Pair<String, String> attribute : attributes) {
+                    Label key = new Label(attribute.getKey());
+                    TextField value = new TextField(attribute.getValue());
                     value.setEditable(false);
 
                     RowConstraints rowConstraints = new RowConstraints();
@@ -149,56 +148,91 @@ public class EditDataController<E> extends ControllerWrapper {
     }
 
     protected void applyQuery() {
+        if (dataAccessObject == null) {
+            message.setText("DataAccess is not available");
+            return;
+        }
+        E tmp = getCurrentData();
 
-        DatabaseConnection databaseConnection = DatabaseConnection.getInstance();
-        try (Connection connection = databaseConnection.getConnection()) {
-            Field[] fields = clazz.getDeclaredFields();
-            int fIndex = 0;
-            StringBuffer sqlQuery = new StringBuffer();
-            if (clazz.getSimpleName().equals("Category")) {
-                sqlQuery.append("UPDATE categories");
-            } else {
-                sqlQuery.append("UPDATE " + clazz.getSimpleName() + "s");
-            }
-            sqlQuery.append(" SET ");
-            for (int index = 0; index < gridPane.getChildren().size(); index += 2) {
-                String label = ((Label)gridPane.getChildren().get(index)).getText().toLowerCase();
-                String textField = ((TextField)gridPane.getChildren().get(index + 1)).getText().toLowerCase();
-
-                while (fIndex < fields.length && !fields[fIndex].getName().toLowerCase().equals(label)) {
-                    fIndex++;
-                }
-
-                if (fields[fIndex].getType() != Integer.class && fields[fIndex].getType() != int.class) {
-                    sqlQuery.append(label + " = " + "\'" + textField + "\'");
-                } else {
-                    sqlQuery.append(label + " = " + textField);
-                }
-
-//                sqlQuery.append(label + " = " + textField);
-                if (index + 2 < gridPane.getChildren().size()) {
-                    sqlQuery.append(", ");
-                }
-            }
-            sqlQuery.append(" WHERE id = " + ((TextField) gridPane.getChildren().get(1)).getText() + ";");
-            PreparedStatement ps = connection.prepareStatement(sqlQuery.toString());
-//            System.out.println(sqlQuery.toString());
-            ps.executeUpdate();
-            ps.close();
+        if (tmp != null && dataAccessObject.update(tmp)) {
+            System.out.println(tmp.toString());
+            System.out.println(dataAccessObject);
+            data.setData(tmp.getData());
             message.setText("Successfully applied!");
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
             message.setText("Some errors occurred! Please try again!");
         }
     }
 
     protected void enableDelete() {
+        deleteBtn.setOnAction(e -> {
+            if (dataAccessObject == null) {
+                message.setText("DataAccess is not available");
+                return;
+            }
+            if (dataAccessObject.delete(data)) {
+                data.setData(null);
+                message.setText("Successfully deleted!");
+            }
+        });
+    }
 
+    protected Node getGridPane(int row, int column) {
+        for (Node node : gridPane.getChildren()) {
+            Integer nodeRow = GridPane.getRowIndex(node);
+            Integer nodeCol = GridPane.getColumnIndex(node);
+
+            if (nodeRow == null) nodeRow = 0;
+            if (nodeCol == null) nodeCol = 0;
+
+            if (nodeRow == row && nodeCol == column) {
+                return node;
+            }
+        }
+        return null;
     }
 
     protected void replaceGridPane(int row, int column, Node node) {
         gridPane.getChildren().set(column + row*2, node);
         GridPane.setRowIndex(node, row);
         GridPane.setColumnIndex(node, column);
+    }
+
+    protected E getCurrentData() {
+        try {
+            List<Pair<String, String>> attributes = new ArrayList<>();
+            for (int i = 0; i < gridPane.getChildren().size(); i += 2) {
+                Pair<String, String> tmp = new Pair<>
+                        (getNodeText(gridPane.getChildren().get(i)),
+                                getNodeText(gridPane.getChildren().get(i + 1)));
+                attributes.add(tmp);
+            }
+            E tmp = (E) data.clone();
+            tmp.setData(attributes);
+            return tmp;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    protected String getNodeText(Node node) {
+        String value = "";
+        switch (node.getClass().getSimpleName()) {
+            case "TextField":
+                value = ((TextField) node).getText();
+                break;
+            case "ComboBox":
+                value = ((ComboBox<?>)node).getValue().toString();
+                break;
+            case "Label":
+                value = ((Label)node).getText();
+                break;
+            default:
+                System.out.println("Unsupported node type: " + node.getClass().getSimpleName());
+                break;
+        }
+
+        return value;
     }
 }

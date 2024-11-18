@@ -87,16 +87,18 @@ public class UserQuery implements DataAccessObject<User> {
     public boolean update(User user) {
         try (Connection connection = databaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("update users set " +
-                    "password = ?, firstname = ?, lastname = ?, gender = ?, dateOfBirth = ?, permission = ? " +
+                    "username = ?, password = ?, firstname = ?, lastname = ?, gender = ?, dateOfBirth = ?, permission = ?, imageLink = ? " +
                     "where id = ?"
             );
-            ps.setString(1, user.getPassword());
-            ps.setString(2, user.getFirstname());
-            ps.setString(3, user.getLastname());
-            ps.setString(4, user.getGender());
-            ps.setDate(5, Date.valueOf(user.getDateOfBirth()));
-            ps.setInt(6, user.getPermission());
-            ps.setInt(7, user.getId());
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getFirstname());
+            ps.setString(4, user.getLastname());
+            ps.setString(5, user.getGender());
+            ps.setDate(6, Date.valueOf(user.getDateOfBirth()));
+            ps.setInt(7, user.getPermission());
+            ps.setString(8, user.getImageLink());
+            ps.setInt(9, user.getId());
             ps.executeUpdate();
             ps.close();
             return true;

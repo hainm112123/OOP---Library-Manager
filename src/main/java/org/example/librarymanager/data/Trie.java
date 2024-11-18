@@ -135,13 +135,15 @@ public class Trie {
         }
     }
 
-    public void delTrie(String x) throws Exception{
+//    public void delTrie(String x) throws Exception{
+    public void delTrie(String x) {
         StringBuffer tmp = modify(x);
         int top = 0;
         for (int i = 0; i < tmp.length(); i++) {
             int u = value(tmp.charAt(i));
             if(nextChar[top][u] == 0 || leftNode[nextChar[top][u]] == null) {
-                throw new NoSuchElementException("Không có xâu: " + x);
+//                throw new NoSuchElementException("Không có xâu: " + x);
+                return;
             }
             top = nextChar[top][u];
         }

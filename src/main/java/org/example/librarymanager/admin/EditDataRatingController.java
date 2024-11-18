@@ -1,7 +1,7 @@
-package org.example.librarymanager.app;
+package org.example.librarymanager.admin;
 
 import javafx.application.Platform;
-import org.example.librarymanager.models.Document;
+import org.example.librarymanager.data.RatingQuery;
 import org.example.librarymanager.models.Rating;
 
 import java.net.URL;
@@ -12,11 +12,7 @@ public class EditDataRatingController extends EditDataController<Rating> {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
+        dataAccessObject = RatingQuery.getInstance();
         Platform.runLater(this::enableDelete);
-    }
-
-    @Override
-    protected void enableDelete() {
-        //super.enableDelete();
     }
 }

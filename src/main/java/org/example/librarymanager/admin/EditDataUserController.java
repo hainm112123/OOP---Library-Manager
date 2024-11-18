@@ -1,12 +1,8 @@
-package org.example.librarymanager.app;
+package org.example.librarymanager.admin;
 
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.example.librarymanager.Common;
@@ -14,7 +10,6 @@ import org.example.librarymanager.data.UserQuery;
 import org.example.librarymanager.models.User;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class EditDataUserController extends EditDataController<User> {
@@ -34,11 +29,12 @@ public class EditDataUserController extends EditDataController<User> {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
+        dataAccessObject = UserQuery.getInstance();
         Platform.runLater(() -> {
             enableApply();
             enableDelete();
 //            System.out.println(gridPane.getChildren().size());
-            Node permissionNode = gridPane.getChildren().get(15);
+            Node permissionNode = getGridPane(7, 1);
             ComboBox<Common.Choice> comboBox = new ComboBox<>();
 //            comboBox.getItems().addAll(User.USER_TYPE_STRING);
 //            comboBox.setValue(User.USER_TYPE_STRING[data.getPermission()]);
@@ -63,18 +59,18 @@ public class EditDataUserController extends EditDataController<User> {
         });
     }
 
-    @Override
-    protected void applyQuery() {
-        int id = Integer.parseInt(((TextField)gridPane.getChildren().get(1)).getText());
-        ComboBox text = (ComboBox)gridPane.getChildren().get(15);
-        String value = (String)text.getValue();
-        int t = 3;
-        for (int i = 0; i < 3; i++) if(value == User.USER_TYPE_STRING[i]) {
-            t = i;
-            break;
-        }
-        if (UserQuery.getInstance().updatePermissionById(id, t)) {
-            message.setText("Successfully applied!");
-        }
-    }
+//    @Override
+//    protected void applyQuery() {
+//        int id = Integer.parseInt(((TextField)gridPane.getChildren().get(1)).getText());
+//        ComboBox text = (ComboBox)gridPane.getChildren().get(15);
+//        String value = (String)text.getValue();
+//        int t = 3;
+//        for (int i = 0; i < 3; i++) if(value == User.USER_TYPE_STRING[i]) {
+//            t = i;
+//            break;
+//        }
+//        if (UserQuery.getInstance().updatePermissionById(id, t)) {
+//            message.setText("Successfully applied!");
+//        }
+//    }
 }

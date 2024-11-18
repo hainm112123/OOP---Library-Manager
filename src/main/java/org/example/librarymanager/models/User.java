@@ -65,6 +65,21 @@ public class User implements Model{
     }
 
     @Override
+    public User clone() {
+        try {
+            return (User) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<String> getAttributes() {
+        return List.of("id", "username", "password", "firstname", "lastname", "gender", "dateOfBirth", "permission", "imageLink");
+    }
+
+    @Override
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
         list.add(new Pair<>("id", String.valueOf(id)));
@@ -74,13 +89,23 @@ public class User implements Model{
         list.add(new Pair<>("lastname", lastname));
         list.add(new Pair<>("gender", gender));
         list.add(new Pair<>("dateOfBirth", dateOfBirth.toString()));
-        list.add(new Pair<>("permission", String.valueOf(permission)));
+        list.add(new Pair<>("permission", USER_TYPE_STRING[permission]));
         list.add(new Pair<>("imageLink", imageLink));
         return list;
     }
 
     @Override
     public void setData(List<Pair<String, String>> data) {
-
+        this.id = Integer.parseInt(data.get(0).getValue());
+        this.username = data.get(1).getValue();
+        this.password = data.get(2).getValue();
+        this.firstname = data.get(3).getValue();
+        this.lastname = data.get(4).getValue();
+        this.gender = data.get(5).getValue();
+        this.dateOfBirth = LocalDate.parse(data.get(6).getValue());
+        for (int i = 0; i < 3; i++) if (data.get(7).getValue().equals(USER_TYPE_STRING[i])) {
+            this.permission = i;
+        }
+        this.imageLink = data.get(8).getValue();
     }
 }

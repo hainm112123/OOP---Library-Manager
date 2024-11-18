@@ -3,6 +3,7 @@ package org.example.librarymanager.data;
 import org.example.librarymanager.models.Category;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -91,7 +92,21 @@ public class CategoryQuery implements DataAccessObject<Category> {
 
     @Override
     public boolean update(Category category) {
-        return false;
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("UPDATE categories SET " +
+                    "name = ?, description = ? " +
+                    "WHERE id = ?"
+            );
+            ps.setString(1, category.getName());
+            ps.setString(2, category.getDescription());
+            ps.setInt(3, category.getId());
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

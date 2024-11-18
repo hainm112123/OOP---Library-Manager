@@ -62,7 +62,12 @@ public class ServiceQuery implements DataAccessObject<Service> {
      */
     public boolean isBorrowingDocument(int userId, int documentId) {
         Service service = getUndoneService(userId, documentId);
-        return service.getStatus() == Service.STATUS_READING;
+        return service != null && service.getStatus() == Service.STATUS_READING;
+    }
+
+    public int getStatus(int userId, int documentId) {
+        Service service = getUndoneService(userId, documentId);
+        return service == null ? Service.STATUS_COMPLETED : service.getStatus();
     }
 
     @Override

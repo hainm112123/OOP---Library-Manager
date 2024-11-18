@@ -38,7 +38,7 @@
             <content>
                <VBox prefWidth="1185.0">
                   <children>
-                     <AnchorPane prefHeight="271.0" prefWidth="1186.0">
+                     <AnchorPane prefHeight="296.0" prefWidth="1186.0">
                         <children>
                            <ImageView fx:id="imageView" fitHeight="192.0" fitWidth="128.0" layoutX="14.0" layoutY="25.0" pickOnBounds="true">
                               <image>
@@ -87,6 +87,13 @@
                            <MFXButton fx:id="returnBtn" layoutX="14.0" layoutY="223.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#5c1c00" styleClass="return-button" text="Return" textFill="WHITE" />
                            <MFXButton fx:id="editBtn" layoutX="14.0" layoutY="223.0" prefHeight="28.0" prefWidth="128.0" rippleColor="#2363d0" styleClass="edit-button" text="Edit" />
                            <MFXProgressSpinner fx:id="loader" layoutX="64.0" layoutY="223.0" prefHeight="28.0" prefWidth="28.0" />
+                           <MFXButton fx:id="addWishlistBtn" layoutX="14.0" layoutY="260.0" prefHeight="28.0" prefWidth="128.0" styleClass="add-wishlist-button" text="Add to wishlist" />
+                           <MFXButton fx:id="removeWishlistBtn" layoutX="14.0" layoutY="260.0" maxWidth="128.0" prefHeight="36.0" prefWidth="128.0" styleClass="remove-wishlist-button" text="Remove from wishlist" textAlignment="CENTER" wrapText="true">
+                              <font>
+                                 <Font size="8.0" />
+                              </font>
+                           </MFXButton>
+                           <MFXProgressSpinner fx:id="wishlistLoader" layoutX="64.0" layoutY="260.0" prefHeight="28.0" prefWidth="28.0" />
                         </children>
                      </AnchorPane>
                      <AnchorPane prefHeight="200.0" prefWidth="1186.0">

@@ -86,7 +86,8 @@ public class TopbarController extends ControllerWrapper {
     private HBox signoutBtn;
 
     private Future<List<Category>> categoryFu;
-    private Future<List<Document>> documentFu;
+    private Future<List<Document>> overdueDocumentFu;
+    private Future<List<Document>> wishlistDocumentFu;
 
     private void initCategory() {
         try {
@@ -148,16 +149,28 @@ public class TopbarController extends ControllerWrapper {
     private void initNotification() {
         Common.disable(notificationPane);
         try {
-            List<Document> documents = documentFu.get();
-            notificationBadge.setText(""+documents.size());
-            if (documents.isEmpty()) {
+            List<Document> documents = overdueDocumentFu.get();
+            List<Document> wishlistDocuments = wishlistDocumentFu.get();
+            for (Document document : documents) {
+                notificationBox.getChildren().add(new NotificationComponent(
+                        document, this,
+                        "You should return this book soon!",
+                        "You have borrowed \"" + document.getTitle() + "\" more than 14 days, you should return it soon. Otherwise, you must pay fine due to overdue."
+                ).getElement());
+            }
+            for (Document document: wishlistDocuments) {
+                notificationBox.getChildren().add(new NotificationComponent(
+                        document, this,
+                        "A book in your wishlist is now available",
+                        "\"" + document.getTitle() + "\" is currently available. You can go borrow it right now!"
+                ).getElement());
+            }
+            notificationBadge.setText(""+notificationBox.getChildren().size());
+            if (notificationBox.getChildren().isEmpty()) {
                 Common.disable(notificationBadge);
             }
             else {
                 Common.enable(notificationBadge);
-            }
-            for (Document document : documents) {
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getElement());
             }
             notificationBell.setOnMouseClicked(event -> {
                if (notificationPane.isDisable()) {
@@ -234,9 +247,10 @@ public class TopbarController extends ControllerWrapper {
             }
         });
 
-        executor = Executors.newFixedThreadPool(2);
+        executor = Executors.newFixedThreadPool(3);
         categoryFu = executor.submit(() -> CategoryQuery.getInstance().getAll());
-        documentFu = executor.submit(() -> ServiceQuery.getInstance().getOverdueDocuments(getUser().getId()));
+        overdueDocumentFu = executor.submit(() -> ServiceQuery.getInstance().getOverdueDocuments(getUser().getId()));
+        wishlistDocumentFu = executor.submit(() -> ServiceQuery.getInstance().getWishlistAvailableDocuments(getUser().getId()));
         executor.shutdown();
 
         try {

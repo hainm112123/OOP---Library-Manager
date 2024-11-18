@@ -179,7 +179,7 @@ public class TopbarController extends ControllerWrapper {
         usertypeLabel.setText(User.USER_TYPE_STRING[getUser().getPermission()]);
         profileBtn.setOnMouseClicked(event -> safeSwitchScene("profile.fxml"));
         changePasswordBtn.setOnMouseClicked(event -> safeSwitchScene("change-password.fxml"));
-        bookshelfBtn.setOnMouseClicked(event -> safeSwitchScene("borrowing-documents.fxml"));
+        bookshelfBtn.setOnMouseClicked(event -> safeSwitchScene("bookshelf.fxml"));
         mydocBtn.setOnMouseClicked(event -> safeSwitchScene("my-documents.fxml"));
         newdocBtn.setOnMouseClicked(event -> safeSwitchScene("new-document.fxml"));
         manageBtn.setOnMouseClicked(event -> safeSwitchScene("admin.fxml"));

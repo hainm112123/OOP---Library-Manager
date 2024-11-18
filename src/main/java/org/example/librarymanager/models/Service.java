@@ -12,9 +12,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Service {
+    public static final int STATUS_READING = 0;
+    public static final int STATUS_WISH_LIST = 1;
+    public static final int STATUS_COMPLETED = 2;
+
     private int id;
     private int userId;
     private int documentId;
+    private int status;
     private LocalDate borrowDate;
     private LocalDate returnDate;
 
@@ -22,7 +27,9 @@ public class Service {
         this.id = rs.getInt("id");
         this.userId = rs.getInt("userId");
         this.documentId = rs.getInt("documentId");
-        this.borrowDate = LocalDate.parse(rs.getString("borrowDate"));
+        this.status = rs.getInt("status");
+        String borrowDateStr = rs.getString("borrowDate");
+        this.borrowDate = borrowDateStr != null ? LocalDate.parse(rs.getString("borrowDate")) : null;
         String date = rs.getString("returnDate");
         this.returnDate = date != null ? LocalDate.parse(date) : null;
     }

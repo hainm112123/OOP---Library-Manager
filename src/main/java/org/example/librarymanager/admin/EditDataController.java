@@ -1,4 +1,4 @@
-package org.example.librarymanager.app;
+package org.example.librarymanager.admin;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -15,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.data.DataAccessObject;
 import org.example.librarymanager.models.*;
 

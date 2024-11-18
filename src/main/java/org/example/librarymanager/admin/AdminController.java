@@ -1,11 +1,9 @@
-package org.example.librarymanager.app;
+package org.example.librarymanager.admin;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
+import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.components.DataTable;
 import org.example.librarymanager.data.*;
 import org.example.librarymanager.models.*;

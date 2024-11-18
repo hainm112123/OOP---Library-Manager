@@ -111,7 +111,10 @@ public class HomeController extends ControllerWrapper{
         Future<List<Document>> highestRateDocFu = executor.submit(() -> DocumentQuery.getInstance().getHighestRatedDocuments(NUM_DOCUMENT_DISPLAY));
         Future<List<Document>> recDocFu = executor.submit(() -> {
             getRecommendations();
-            return DocumentQuery.getInstance().getDocumentsFromIds(recommendations);
+            if (recommendations != null && !recommendations.isEmpty()) {
+                return DocumentQuery.getInstance().getDocumentsFromIds(recommendations);
+            }
+            return null;
         });
         Future<List<Document>> newDocFu = executor.submit(() -> DocumentQuery.getInstance().getNewestDocuments(NUM_DOCUMENT_DISPLAY));
         executor.shutdown();
@@ -120,7 +123,7 @@ public class HomeController extends ControllerWrapper{
             List<Document> highestRatedDocuments = highestRateDocFu.get();
             List<Document> recommendedDocuments = recDocFu.get();
             List<Document> newDocuments = newDocFu.get();
-//            if (recommendedDocuments.isEmpty()) recommendedDocuments = highestRatedDocuments;
+            if (recommendedDocuments == null || recommendedDocuments.isEmpty()) recommendedDocuments = highestRatedDocuments;
             display(newDocuments, newsContainer);
             display(recommendedDocuments, recommendationsContainer);
             display(mostPopularDocuments, mostPopularContainer);

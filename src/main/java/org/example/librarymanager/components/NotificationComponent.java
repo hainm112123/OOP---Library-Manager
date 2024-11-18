@@ -28,14 +28,14 @@ public class NotificationComponent implements Component {
     private static final int IMAGE_WIDTH = 32;
     private static final int IMAGE_HEIGHT = 48;
 
-    public NotificationComponent(Document document, ControllerWrapper controller) {
+    public NotificationComponent(Document document, ControllerWrapper controller, String titleStr, String messageStr) {
         this.controller = controller;
         container = new HBox();
         content = new VBox();
         imageWrapper = new VBox();
         imageView = new ImageView(new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg")));
-        title = new Label("You should return this book soon!");
-        message = new Label("You have borrowed \"" + document.getTitle() + "\" more than 14 days, you should return it soon. Otherwise, you must pay fine due to overdue.");
+        title = new Label(titleStr);
+        message = new Label(messageStr);
 
         if (document.getImageLink() != null) {
             Task<Image> task = new Task<Image>() {

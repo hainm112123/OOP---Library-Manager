@@ -3,7 +3,6 @@ package org.example.librarymanager.components;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
-import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -14,6 +13,8 @@ import javafx.scene.paint.Paint;
 import lombok.Data;
 import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.models.Document;
+import org.example.librarymanager.utils.observers.ListDocumentsObserver;
+import org.example.librarymanager.utils.observers.ListDocumentsSubject;
 
 import java.util.List;
 
@@ -94,7 +95,7 @@ public class ListDocumentsComponent implements Component {
         int actualItems = end - start;
 
         int columns = subject.getDisplayType() == DocumentComponent.VIEW_TYPE_LIST ? 2 :  5;
-        int rows = (int) Math.ceil((double) actualItems / columns);
+        int rows = (int) Math.ceil((double) actualItems / columns) + 1;
         grid.setVgap(60);
 
         int row = 0;

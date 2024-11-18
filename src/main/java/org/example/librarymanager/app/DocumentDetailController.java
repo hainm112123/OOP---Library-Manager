@@ -25,6 +25,7 @@ import org.example.librarymanager.data.ServiceQuery;
 import org.example.librarymanager.data.UserQuery;
 import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Rating;
+import org.example.librarymanager.models.Service;
 import org.example.librarymanager.models.User;
 
 import java.net.URL;
@@ -60,6 +61,10 @@ public class DocumentDetailController extends ControllerWrapper {
     @FXML
     private MFXButton editBtn;
     @FXML
+    private MFXButton addWishlistBtn;
+    @FXML
+    private MFXButton removeWishlistBtn;
+    @FXML
     private TextArea description;
 
     @FXML
@@ -70,6 +75,8 @@ public class DocumentDetailController extends ControllerWrapper {
     private MFXScrollPane scrollScreen;
     @FXML
     private MFXProgressSpinner loader;
+    @FXML
+    private MFXProgressSpinner wishlistLoader;
 
     @FXML
     private HBox backBtn;
@@ -105,7 +112,8 @@ public class DocumentDetailController extends ControllerWrapper {
         addDate.setText(""+getCurrentDocument().getAddDate());
         borrowedTimes.setText(""+getCurrentDocument().getBorrowedTimes());
         description.setText(getCurrentDocument().getDescription());
-        loader.setVisible(false);
+        Common.disable(loader);
+        Common.disable(wishlistLoader);
         header.setText(title.getText());
         TranslateTransition left = new TranslateTransition(Duration.millis(200), backBtn);
         left.setToX(-6);
@@ -116,7 +124,7 @@ public class DocumentDetailController extends ControllerWrapper {
         backBtn.setOnMouseClicked(e -> backScene());
 
         executor = Executors.newFixedThreadPool(5);
-        Future<Boolean> borrowStatusFu = executor.submit(() -> ServiceQuery.getInstance().isBorrowingDocument(getUser().getId(), getCurrentDocument().getId()));
+        Future<Integer> statusFu = executor.submit(() -> ServiceQuery.getInstance().getStatus(getUser().getId(), getCurrentDocument().getId()));
         Future<Category> categoryFu = executor.submit(() -> CategoryQuery.getInstance().getById(getCurrentDocument().getCategoryId()));
         Future<Image> imageFu = executor.submit(() -> {
             try {
@@ -131,19 +139,33 @@ public class DocumentDetailController extends ControllerWrapper {
         executor.shutdown();
 
         try {
-            if (borrowStatusFu.get()) {
+            int status = statusFu.get();
+            if (status == Service.STATUS_WISH_LIST) {
+                Common.disable(addWishlistBtn);
+                Common.enable(removeWishlistBtn);
+                Common.enable(borrowBtn);
+                Common.disable(returnBtn);
+            } else if (status == Service.STATUS_READING) {
                 Common.disable(borrowBtn);
                 Common.enable(returnBtn);
+                Common.disable(addWishlistBtn);
+                Common.disable(removeWishlistBtn);
             }
             else {
                 Common.enable(borrowBtn);
                 Common.disable(returnBtn);
+                Common.enable(addWishlistBtn);
+                Common.disable(removeWishlistBtn);
             }
             if (ownerFu.get().getId() == getUser().getId()) {
                 Common.disable(borrowBtn);
                 Common.disable(returnBtn);
+                Common.disable(addWishlistBtn);
+                Common.disable(removeWishlistBtn);
+                Common.enable(editBtn);
+            } else {
+                Common.disable(editBtn);
             }
-            editBtn.setVisible(ownerFu.get().getId() == getUser().getId());
             owner.setText(ownerFu.get().getFirstname() + " " + ownerFu.get().getLastname());
             category.setText(categoryFu.get().getName());
             imageView.setImage(imageFu.get());
@@ -219,6 +241,66 @@ public class DocumentDetailController extends ControllerWrapper {
                                 "",
                                 "Some error occurs. Please try again.",
                                 DialogComponent.DIALOG_ERROR,
+                                stage,
+                                container
+                        );
+                        dialog.addConfirmAction(e1 -> {
+                            dialog.close();
+                        });
+                        dialog.show();
+                    }
+                });
+                new Thread(task).start();
+            });
+            addWishlistBtn.setOnMouseClicked(e -> {
+                Common.disable(addWishlistBtn);
+                Common.enable(wishlistLoader);
+                Task<Boolean> task = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        return ServiceQuery.getInstance().addToWishlist(getUser().getId(), getCurrentDocument().getId());
+                    }
+                };
+                task.setOnSucceeded(event -> {
+                    Common.disable(wishlistLoader);
+                    Common.enable(removeWishlistBtn);
+                    if (task.getValue()) {
+                        safeSwitchScene("document-detail.fxml");
+                    } else {
+                        DialogComponent dialog = new DialogComponent(
+                                "",
+                                "Some error occurs. Please try again.",
+                                DialogComponent.DIALOG_WARNING,
+                                stage,
+                                container
+                        );
+                        dialog.addConfirmAction(e1 -> {
+                            dialog.close();
+                        });
+                        dialog.show();
+                    }
+                });
+                new Thread(task).start();
+            });
+            removeWishlistBtn.setOnMouseClicked(e -> {
+                Common.disable(removeWishlistBtn);
+                Common.enable(wishlistLoader);
+                Task<Boolean> task = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        return ServiceQuery.getInstance().removeFromWishlist(getUser().getId(), getCurrentDocument().getId());
+                    }
+                };
+                task.setOnSucceeded(event -> {
+                    Common.disable(wishlistLoader);
+                    Common.enable(addWishlistBtn);
+                    if (task.getValue()) {
+                        safeSwitchScene("document-detail.fxml");
+                    } else {
+                        DialogComponent dialog = new DialogComponent(
+                                "",
+                                "Some error occurs. Please try again.",
+                                DialogComponent.DIALOG_WARNING,
                                 stage,
                                 container
                         );

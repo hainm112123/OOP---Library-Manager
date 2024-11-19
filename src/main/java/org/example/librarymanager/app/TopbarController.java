@@ -161,14 +161,16 @@ public class TopbarController extends ControllerWrapper {
                 notificationBox.getChildren().add(new NotificationComponent(
                         document, this,
                         "You should return this book soon!",
-                        "You have borrowed \"" + document.getTitle() + "\" more than 14 days, you should return it soon. Otherwise, you must pay fine due to overdue."
+                        "You have borrowed \"" + document.getTitle() + "\" more than 14 days, you should return it soon. Otherwise, you must pay fine due to overdue.",
+                        notificationPane
                 ).getElement());
             }
             for (Document document: wishlistDocuments) {
                 notificationBox.getChildren().add(new NotificationComponent(
                         document, this,
                         "A book in your wishlist is now available",
-                        "\"" + document.getTitle() + "\" is currently available. You can go borrow it right now!"
+                        "\"" + document.getTitle() + "\" is currently available. You can go borrow it right now!",
+                        notificationPane
                 ).getElement());
             }
             notificationBadge.setText(""+notificationBox.getChildren().size());
@@ -199,13 +201,32 @@ public class TopbarController extends ControllerWrapper {
 
         usernameLabel.setText(getUser().getUsername());
         usertypeLabel.setText(User.USER_TYPE_STRING[getUser().getPermission()]);
-        profileBtn.setOnMouseClicked(event -> safeSwitchScene("profile.fxml"));
-        changePasswordBtn.setOnMouseClicked(event -> safeSwitchScene("change-password.fxml"));
-        bookshelfBtn.setOnMouseClicked(event -> safeSwitchScene("bookshelf.fxml"));
-        mydocBtn.setOnMouseClicked(event -> safeSwitchScene("my-documents.fxml"));
-        newdocBtn.setOnMouseClicked(event -> safeSwitchScene("new-document.fxml"));
-        manageBtn.setOnMouseClicked(event -> safeSwitchScene("admin.fxml"));
+        profileBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("profile.fxml");
+        });
+        changePasswordBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("change-password.fxml");
+        });
+        bookshelfBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("bookshelf.fxml");
+        });
+        mydocBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("my-documents.fxml");
+        });
+        newdocBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("new-document.fxml");
+        });
+        manageBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("admin.fxml");
+        });
         signoutBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
             safeSwitchScene("login.fxml");
             setUser(null);
         });

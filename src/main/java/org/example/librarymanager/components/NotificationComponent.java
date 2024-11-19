@@ -28,7 +28,7 @@ public class NotificationComponent implements Component {
     private static final int IMAGE_WIDTH = 32;
     private static final int IMAGE_HEIGHT = 48;
 
-    public NotificationComponent(Document document, ControllerWrapper controller, String titleStr, String messageStr) {
+    public NotificationComponent(Document document, ControllerWrapper controller, String titleStr, String messageStr, Node pane) {
         this.controller = controller;
         container = new HBox();
         content = new VBox();
@@ -78,6 +78,7 @@ public class NotificationComponent implements Component {
         });
         container.setOnMouseClicked(e -> {
             ControllerWrapper.setCurrentDocument(document);
+            Common.disable(pane);
             controller.safeSwitchScene("document-detail.fxml");
         });
     }

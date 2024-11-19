@@ -1,4 +1,4 @@
-package org.example.librarymanager.admin;
+package org.example.librarymanager.app;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
@@ -10,7 +10,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import org.example.librarymanager.Common;
-import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.components.DialogComponent;
 import org.example.librarymanager.data.Backblaze;
 import org.example.librarymanager.data.CategoryQuery;

@@ -1,0 +1,19 @@
+@import "common.css";
+@import "form.css";
+
+.profile-image-overlay {
+    -fx-background-radius: 100;
+    -fx-border-radius: 100;
+    -fx-background-color: rgba(0, 0, 0, 0.15);
+}
+
+.camera-container {
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+}
+
+.profile-image {
+    -fx-background-radius: 100;
+    -fx-border-radius: 100;
+}

@@ -1,23 +1,26 @@
 package org.example.librarymanager.app;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import javafx.scene.Cursor;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
-import javafx.stage.Stage;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import org.example.librarymanager.Common;
-import org.example.librarymanager.data.AuthQuery;
-import org.example.librarymanager.data.AuthResult;
+import org.example.librarymanager.components.Avatar;
+import org.example.librarymanager.data.Backblaze;
 import org.example.librarymanager.data.UserQuery;
 import org.example.librarymanager.models.User;
 
-import java.io.IOException;
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -42,10 +45,21 @@ public class ProfileController extends ControllerWrapper {
     private AreaChart<String,Number> StatisticalTimeUse;
     @FXML
     private Label UserName;
+    @FXML
+    private ImageView profileImage;
+    @FXML
+    private Pane profileImgOverlay;
+    @FXML
+    private MFXButton saveImageBtn;
+    @FXML
+    private MFXProgressSpinner loader;
+
+    private File imageFile;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         resetName();
-        UserName.setText((String)("@User " + getUser().getUsername()));
+        UserName.setText((String)("@" + User.USER_TYPE_STRING[getUser().getPermission()] + " " + getUser().getUsername()));
 
         Cancel.setRippleColor(Paint.valueOf(Common.PRIMARY_COLOR));
         SaveName.setRippleColor(Paint.valueOf(Common.PRIMARY_COLOR));
@@ -71,6 +85,52 @@ public class ProfileController extends ControllerWrapper {
             };
             task.setOnSucceeded(e -> {
                 NotChangeStatus();
+            });
+            new Thread(task).start();
+        });
+
+        profileImage = (ImageView) new Avatar(profileImage, 200, getUser().getImageLink()).getElement();
+        Common.disable(saveImageBtn);
+        Common.disable(loader);
+        profileImgOverlay.setOpacity(0.0);
+        profileImage.setCursor(Cursor.HAND);
+        Circle circle = new Circle(100);
+        circle.setCenterX(100);
+        circle.setCenterY(100);
+        profileImage.setClip(circle);
+        profileImgOverlay.setOnMouseEntered(e -> {
+            profileImgOverlay.setOpacity(1.0);
+        });
+        profileImgOverlay.setOnMouseExited(e -> {
+            profileImgOverlay.setOpacity(0.0);
+        });
+
+        profileImgOverlay.setOnMouseClicked(e -> {
+           FileChooser fileChooser = new FileChooser();
+           fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png"));
+           fileChooser.setTitle("Select Profile Image");
+           imageFile = fileChooser.showOpenDialog(stage);
+           if (imageFile != null) {
+               Common.enable(saveImageBtn);
+               Image image = new Image(imageFile.toURI().toString());
+               profileImage.setImage(image);
+           } else {
+               Common.disable(saveImageBtn);
+           }
+        });
+        saveImageBtn.setOnAction(e -> {
+            Common.enable(loader);
+            Common.disable(saveImageBtn);
+            Task<Boolean> task = new Task<>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    String url = Backblaze.getInstance().upload(String.format("user-profile-%d.png", getUser().getId()), imageFile.getAbsolutePath());
+                    getUser().setImageLink(url);
+                    return UserQuery.getInstance().update(getUser());
+                }
+            };
+            task.setOnSucceeded(event -> {
+                Common.disable(loader);
             });
             new Thread(task).start();
         });

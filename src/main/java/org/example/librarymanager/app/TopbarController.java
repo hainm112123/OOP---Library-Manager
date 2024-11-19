@@ -2,16 +2,20 @@ package org.example.librarymanager.app;
 
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.util.Pair;
 import org.example.librarymanager.Common;
+import org.example.librarymanager.components.Avatar;
 import org.example.librarymanager.components.NotificationComponent;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
@@ -84,6 +88,8 @@ public class TopbarController extends ControllerWrapper {
     private HBox manageBtn;
     @FXML
     private HBox signoutBtn;
+    @FXML
+    private ImageView profileImage;
 
     private Future<List<Category>> categoryFu;
     private Future<List<Document>> overdueDocumentFu;
@@ -188,6 +194,9 @@ public class TopbarController extends ControllerWrapper {
     }
 
     private void initUser() {
+        userBtn = (ImageView) new Avatar(userBtn, 48, getUser().getImageLink()).getElement();
+        profileImage = (ImageView) new Avatar(profileImage, 48, getUser().getImageLink()).getElement();
+
         usernameLabel.setText(getUser().getUsername());
         usertypeLabel.setText(User.USER_TYPE_STRING[getUser().getPermission()]);
         profileBtn.setOnMouseClicked(event -> safeSwitchScene("profile.fxml"));

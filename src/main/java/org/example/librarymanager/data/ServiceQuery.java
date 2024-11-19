@@ -281,75 +281,12 @@ public class ServiceQuery implements DataAccessObject<Service> {
         return data;
     }
 
-    public List<Document> getWishlistDocuments(int userId) {
-        List<Document> documents = new ArrayList<>();
-        try (Connection connection = databaseConnection.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(
-                    "select d.* from services as s join documents as d on s.documentId = d.id " +
-                            "where s.userId = ? and status = ? group by d.id"
-            );
-            ps.setInt(1, userId);
-            ps.setInt(2, Service.STATUS_WISH_LIST);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                documents.add(new Document(rs));
-            }
-            rs.close();
-            ps.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return documents;
-    }
-
-    public List<Document> getBorrowingDocuments(int userId) {
-        List<Document> documents = new ArrayList<>();
-        try (Connection connection = databaseConnection.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(
-                    "select d.* from services as s join documents as d on s.documentId = d.id " +
-                            "where s.userId = ? and status = ? group by d.id"
-            );
-            ps.setInt(1, userId);
-            ps.setInt(2, Service.STATUS_READING);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                documents.add(new Document(rs));
-            }
-            rs.close();
-            ps.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return documents;
-    }
-
-    public List<Document> getCompletedDocument(int userId) {
-        List<Document> documents = new ArrayList<>();
-        try (Connection connection = databaseConnection.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(
-                    "select d.* from services as s join documents as d on s.documentId = d.id " +
-                            "where s.userId = ? and status = ? group by d.id"
-            );
-            ps.setInt(1, userId);
-            ps.setInt(2, Service.STATUS_COMPLETED);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                documents.add(new Document(rs));
-            }
-            rs.close();
-            ps.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return documents;
-    }
-
     public List<Document> getWishlistAvailableDocuments(int userId) {
         List<Document> documents = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(
-                    "select d.* from services as s join documents as d on s.documentId = d.id " +
-                            "where s.userId = ? and status = ? and quantityInStock > 0 group by d.id"
+                    "select d.* from services as s join documents as d on s.documentId = d.id "
+                        + "where s.userId = ? and status = ? and quantityInStock > 0 group by d.id"
             );
             ps.setInt(1, userId);
             ps.setInt(2, Service.STATUS_WISH_LIST);

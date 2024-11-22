@@ -52,6 +52,18 @@ public class Common {
 
     @Data
     @AllArgsConstructor
+    public static class StrChoice {
+        private String value;
+        private String label;
+
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
     public static class Item<T extends Comparable<T>, V extends Comparable<V>> implements Comparable<Item<T, V>> {
         private T key;
         private V value;

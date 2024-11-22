@@ -14,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.example.librarymanager.Common;
+import org.example.librarymanager.components.DocumentComponent;
 import org.example.librarymanager.data.Backblaze;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
@@ -61,7 +62,7 @@ public class NewDocumentController extends ControllerWrapper {
     @FXML
     private MFXProgressSpinner searchLoader;
     @FXML
-    private MFXComboBox<Common.Choice> searchType;
+    private MFXComboBox<Common.StrChoice> searchType;
     @FXML
     private VBox modalContainer;
     @FXML
@@ -112,13 +113,6 @@ public class NewDocumentController extends ControllerWrapper {
         Common.disable(searchLoader);
         Common.disable(modalOverlay);
 
-        openModalBtn.setOnAction(e -> {
-            Common.enable(modalOverlay);
-        });
-        DropShadow ds = new DropShadow();
-        ds.setRadius(30);
-        modalOverlay.setEffect(ds);
-
         uploadBtn.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png"));
@@ -129,6 +123,28 @@ public class NewDocumentController extends ControllerWrapper {
                 uploadlabel.setText("No file chosen");
             }
         });
+
+        openModalBtn.setOnAction(e -> {
+            Common.enable(modalOverlay);
+        });
+        DropShadow ds = new DropShadow();
+        ds.setRadius(30);
+        modalOverlay.setEffect(ds);
+        searchType.getItems().addAll(
+                new Common.StrChoice("", "Any"),
+                new Common.StrChoice("intitle:", "Title"),
+                new Common.StrChoice("inauthor:", "Author"),
+                new Common.StrChoice("inpublisher:", "Publisher"),
+                new Common.StrChoice("subject:", "Subject"),
+                new Common.StrChoice("isbn:", "ISBN"),
+                new Common.StrChoice("lccn:", "LCCN"),
+                new Common.StrChoice("oclc:", "OCLC")
+        );
+        searchType.getSelectionModel().selectFirst();
+        openModalBtn.setOnAction(e -> {
+            Common.enable(modalOverlay);
+        });
+        apiSearch.setOnAction(this::onSearchByISBN);
     }
 
     /**
@@ -138,33 +154,46 @@ public class NewDocumentController extends ControllerWrapper {
     private void onSearchByISBN(ActionEvent event) {
         Common.enable(searchLoader);
         Common.disable(apiSearch);
-        Task<Volume> task = new Task<Volume>() {
+        Task<List<Volume>> task = new Task<>() {
             @Override
-            protected Volume call() throws Exception {
-                return DocumentQuery.getInstance().getDocumentByISBN(apiPattern.getText());
+            protected List<Volume> call() throws Exception {
+                return DocumentQuery.getInstance().getDocumentsFromAPI(searchType.getSelectionModel().getSelectedItem().getValue(), apiPattern.getText());
             }
         };
         task.setOnSucceeded((e) -> {
-            Volume volume = task.getValue();
-            if (volume != null) {
+            List<Volume> volumes = task.getValue();
+            if (volumes != null && !volumes.isEmpty()) {
+                documentListContainer.setPrefHeight(DocumentComponent.DOC_COMPONENT_HEIGHT_DETAIL * volumes.size());
                 searchMessage.setText("Searching complete!");
-                docTitle.setText(volume.getVolumeInfo().getTitle());
-                docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
-                docDescription.setText(volume.getVolumeInfo().getDescription());
-                if (volume.getVolumeInfo().getImageLinks() != null) {
-                    docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
-                }
-                String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
-                Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
-                if (opt.isPresent()) {
-                    docCategories.getSelectionModel().selectItem(opt.get());
-                } else {
-                    docCategories.getSelectionModel().selectLast();
+                for (Volume volume : volumes) {
+                    Document document = new Document(volume);
+                    DocumentComponent component = new DocumentComponent(document, this, DocumentComponent.VIEW_TYPE_DETAIL);
+                    documentListContainer.getChildren().add(component.getElement());
+                    component.setSelectButtonAction(actionEvent -> {
+                        docTitle.setText(volume.getVolumeInfo().getTitle());
+                        if (volume.getVolumeInfo().getAuthors() != null) {
+                            docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
+                        } else {
+                            docAuthor.setText("");
+                        }
+                        docDescription.setText(volume.getVolumeInfo().getDescription());
+                        if (volume.getVolumeInfo().getImageLinks() != null) {
+                            docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
+                        }
+                        String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
+                        Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
+                        if (opt.isPresent()) {
+                            docCategories.getSelectionModel().selectItem(opt.get());
+                        } else {
+                            docCategories.getSelectionModel().selectFirst();
+                        }
+                        Common.disable(modalOverlay);
+                    });
                 }
                 searchMessage.getStyleClass().clear();
                 searchMessage.getStyleClass().add("form-message--success");
             } else {
-                searchMessage.setText("ISBN not found!");
+                searchMessage.setText("No document found!");
                 searchMessage.getStyleClass().clear();
                 searchMessage.getStyleClass().add("form-message--error");
             }

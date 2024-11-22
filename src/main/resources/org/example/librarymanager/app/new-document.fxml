@@ -165,7 +165,7 @@
                               <URL value="@../css/MFXComboBoxCell.css" />
                            </stylesheets></MFXComboBox>
                         <MFXTextField fx:id="apiPattern" floatMode="DISABLED" maxHeight="-Infinity" prefHeight="50.0" prefWidth="701.0" style="-fx-pref-height: 44;" styleClass="form-text-field" GridPane.columnIndex="1" />
-                        <MFXButton fx:id="apiSearch" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onSearchByISBN" prefHeight="40.0" prefWidth="102.0" rippleColor="#5c1c00" styleClass="form-primary-button" text="Search" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+                        <MFXButton fx:id="apiSearch" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="102.0" rippleColor="#5c1c00" styleClass="form-primary-button" text="Search" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
                         <Label fx:id="searchMessage" prefHeight="18.0" prefWidth="494.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <MFXProgressSpinner fx:id="searchLoader" prefHeight="40.0" prefWidth="101.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
                      </children>

@@ -2,8 +2,12 @@ package org.example.librarymanager.components;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.animation.TranslateTransition;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -12,11 +16,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.models.Document;
+
+import java.awt.event.MouseEvent;
 
 public class DocumentComponent implements Component {
     private Node container;
@@ -34,15 +41,21 @@ public class DocumentComponent implements Component {
     private Label category;
     private Label description;
 
+    private VBox detailWrapper;
+    private HBox detailContainer;
+    private MFXButton selectBtn;
+
     private ControllerWrapper controller;
 
     public static final int DOC_COMPONENT_WITDH_GRID = 144;
     public static final int DOC_COMPONENT_HEIGHT_GRID = 300;
     public static final int DOC_COMPONENT_WIDTH_LIST = 500;
     public static final int DOC_COMPONENT_HEIGHT_LIST = 232;
+    public static final int DOC_COMPONENT_HEIGHT_DETAIL = 178;
     public static final int DOC_COMPONENT_OFFSET = 30;
     public static final int VIEW_TYPE_GRID = 0;
     public static final int VIEW_TYPE_LIST = 1;
+    public static final int VIEW_TYPE_DETAIL = 2;
 
     private static final int IMAGE_WIDTH = 144;
     private static final int IMAGE_HEIGHT = 216;
@@ -133,6 +146,40 @@ public class DocumentComponent implements Component {
         listContainer.setEffect(ds);
     }
 
+    public void initDetailView(Document document) {
+        detailContainer = new HBox();
+        detailContainer.setAlignment(Pos.CENTER);
+        detailBox = new VBox();
+        title = new Label(document.getTitle());
+        title.setEllipsisString("...");
+        category = new Label(document.getCategoryName());
+        description = new Label(document.getDescription());
+        description.setEllipsisString("...");
+        selectBtn = new MFXButton("Select");
+
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(150);
+        detailBox.getChildren().addAll(title, category, description);
+        detailContainer.getChildren().addAll(imageView, detailBox, selectBtn);
+        detailContainer.getStylesheets().add(getClass().getResource("/org/example/librarymanager/css/document.css").toExternalForm());
+        title.getStyleClass().addAll("document-title", "document-title-detail");
+        category.getStyleClass().add("document-category");
+        description.getStyleClass().add("document-detail-description");
+        detailBox.getStyleClass().add("document-detail-box");
+        detailContainer.getStyleClass().add("document-detail-container");
+        selectBtn.getStyleClass().add("modal-document-select-button");
+        StackPane top = new StackPane();
+        StackPane bottom = new StackPane();
+        top.setPrefHeight(6);
+        bottom.setPrefHeight(6);
+        detailWrapper = new VBox();
+        detailWrapper.getChildren().addAll(top, detailContainer, bottom);
+    }
+
+    public void setSelectButtonAction(EventHandler<ActionEvent> action) {
+        selectBtn.setOnAction(action);
+    }
+
     /**
      * Construct a component of document details.
      * Image is loaded in a task which is executed in a new distinct thread.
@@ -168,9 +215,12 @@ public class DocumentComponent implements Component {
         if (type == VIEW_TYPE_GRID) {
             initGridView(document);
             container = gridContainer;
-        } else {
+        } else if (type == VIEW_TYPE_LIST) {
             initListView(document);
             container = listContainer;
+        } else {
+            initDetailView(document);
+            container = detailWrapper;
         }
     }
 

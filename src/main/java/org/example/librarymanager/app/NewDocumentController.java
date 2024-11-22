@@ -9,7 +9,9 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.data.Backblaze;
@@ -18,16 +20,12 @@ import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 
-import javax.print.Doc;
-import javax.swing.text.DocumentFilter;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class NewDocumentController extends ControllerWrapper {
     @FXML
@@ -46,9 +44,9 @@ public class NewDocumentController extends ControllerWrapper {
     private MFXButton docSubmit;
 
     @FXML
-    private MFXTextField docISBN;
+    private MFXTextField apiPattern;
     @FXML
-    private MFXButton docSearch;
+    private MFXButton apiSearch;
     @FXML
     private Label searchMessage;
     @FXML
@@ -61,7 +59,17 @@ public class NewDocumentController extends ControllerWrapper {
     @FXML
     private MFXProgressSpinner loader;
     @FXML
-    private MFXProgressSpinner isbnLoader;
+    private MFXProgressSpinner searchLoader;
+    @FXML
+    private MFXComboBox<Common.Choice> searchType;
+    @FXML
+    private VBox modalContainer;
+    @FXML
+    private AnchorPane modalOverlay;
+    @FXML
+    private VBox documentListContainer;
+    @FXML
+    private MFXButton openModalBtn;
 
     private File imageFile;
 
@@ -94,14 +102,22 @@ public class NewDocumentController extends ControllerWrapper {
 
         hideMessage(docTitle, submitMessage);
         hideMessage(docQuantity, submitMessage);
-        hideMessage(docISBN, submitMessage);
+        hideMessage(apiPattern, submitMessage);
         hideMessage(docDescription, submitMessage);
         hideMessage(docAuthor, submitMessage);
 
-        hideMessage(docISBN, searchMessage);
+        hideMessage(apiPattern, searchMessage);
 
         Common.disable(loader);
-        Common.disable(isbnLoader);
+        Common.disable(searchLoader);
+        Common.disable(modalOverlay);
+
+        openModalBtn.setOnAction(e -> {
+            Common.enable(modalOverlay);
+        });
+        DropShadow ds = new DropShadow();
+        ds.setRadius(30);
+        modalOverlay.setEffect(ds);
 
         uploadBtn.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
@@ -120,12 +136,12 @@ public class NewDocumentController extends ControllerWrapper {
      */
     @FXML
     private void onSearchByISBN(ActionEvent event) {
-        Common.enable(isbnLoader);
-        Common.disable(docSearch);
+        Common.enable(searchLoader);
+        Common.disable(apiSearch);
         Task<Volume> task = new Task<Volume>() {
             @Override
             protected Volume call() throws Exception {
-                return DocumentQuery.getInstance().getDocumentByISBN(docISBN.getText());
+                return DocumentQuery.getInstance().getDocumentByISBN(apiPattern.getText());
             }
         };
         task.setOnSucceeded((e) -> {
@@ -153,8 +169,8 @@ public class NewDocumentController extends ControllerWrapper {
                 searchMessage.getStyleClass().add("form-message--error");
             }
             searchMessage.setVisible(true);
-            Common.disable(isbnLoader);
-            Common.enable(docSearch);
+            Common.disable(searchLoader);
+            Common.enable(apiSearch);
         });
         new Thread(task).start();
     }

@@ -50,8 +50,8 @@ public class DocumentTest {
 
     @Test
     public void getDocumentsFromAPI_Test() {
-        String pattern = "Harry Potter";
-        List<Volume> volumes = DocumentQuery.getInstance().getDocumentsFromAPI(pattern);
+        String pattern = "0316559806";
+        List<Volume> volumes = DocumentQuery.getInstance().getDocumentsFromAPI("isbn:", pattern);
         Assertions.assertNotNull(volumes);
         for (Volume volume : volumes) {
             System.out.println("Title: " + volume.getVolumeInfo().getTitle());

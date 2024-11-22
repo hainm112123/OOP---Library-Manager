@@ -62,3 +62,13 @@
 .form-message--error {
     -fx-text-fill: #B22222;
 }
+
+.modal-overlay {
+  -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+.modal-container {
+    -fx-background-color: #f4f4f4;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}

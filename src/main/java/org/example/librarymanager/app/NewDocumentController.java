@@ -152,7 +152,7 @@ public class NewDocumentController extends ControllerWrapper {
         openModalBtn.setOnAction(e -> {
             Common.enable(modalOverlay);
         });
-        apiSearch.setOnAction(this::onSearchByISBN);
+        apiSearch.setOnAction(this::onSearchWithAPI);
         loadMoreContainer = new AnchorPane();
         loadMoreBtn = new MFXButton("Load more");
         loadMoreLoader = new MFXProgressSpinner();
@@ -179,6 +179,10 @@ public class NewDocumentController extends ControllerWrapper {
         loadMoreBtn.setOnAction(this::loadMore);
     }
 
+    /**
+     * append a volume to list
+     * @param volume
+     */
     private void addVolume(Volume volume) {
         Document document = new Document(volume);
         DocumentComponent component = new DocumentComponent(document, this, DocumentComponent.VIEW_TYPE_DETAIL);
@@ -194,7 +198,7 @@ public class NewDocumentController extends ControllerWrapper {
             if (volume.getVolumeInfo().getImageLinks() != null) {
                 docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
             }
-            String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
+            String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "Uncategorized";
             Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
             if (opt.isPresent()) {
                 docCategories.getSelectionModel().selectItem(opt.get());
@@ -205,6 +209,10 @@ public class NewDocumentController extends ControllerWrapper {
         });
     }
 
+    /**
+     * load more volume from api
+     * @param actionEvent
+     */
     private void loadMore(ActionEvent actionEvent) {
         Common.disable(loadMoreBtn);
         Common.enable(loadMoreLoader);
@@ -235,10 +243,10 @@ public class NewDocumentController extends ControllerWrapper {
     }
 
     /**
-     * Search book by ISBN and fill in the form.
+     * Search books with api
      */
     @FXML
-    private void onSearchByISBN(ActionEvent event) {
+    private void onSearchWithAPI(ActionEvent event) {
         Common.enable(searchLoader);
         Common.disable(apiSearch);
         Task<List<Volume>> task = new Task<>() {

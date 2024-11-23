@@ -69,15 +69,12 @@ public class ProfileController extends ControllerWrapper {
     private MFXTextField FName;
     @FXML
     private MFXTextField LName;
-
     @FXML
     private ScatterChart<Number,String> BorrowChart;
-
     @FXML
     private MFXComboBox<String> GenderField;
     @FXML
     private MFXDatePicker DateOfBirthField;
-
     @FXML
     private Label UserName;
     @FXML
@@ -227,9 +224,9 @@ public class ProfileController extends ControllerWrapper {
 
         while (!currentDate.isAfter(today)) {
             int orderColor = 0;
-            if ( curIndexBorrowDate < ListBorrowDate.size() && ListBorrowDate.get(curIndexBorrowDate).getDate() == currentDate ) {
+            if ( curIndexBorrowDate < ListBorrowDate.size() && ListBorrowDate.get(curIndexBorrowDate).getDate().isEqual(currentDate) ) {
+                orderColor = ListBorrowDate.get(curIndexBorrowDate).getCount() ;
                 ++curIndexBorrowDate;
-                orderColor = ListBorrowDate.get(curIndexBorrowDate).getCount();
             }
             series.getData().addAll(new XYChart.Data<>(orderColumn, getOrderDay(currentDate)));
             XYChart.Data<Number, String> point = series.getData().get(series.getData().size()-1);

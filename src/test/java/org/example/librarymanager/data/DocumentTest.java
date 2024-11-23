@@ -51,7 +51,7 @@ public class DocumentTest {
     @Test
     public void getDocumentsFromAPI_Test() {
         String pattern = "0316559806";
-        List<Volume> volumes = DocumentQuery.getInstance().getDocumentsFromAPI("isbn:", pattern);
+        List<Volume> volumes = DocumentQuery.getInstance().getDocumentsFromAPI("isbn:", pattern, 0, 30);
         Assertions.assertNotNull(volumes);
         for (Volume volume : volumes) {
             System.out.println("Title: " + volume.getVolumeInfo().getTitle());

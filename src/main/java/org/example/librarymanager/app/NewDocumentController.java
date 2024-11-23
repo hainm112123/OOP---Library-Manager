@@ -8,6 +8,7 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
@@ -72,7 +73,14 @@ public class NewDocumentController extends ControllerWrapper {
     @FXML
     private MFXButton openModalBtn;
 
+    private AnchorPane loadMoreContainer;
+    private MFXButton loadMoreBtn;
+    private MFXProgressSpinner loadMoreLoader;
+    private Label loadMoreMessage;
+
     private File imageFile;
+    private int startIndex = 0;
+    private static final int limit = 10;
 
     /**
      * Hide message when edit input.
@@ -145,6 +153,85 @@ public class NewDocumentController extends ControllerWrapper {
             Common.enable(modalOverlay);
         });
         apiSearch.setOnAction(this::onSearchByISBN);
+        loadMoreContainer = new AnchorPane();
+        loadMoreBtn = new MFXButton("Load more");
+        loadMoreLoader = new MFXProgressSpinner();
+        loadMoreMessage = new Label("No more books matched");
+        loadMoreContainer.setPrefHeight(32);
+        loadMoreContainer.getChildren().addAll(loadMoreBtn, loadMoreLoader, loadMoreMessage);
+        AnchorPane.setTopAnchor(loadMoreBtn, 0.0);
+        AnchorPane.setLeftAnchor(loadMoreBtn, 0.0);
+        AnchorPane.setRightAnchor(loadMoreBtn, 0.0);
+        AnchorPane.setBottomAnchor(loadMoreBtn, 0.0);
+        AnchorPane.setTopAnchor(loadMoreLoader, 0.0);
+        AnchorPane.setLeftAnchor(loadMoreLoader, 0.0);
+        AnchorPane.setRightAnchor(loadMoreLoader, 0.0);
+        AnchorPane.setBottomAnchor(loadMoreLoader, 0.0);
+        AnchorPane.setTopAnchor(loadMoreMessage, 0.0);
+        AnchorPane.setLeftAnchor(loadMoreMessage, 0.0);
+        AnchorPane.setRightAnchor(loadMoreMessage, 0.0);
+        AnchorPane.setBottomAnchor(loadMoreMessage, 0.0);
+        loadMoreBtn.getStyleClass().add("form-primary-button");
+        loadMoreMessage.getStyleClass().add("form-message--error");
+        loadMoreMessage.setAlignment(Pos.CENTER);
+        Common.disable(loadMoreLoader);
+        Common.disable(loadMoreMessage);
+        loadMoreBtn.setOnAction(this::loadMore);
+    }
+
+    private void addVolume(Volume volume) {
+        Document document = new Document(volume);
+        DocumentComponent component = new DocumentComponent(document, this, DocumentComponent.VIEW_TYPE_DETAIL);
+        documentListContainer.getChildren().add(component.getElement());
+        component.setSelectButtonAction(actionEvent -> {
+            docTitle.setText(volume.getVolumeInfo().getTitle());
+            if (volume.getVolumeInfo().getAuthors() != null) {
+                docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
+            } else {
+                docAuthor.setText("");
+            }
+            docDescription.setText(volume.getVolumeInfo().getDescription());
+            if (volume.getVolumeInfo().getImageLinks() != null) {
+                docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
+            }
+            String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
+            Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
+            if (opt.isPresent()) {
+                docCategories.getSelectionModel().selectItem(opt.get());
+            } else {
+                docCategories.getSelectionModel().selectFirst();
+            }
+            Common.disable(modalOverlay);
+        });
+    }
+
+    private void loadMore(ActionEvent actionEvent) {
+        Common.disable(loadMoreBtn);
+        Common.enable(loadMoreLoader);
+        Task<List<Volume>> task = new Task<List<Volume>>() {
+            @Override
+            protected List<Volume> call() throws Exception {
+                startIndex += limit;
+                return DocumentQuery.getInstance().getDocumentsFromAPI(searchType.getSelectionModel().getSelectedItem().getValue(), apiPattern.getText(), startIndex, limit);
+            }
+        };
+        task.setOnSucceeded(e -> {
+            List<Volume> volumes = task.getValue();
+            if (volumes != null && !volumes.isEmpty()) {
+                documentListContainer.getChildren().removeLast();
+                for (Volume volume : volumes) {
+                    addVolume(volume);
+                }
+                documentListContainer.setPrefHeight(DocumentComponent.DOC_COMPONENT_HEIGHT_DETAIL * documentListContainer.getChildren().size() + loadMoreContainer.getPrefHeight());
+                documentListContainer.getChildren().add(loadMoreContainer);
+                Common.disable(loadMoreLoader);
+                Common.enable(loadMoreBtn);
+            } else {
+                Common.disable(loadMoreLoader);
+                Common.enable(loadMoreMessage);
+            }
+        });
+        new Thread(task).start();
     }
 
     /**
@@ -157,39 +244,18 @@ public class NewDocumentController extends ControllerWrapper {
         Task<List<Volume>> task = new Task<>() {
             @Override
             protected List<Volume> call() throws Exception {
-                return DocumentQuery.getInstance().getDocumentsFromAPI(searchType.getSelectionModel().getSelectedItem().getValue(), apiPattern.getText());
+                return DocumentQuery.getInstance().getDocumentsFromAPI(searchType.getSelectionModel().getSelectedItem().getValue(), apiPattern.getText(), startIndex, limit);
             }
         };
         task.setOnSucceeded((e) -> {
             List<Volume> volumes = task.getValue();
             if (volumes != null && !volumes.isEmpty()) {
-                documentListContainer.setPrefHeight(DocumentComponent.DOC_COMPONENT_HEIGHT_DETAIL * volumes.size());
+                documentListContainer.setPrefHeight(DocumentComponent.DOC_COMPONENT_HEIGHT_DETAIL * volumes.size() + loadMoreContainer.getPrefHeight());
                 searchMessage.setText("Searching complete!");
                 for (Volume volume : volumes) {
-                    Document document = new Document(volume);
-                    DocumentComponent component = new DocumentComponent(document, this, DocumentComponent.VIEW_TYPE_DETAIL);
-                    documentListContainer.getChildren().add(component.getElement());
-                    component.setSelectButtonAction(actionEvent -> {
-                        docTitle.setText(volume.getVolumeInfo().getTitle());
-                        if (volume.getVolumeInfo().getAuthors() != null) {
-                            docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
-                        } else {
-                            docAuthor.setText("");
-                        }
-                        docDescription.setText(volume.getVolumeInfo().getDescription());
-                        if (volume.getVolumeInfo().getImageLinks() != null) {
-                            docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
-                        }
-                        String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
-                        Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
-                        if (opt.isPresent()) {
-                            docCategories.getSelectionModel().selectItem(opt.get());
-                        } else {
-                            docCategories.getSelectionModel().selectFirst();
-                        }
-                        Common.disable(modalOverlay);
-                    });
+                    addVolume(volume);
                 }
+                documentListContainer.getChildren().add(loadMoreContainer);
                 searchMessage.getStyleClass().clear();
                 searchMessage.getStyleClass().add("form-message--success");
             } else {

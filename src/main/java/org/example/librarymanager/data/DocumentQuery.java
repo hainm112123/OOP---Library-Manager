@@ -277,12 +277,13 @@ public class DocumentQuery implements DataAccessObject<Document> {
     /**
      * Get list of books from Google Books API by a search pattern.
      */
-    public List<Volume> getDocumentsFromAPI(String type, String pattern) {
+    public List<Volume> getDocumentsFromAPI(String type, String pattern, int startIndex, int limit) {
         try {
             Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, null)
                     .setApplicationName(APPLICATION_NAME).build();
             Books.Volumes.List volumeList = books.volumes().list(type + pattern).setKey(API_KEY);
-            volumeList.setMaxResults(30L);
+            volumeList.setStartIndex((long)startIndex);
+            volumeList.setMaxResults((long)limit);
             Volumes volumes = volumeList.execute();
             return volumes.getItems();
         } catch (Exception e) {

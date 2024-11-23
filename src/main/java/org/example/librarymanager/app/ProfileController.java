@@ -161,7 +161,7 @@ public class ProfileController extends ControllerWrapper {
         }
         FName.setText(getUser().getFirstname());
         LName.setText(getUser().getLastname());
-        if (getUser().getGender().equals("Male")) {
+        if (getUser().getGender() != null && getUser().getGender().equals("Male")) {
             GenderField.getSelectionModel().selectFirst();
         } else {
             GenderField.getSelectionModel().selectLast();

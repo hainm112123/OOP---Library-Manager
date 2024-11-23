@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
@@ -180,6 +181,15 @@
                   <Insets bottom="32.0" left="50.0" right="50.0" top="32.0" />
                </padding>
             </VBox>
+            <AnchorPane layoutX="50.0" layoutY="100.0" prefHeight="32.0" prefWidth="1100.0">
+               <children>
+                  <VBox fx:id="closeModalBtn" alignment="CENTER" prefHeight="200.0" prefWidth="24.0" styleClass="modal-close-btn" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="8.0">
+                     <children>
+                        <FontAwesomeIconView fill="#5c1c00" glyphName="CLOSE" size="16" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
    </children>

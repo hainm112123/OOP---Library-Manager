@@ -47,7 +47,9 @@ public class User implements Model{
         this.firstname = rs.getString("firstname");
         this.lastname = rs.getString("lastname");
         this.gender = rs.getString("gender");
-        this.dateOfBirth = new Date(rs.getDate("dateOfBirth").getTime()).toLocalDate();
+        if (rs.getDate("dateOfBirth") != null) {
+            this.dateOfBirth = new Date(rs.getDate("dateOfBirth").getTime()).toLocalDate();
+        }
         this.permission = rs.getInt("permission");
         this.imageLink = rs.getString("imageLink");
     }

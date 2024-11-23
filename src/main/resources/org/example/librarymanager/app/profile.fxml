@@ -2,8 +2,11 @@
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
 <?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.CategoryAxis?>
@@ -39,32 +42,26 @@
                          <RowConstraints maxHeight="55.200018310546874" minHeight="10.0" prefHeight="45.6000244140625" vgrow="SOMETIMES" />
                          <RowConstraints maxHeight="67.20001831054687" minHeight="10.0" prefHeight="40.600012207031256" vgrow="SOMETIMES" />
                          <RowConstraints maxHeight="62.399987792968744" minHeight="10.0" prefHeight="42.399987792968744" vgrow="SOMETIMES" />
-                           <RowConstraints maxHeight="63.20001220703125" minHeight="10.0" prefHeight="38.40001525878907" vgrow="SOMETIMES" />
                            <RowConstraints maxHeight="52.0000061035156" minHeight="4.599987792968761" prefHeight="37.0" vgrow="SOMETIMES" />
                            <RowConstraints maxHeight="60.60001220703123" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
                        </rowConstraints>
                         <children>
-                           <Label prefHeight="30.0" prefWidth="131.0" text="First Name : ">
+                           <Label prefHeight="30.0" prefWidth="131.0" styleClass="form-label" text="First Name : ">
                               <font>
                                  <Font size="14.0" />
                               </font>
                            </Label>
-                           <Label prefHeight="30.0" prefWidth="143.0" text="Last Name :" textAlignment="RIGHT" GridPane.rowIndex="1">
+                           <Label prefHeight="30.0" prefWidth="143.0" styleClass="form-label" text="Last Name :" textAlignment="RIGHT" GridPane.rowIndex="1">
                               <font>
                                  <Font size="14.0" />
                               </font>
                            </Label>
-                           <Label prefHeight="30.0" prefWidth="155.0" text="Gender :" textAlignment="RIGHT" GridPane.rowIndex="2">
+                           <Label prefHeight="30.0" prefWidth="155.0" styleClass="form-label" text="Gender :" textAlignment="RIGHT" GridPane.rowIndex="2">
                               <font>
                                  <Font size="14.0" />
                               </font>
                            </Label>
-                           <Label prefHeight="30.0" prefWidth="152.0" text="Average Rate :" GridPane.rowIndex="3">
-                              <font>
-                                 <Font size="14.0" />
-                              </font>
-                           </Label>
-                           <Label prefHeight="30.0" prefWidth="148.0" text="Favourite Category :" GridPane.rowIndex="4">
+                           <Label prefHeight="30.0" prefWidth="152.0" styleClass="form-label" text="Date of birth:" GridPane.rowIndex="3">
                               <font>
                                  <Font size="14.0" />
                               </font>
@@ -75,7 +72,6 @@
                               </font>
                            </Label>
                            <Label prefHeight="30.0" prefWidth="534.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                           <Label prefHeight="30.0" prefWidth="534.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                            <Label fx:id="FirstName" prefHeight="30.0" prefWidth="534.0" text="FirstName" GridPane.columnIndex="1">
                               <font>
                                  <Font size="14.0" />
@@ -86,23 +82,31 @@
                                  <Font size="14.0" />
                               </font>
                            </Label>
-                           <MFXButton fx:id="ChangeName" prefHeight="50.0" prefWidth="534.0" rippleAnimateShadow="true" styleClass="form-primary-button" text="Change Your Name" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                           <MFXButton fx:id="ChangeName" prefHeight="32.0" prefWidth="534.0" rippleAnimateShadow="true" styleClass="form-primary-button" text="Edit" GridPane.columnIndex="1" GridPane.rowIndex="4">
                               <font>
                                  <Font size="14.0" />
                               </font>
                            </MFXButton>
-                           <MFXButton fx:id="Cancel" prefHeight="32.0" prefWidth="534.0" text="Cancel" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                           <MFXButton fx:id="SaveName" prefHeight="32.0" prefWidth="534.0" styleClass="form-primary-button" text="Save" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4">
                               <font>
                                  <Font size="14.0" />
                               </font>
                            </MFXButton>
-                           <MFXButton fx:id="SaveName" prefHeight="33.0" prefWidth="534.0" text="Save" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                           <MFXButton fx:id="Cancel" prefHeight="32.0" prefWidth="534.0" styleClass="form-cancel-button" text="Cancel" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5">
                               <font>
                                  <Font size="14.0" />
                               </font>
                            </MFXButton>
-                           <MFXTextField fx:id="FName" minHeight="30.0" prefHeight="30.0" prefWidth="566.0" visible="false" GridPane.columnIndex="1" />
-                           <MFXTextField fx:id="LName" minHeight="30.0" prefHeight="30.0" prefWidth="566.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           <MFXTextField fx:id="FName" minHeight="30.0" prefHeight="30.0" prefWidth="566.0" styleClass="form-text-field" visible="false" GridPane.columnIndex="1" />
+                           <MFXTextField fx:id="LName" minHeight="30.0" prefHeight="30.0" prefWidth="566.0" styleClass="form-text-field" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           <MFXComboBox fx:id="GenderField" floatMode="DISABLED" prefHeight="46.0" prefWidth="559.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <stylesheets>
+                                 <URL value="@../css/MFXComboBox.css" />
+                                 <URL value="@../css/MFXComboBoxCell.css" />
+                              </stylesheets>
+                           </MFXComboBox>
+                           <Label fx:id="DateOfBirth" prefHeight="37.0" prefWidth="534.0" text="01/01/2024" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                           <MFXDatePicker fx:id="DateOfBirthField" prefHeight="38.0" prefWidth="580.0" stylesheets="@../css/MFXDatePicker.css" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         </children>
                      </GridPane>
                      <AreaChart fx:id="StatisticalTimeUse" layoutX="293.0" layoutY="378.0" prefHeight="330.0" prefWidth="757.0" title="Usage period within the last 30 days">

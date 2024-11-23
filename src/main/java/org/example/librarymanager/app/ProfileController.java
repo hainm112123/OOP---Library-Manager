@@ -1,8 +1,6 @@
 package org.example.librarymanager.app;
 
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
-import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -22,6 +20,8 @@ import org.example.librarymanager.models.User;
 
 import java.io.File;
 import java.net.URL;
+import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class ProfileController extends ControllerWrapper {
@@ -32,6 +32,8 @@ public class ProfileController extends ControllerWrapper {
     @FXML
     private Label Gender;
     @FXML
+    private Label DateOfBirth;
+    @FXML
     private MFXButton ChangeName;
     @FXML
     private MFXButton SaveName;
@@ -41,6 +43,10 @@ public class ProfileController extends ControllerWrapper {
     private MFXTextField FName;
     @FXML
     private MFXTextField LName;
+    @FXML
+    private MFXComboBox<String> GenderField;
+    @FXML
+    private MFXDatePicker DateOfBirthField;
     @FXML
     private AreaChart<String,Number> StatisticalTimeUse;
     @FXML
@@ -58,6 +64,9 @@ public class ProfileController extends ControllerWrapper {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        GenderField.getItems().addAll("Male", "Female");
+        Common.disable(GenderField);
+        Common.disable(DateOfBirthField);
         resetName();
         UserName.setText((String)("@" + User.USER_TYPE_STRING[getUser().getPermission()] + " " + getUser().getUsername()));
 
@@ -77,6 +86,10 @@ public class ProfileController extends ControllerWrapper {
         SaveName.setOnAction(event -> {
             getUser().setFirstname(FName.getText());
             getUser().setLastname(LName.getText());
+            getUser().setGender(GenderField.getValue());
+            if (DateOfBirthField.getValue() != null) {
+                getUser().setDateOfBirth(DateOfBirthField.getValue());
+            }
             Task<Boolean> task = new Task<Boolean>() {
                 @Override
                 protected Boolean call() throws Exception {
@@ -84,6 +97,7 @@ public class ProfileController extends ControllerWrapper {
                 }
             };
             task.setOnSucceeded(e -> {
+                resetName();
                 NotChangeStatus();
             });
             new Thread(task).start();
@@ -140,8 +154,18 @@ public class ProfileController extends ControllerWrapper {
         FirstName.setText(getUser().getFirstname());
         LastName.setText(getUser().getLastname());
         Gender.setText(getUser().getGender());
+        if (getUser().getDateOfBirth() != null) {
+            DateOfBirth.setText(getUser().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        } else {
+            DateOfBirth.setText("n/a");
+        }
         FName.setText(getUser().getFirstname());
         LName.setText(getUser().getLastname());
+        if (getUser().getGender().equals("Male")) {
+            GenderField.getSelectionModel().selectFirst();
+        } else {
+            GenderField.getSelectionModel().selectLast();
+        }
     }
 
     public void ChangeStatus(){
@@ -152,6 +176,10 @@ public class ProfileController extends ControllerWrapper {
         Cancel.setVisible(true);
         SaveName.setVisible(true);
         ChangeName.setVisible(false);
+        Common.enable(GenderField);
+        Common.disable(Gender);
+        Common.enable(DateOfBirthField);
+        Common.disable(DateOfBirth);
     }
     public void NotChangeStatus(){
         FName.setVisible(false);
@@ -161,6 +189,10 @@ public class ProfileController extends ControllerWrapper {
         SaveName.setVisible(false);
         Cancel.setVisible(false);
         ChangeName.setVisible(true);
+        Common.disable(GenderField);
+        Common.enable(Gender);
+        Common.disable(DateOfBirthField);
+        Common.enable(DateOfBirth);
     }
 
 }

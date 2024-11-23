@@ -73,6 +73,7 @@ public class ProfileController extends ControllerWrapper {
     @FXML
     private ScatterChart<Number,String> BorrowChart;
 
+    @FXML
     private MFXComboBox<String> GenderField;
     @FXML
     private MFXDatePicker DateOfBirthField;

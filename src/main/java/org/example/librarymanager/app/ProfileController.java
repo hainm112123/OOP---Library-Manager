@@ -1,10 +1,9 @@
 package org.example.librarymanager.app;
 
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.*;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
@@ -17,16 +16,35 @@ import org.example.librarymanager.Common;
 import org.example.librarymanager.data.AuthQuery;
 import org.example.librarymanager.data.AuthResult;
 import org.example.librarymanager.data.ServiceQuery;
+
+import javafx.scene.Cursor;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import org.example.librarymanager.Common;
+import org.example.librarymanager.components.Avatar;
+import org.example.librarymanager.data.Backblaze;
+
 import org.example.librarymanager.data.UserQuery;
 import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.ServiceData;
 import org.example.librarymanager.models.User;
 
-import java.io.IOException;
+import java.io.File;
 import java.net.URL;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+
+import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
+
 import java.util.ResourceBundle;
 
 import static java.time.DayOfWeek.*;
@@ -40,6 +58,8 @@ public class ProfileController extends ControllerWrapper {
     @FXML
     private Label Gender;
     @FXML
+    private Label DateOfBirth;
+    @FXML
     private MFXButton ChangeName;
     @FXML
     private MFXButton SaveName;
@@ -49,18 +69,38 @@ public class ProfileController extends ControllerWrapper {
     private MFXTextField FName;
     @FXML
     private MFXTextField LName;
-    @FXML
-    private Label DateofBirth;
+
     @FXML
     private ScatterChart<Number,String> BorrowChart;
+
+    private MFXComboBox<String> GenderField;
+    @FXML
+    private MFXDatePicker DateOfBirthField;
+
     @FXML
     private Label UserName;
+    @FXML
+    private ImageView profileImage;
+    @FXML
+    private Pane profileImgOverlay;
+    @FXML
+    private MFXButton saveImageBtn;
+    @FXML
+    private MFXProgressSpinner loader;
+
+    private File imageFile;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        GenderField.getItems().addAll("Male", "Female");
+        Common.disable(GenderField);
+        Common.disable(DateOfBirthField);
         resetName();
+
         InitChart();
 
-        UserName.setText((String)("@User " + getUser().getUsername()));
+        UserName.setText((String)("@" + User.USER_TYPE_STRING[getUser().getPermission()] + " " + getUser().getUsername()));
+
         Cancel.setRippleColor(Paint.valueOf(Common.PRIMARY_COLOR));
         SaveName.setRippleColor(Paint.valueOf(Common.PRIMARY_COLOR));
         ChangeName.setRippleColor(Paint.valueOf(Common.PRIMARY_COLOR));
@@ -77,6 +117,10 @@ public class ProfileController extends ControllerWrapper {
         SaveName.setOnAction(event -> {
             getUser().setFirstname(FName.getText());
             getUser().setLastname(LName.getText());
+            getUser().setGender(GenderField.getValue());
+            if (DateOfBirthField.getValue() != null) {
+                getUser().setDateOfBirth(DateOfBirthField.getValue());
+            }
             Task<Boolean> task = new Task<Boolean>() {
                 @Override
                 protected Boolean call() throws Exception {
@@ -84,7 +128,54 @@ public class ProfileController extends ControllerWrapper {
                 }
             };
             task.setOnSucceeded(e -> {
+                resetName();
                 NotChangeStatus();
+            });
+            new Thread(task).start();
+        });
+
+        profileImage = (ImageView) new Avatar(profileImage, 200, getUser().getImageLink()).getElement();
+        Common.disable(saveImageBtn);
+        Common.disable(loader);
+        profileImgOverlay.setOpacity(0.0);
+        profileImage.setCursor(Cursor.HAND);
+        Circle circle = new Circle(100);
+        circle.setCenterX(100);
+        circle.setCenterY(100);
+        profileImage.setClip(circle);
+        profileImgOverlay.setOnMouseEntered(e -> {
+            profileImgOverlay.setOpacity(1.0);
+        });
+        profileImgOverlay.setOnMouseExited(e -> {
+            profileImgOverlay.setOpacity(0.0);
+        });
+
+        profileImgOverlay.setOnMouseClicked(e -> {
+           FileChooser fileChooser = new FileChooser();
+           fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png"));
+           fileChooser.setTitle("Select Profile Image");
+           imageFile = fileChooser.showOpenDialog(stage);
+           if (imageFile != null) {
+               Common.enable(saveImageBtn);
+               Image image = new Image(imageFile.toURI().toString());
+               profileImage.setImage(image);
+           } else {
+               Common.disable(saveImageBtn);
+           }
+        });
+        saveImageBtn.setOnAction(e -> {
+            Common.enable(loader);
+            Common.disable(saveImageBtn);
+            Task<Boolean> task = new Task<>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    String url = Backblaze.getInstance().upload(String.format("user-profile-%d.png", getUser().getId()), imageFile.getAbsolutePath());
+                    getUser().setImageLink(url);
+                    return UserQuery.getInstance().update(getUser());
+                }
+            };
+            task.setOnSucceeded(event -> {
+                Common.disable(loader);
             });
             new Thread(task).start();
         });
@@ -155,9 +246,18 @@ public class ProfileController extends ControllerWrapper {
         FirstName.setText(getUser().getFirstname());
         LastName.setText(getUser().getLastname());
         Gender.setText(getUser().getGender());
+        if (getUser().getDateOfBirth() != null) {
+            DateOfBirth.setText(getUser().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        } else {
+            DateOfBirth.setText("n/a");
+        }
         FName.setText(getUser().getFirstname());
         LName.setText(getUser().getLastname());
-        DateofBirth.setText(getUser().getDateOfBirth().toString());
+        if (getUser().getGender() != null && getUser().getGender().equals("Male")) {
+            GenderField.getSelectionModel().selectFirst();
+        } else {
+            GenderField.getSelectionModel().selectLast();
+        }
     }
 
     public void ChangeStatus(){
@@ -168,6 +268,10 @@ public class ProfileController extends ControllerWrapper {
         Cancel.setVisible(true);
         SaveName.setVisible(true);
         ChangeName.setVisible(false);
+        Common.enable(GenderField);
+        Common.disable(Gender);
+        Common.enable(DateOfBirthField);
+        Common.disable(DateOfBirth);
     }
     public void NotChangeStatus(){
         FName.setVisible(false);
@@ -177,6 +281,10 @@ public class ProfileController extends ControllerWrapper {
         SaveName.setVisible(false);
         Cancel.setVisible(false);
         ChangeName.setVisible(true);
+        Common.disable(GenderField);
+        Common.enable(Gender);
+        Common.disable(DateOfBirthField);
+        Common.enable(DateOfBirth);
     }
 
 }

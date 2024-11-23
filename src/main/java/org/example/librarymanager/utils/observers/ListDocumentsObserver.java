@@ -1,11 +1,11 @@
-package org.example.librarymanager.components;
+package org.example.librarymanager.utils.observers;
 
-import javafx.scene.control.Pagination;
+import org.example.librarymanager.components.ListDocumentsComponent;
 import org.example.librarymanager.models.Document;
 
 import java.util.List;
 
-public class ListDocumentsObserver implements Observer {
+public class ListDocumentsObserver extends Observer {
     private List<Document> documents;
     private ListDocumentsComponent component;
 

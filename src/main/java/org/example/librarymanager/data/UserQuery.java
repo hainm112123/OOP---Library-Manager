@@ -121,18 +121,4 @@ public class UserQuery implements DataAccessObject<User> {
             return false;
         }
     }
-
-    public boolean updatePermissionById(int id, int permission) {
-        try (Connection connection = databaseConnection.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement("update users set permission = ? where id = ?");
-            ps.setInt(1, permission);
-            ps.setInt(2, id);
-            ps.executeUpdate();
-            ps.close();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }

@@ -18,6 +18,8 @@ import java.util.concurrent.Future;
 public class MyDocumentsController extends ControllerWrapper {
     @FXML
     private MFXScrollPane scrollPane;
+    @FXML
+    private VBox container;
 
     /**
      * Display all documents by owner in a grid pane.
@@ -36,10 +38,6 @@ public class MyDocumentsController extends ControllerWrapper {
             e.printStackTrace();
         }
 
-        VBox container = new VBox();
-        StackPane stackPane = new StackPane();
-        stackPane.setPrefHeight(50);
-        container.getChildren().addAll(stackPane, new ListDocumentsComponent(documents, scrollPane, this).getElement());
-        scrollPane.setContent(container);
+        container.getChildren().add(new ListDocumentsComponent(documents, scrollPane, this).getElement());
     }
 }

@@ -18,6 +18,19 @@
     -fx-font-weight: 700;
 }
 
+.add-wishlist-button {
+    -fx-background-color: rgba(46, 107, 211, 0.8);
+    -fx-text-fill: #fff;
+    -fx-font-weight: 700;
+}
+
+.remove-wishlist-button {
+    -fx-background-color: rgba(52, 100, 186, 0.8);
+    -fx-text-fill: #fff;
+    -fx-font-weight: 700;
+    -fx-font-size: 10;
+}
+
 .info-label {
     -fx-font-weight: 700;
 }

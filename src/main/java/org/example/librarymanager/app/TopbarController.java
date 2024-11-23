@@ -2,16 +2,20 @@ package org.example.librarymanager.app;
 
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.util.Pair;
 import org.example.librarymanager.Common;
+import org.example.librarymanager.components.Avatar;
 import org.example.librarymanager.components.NotificationComponent;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
@@ -84,9 +88,12 @@ public class TopbarController extends ControllerWrapper {
     private HBox manageBtn;
     @FXML
     private HBox signoutBtn;
+    @FXML
+    private ImageView profileImage;
 
     private Future<List<Category>> categoryFu;
-    private Future<List<Document>> documentFu;
+    private Future<List<Document>> overdueDocumentFu;
+    private Future<List<Document>> wishlistDocumentFu;
 
     private void initCategory() {
         try {
@@ -148,16 +155,30 @@ public class TopbarController extends ControllerWrapper {
     private void initNotification() {
         Common.disable(notificationPane);
         try {
-            List<Document> documents = documentFu.get();
-            notificationBadge.setText(""+documents.size());
-            if (documents.isEmpty()) {
+            List<Document> documents = overdueDocumentFu.get();
+            List<Document> wishlistDocuments = wishlistDocumentFu.get();
+            for (Document document : documents) {
+                notificationBox.getChildren().add(new NotificationComponent(
+                        document, this,
+                        "You should return this book soon!",
+                        "You have borrowed \"" + document.getTitle() + "\" more than 14 days, you should return it soon. Otherwise, you must pay fine due to overdue.",
+                        notificationPane
+                ).getElement());
+            }
+            for (Document document: wishlistDocuments) {
+                notificationBox.getChildren().add(new NotificationComponent(
+                        document, this,
+                        "A book in your wishlist is now available",
+                        "\"" + document.getTitle() + "\" is currently available. You can go borrow it right now!",
+                        notificationPane
+                ).getElement());
+            }
+            notificationBadge.setText(""+notificationBox.getChildren().size());
+            if (notificationBox.getChildren().isEmpty()) {
                 Common.disable(notificationBadge);
             }
             else {
                 Common.enable(notificationBadge);
-            }
-            for (Document document : documents) {
-                notificationBox.getChildren().add(new NotificationComponent(document, this).getElement());
             }
             notificationBell.setOnMouseClicked(event -> {
                if (notificationPane.isDisable()) {
@@ -175,15 +196,37 @@ public class TopbarController extends ControllerWrapper {
     }
 
     private void initUser() {
+        userBtn = (ImageView) new Avatar(userBtn, 48, getUser().getImageLink()).getElement();
+        profileImage = (ImageView) new Avatar(profileImage, 48, getUser().getImageLink()).getElement();
+
         usernameLabel.setText(getUser().getUsername());
         usertypeLabel.setText(User.USER_TYPE_STRING[getUser().getPermission()]);
-        profileBtn.setOnMouseClicked(event -> safeSwitchScene("profile.fxml"));
-        changePasswordBtn.setOnMouseClicked(event -> safeSwitchScene("change-password.fxml"));
-        bookshelfBtn.setOnMouseClicked(event -> safeSwitchScene("borrowing-documents.fxml"));
-        mydocBtn.setOnMouseClicked(event -> safeSwitchScene("my-documents.fxml"));
-        newdocBtn.setOnMouseClicked(event -> safeSwitchScene("new-document.fxml"));
-        manageBtn.setOnMouseClicked(event -> safeSwitchScene("admin.fxml"));
+        profileBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("profile.fxml");
+        });
+        changePasswordBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("change-password.fxml");
+        });
+        bookshelfBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("bookshelf.fxml");
+        });
+        mydocBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("my-documents.fxml");
+        });
+        newdocBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("new-document.fxml");
+        });
+        manageBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("admin.fxml");
+        });
         signoutBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
             safeSwitchScene("login.fxml");
             setUser(null);
         });
@@ -234,9 +277,10 @@ public class TopbarController extends ControllerWrapper {
             }
         });
 
-        executor = Executors.newFixedThreadPool(2);
+        executor = Executors.newFixedThreadPool(3);
         categoryFu = executor.submit(() -> CategoryQuery.getInstance().getAll());
-        documentFu = executor.submit(() -> ServiceQuery.getInstance().getOverdueDocuments(getUser().getId()));
+        overdueDocumentFu = executor.submit(() -> ServiceQuery.getInstance().getOverdueDocuments(getUser().getId()));
+        wishlistDocumentFu = executor.submit(() -> ServiceQuery.getInstance().getWishlistAvailableDocuments(getUser().getId()));
         executor.shutdown();
 
         try {

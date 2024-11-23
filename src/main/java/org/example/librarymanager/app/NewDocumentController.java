@@ -8,26 +8,26 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.example.librarymanager.Common;
+import org.example.librarymanager.components.DocumentComponent;
 import org.example.librarymanager.data.Backblaze;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 
-import javax.print.Doc;
-import javax.swing.text.DocumentFilter;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class NewDocumentController extends ControllerWrapper {
     @FXML
@@ -46,9 +46,9 @@ public class NewDocumentController extends ControllerWrapper {
     private MFXButton docSubmit;
 
     @FXML
-    private MFXTextField docISBN;
+    private MFXTextField apiPattern;
     @FXML
-    private MFXButton docSearch;
+    private MFXButton apiSearch;
     @FXML
     private Label searchMessage;
     @FXML
@@ -61,9 +61,28 @@ public class NewDocumentController extends ControllerWrapper {
     @FXML
     private MFXProgressSpinner loader;
     @FXML
-    private MFXProgressSpinner isbnLoader;
+    private MFXProgressSpinner searchLoader;
+    @FXML
+    private MFXComboBox<Common.StrChoice> searchType;
+    @FXML
+    private VBox modalContainer;
+    @FXML
+    private AnchorPane modalOverlay;
+    @FXML
+    private VBox documentListContainer;
+    @FXML
+    private MFXButton openModalBtn;
+    @FXML
+    private VBox closeModalBtn;
+
+    private AnchorPane loadMoreContainer;
+    private MFXButton loadMoreBtn;
+    private MFXProgressSpinner loadMoreLoader;
+    private Label loadMoreMessage;
 
     private File imageFile;
+    private int startIndex = 0;
+    private static final int limit = 10;
 
     /**
      * Hide message when edit input.
@@ -94,14 +113,15 @@ public class NewDocumentController extends ControllerWrapper {
 
         hideMessage(docTitle, submitMessage);
         hideMessage(docQuantity, submitMessage);
-        hideMessage(docISBN, submitMessage);
+        hideMessage(apiPattern, submitMessage);
         hideMessage(docDescription, submitMessage);
         hideMessage(docAuthor, submitMessage);
 
-        hideMessage(docISBN, searchMessage);
+        hideMessage(apiPattern, searchMessage);
 
         Common.disable(loader);
-        Common.disable(isbnLoader);
+        Common.disable(searchLoader);
+        Common.disable(modalOverlay);
 
         uploadBtn.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
@@ -113,48 +133,153 @@ public class NewDocumentController extends ControllerWrapper {
                 uploadlabel.setText("No file chosen");
             }
         });
+
+        openModalBtn.setOnAction(e -> {
+            Common.enable(modalOverlay);
+        });
+        closeModalBtn.setOnMouseClicked(e -> {
+            Common.disable(modalOverlay);
+        });
+        DropShadow ds = new DropShadow();
+        ds.setRadius(30);
+        modalOverlay.setEffect(ds);
+        searchType.getItems().addAll(
+                new Common.StrChoice("", "Any"),
+                new Common.StrChoice("intitle:", "Title"),
+                new Common.StrChoice("inauthor:", "Author"),
+                new Common.StrChoice("inpublisher:", "Publisher"),
+                new Common.StrChoice("subject:", "Subject"),
+                new Common.StrChoice("isbn:", "ISBN"),
+                new Common.StrChoice("lccn:", "LCCN"),
+                new Common.StrChoice("oclc:", "OCLC")
+        );
+        searchType.getSelectionModel().selectFirst();
+        openModalBtn.setOnAction(e -> {
+            Common.enable(modalOverlay);
+        });
+        apiSearch.setOnAction(this::onSearchWithAPI);
+        loadMoreContainer = new AnchorPane();
+        loadMoreBtn = new MFXButton("Load more");
+        loadMoreLoader = new MFXProgressSpinner();
+        loadMoreMessage = new Label("No more books matched");
+        loadMoreContainer.setPrefHeight(32);
+        loadMoreContainer.getChildren().addAll(loadMoreBtn, loadMoreLoader, loadMoreMessage);
+        AnchorPane.setTopAnchor(loadMoreBtn, 0.0);
+        AnchorPane.setLeftAnchor(loadMoreBtn, 0.0);
+        AnchorPane.setRightAnchor(loadMoreBtn, 0.0);
+        AnchorPane.setBottomAnchor(loadMoreBtn, 0.0);
+        AnchorPane.setTopAnchor(loadMoreLoader, 0.0);
+        AnchorPane.setLeftAnchor(loadMoreLoader, 0.0);
+        AnchorPane.setRightAnchor(loadMoreLoader, 0.0);
+        AnchorPane.setBottomAnchor(loadMoreLoader, 0.0);
+        AnchorPane.setTopAnchor(loadMoreMessage, 0.0);
+        AnchorPane.setLeftAnchor(loadMoreMessage, 0.0);
+        AnchorPane.setRightAnchor(loadMoreMessage, 0.0);
+        AnchorPane.setBottomAnchor(loadMoreMessage, 0.0);
+        loadMoreBtn.getStyleClass().add("form-primary-button");
+        loadMoreMessage.getStyleClass().add("form-message--error");
+        loadMoreMessage.setAlignment(Pos.CENTER);
+        Common.disable(loadMoreLoader);
+        Common.disable(loadMoreMessage);
+        loadMoreBtn.setOnAction(this::loadMore);
     }
 
     /**
-     * Search book by ISBN and fill in the form.
+     * append a volume to list
+     * @param volume
+     */
+    private void addVolume(Volume volume) {
+        Document document = new Document(volume);
+        DocumentComponent component = new DocumentComponent(document, this, DocumentComponent.VIEW_TYPE_DETAIL);
+        documentListContainer.getChildren().add(component.getElement());
+        component.setSelectButtonAction(actionEvent -> {
+            docTitle.setText(volume.getVolumeInfo().getTitle());
+            if (volume.getVolumeInfo().getAuthors() != null) {
+                docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
+            } else {
+                docAuthor.setText("");
+            }
+            docDescription.setText(volume.getVolumeInfo().getDescription());
+            if (volume.getVolumeInfo().getImageLinks() != null) {
+                docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
+            }
+            String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "Uncategorized";
+            Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
+            if (opt.isPresent()) {
+                docCategories.getSelectionModel().selectItem(opt.get());
+            } else {
+                docCategories.getSelectionModel().selectFirst();
+            }
+            Common.disable(modalOverlay);
+        });
+    }
+
+    /**
+     * load more volume from api
+     * @param actionEvent
+     */
+    private void loadMore(ActionEvent actionEvent) {
+        Common.disable(loadMoreBtn);
+        Common.enable(loadMoreLoader);
+        Task<List<Volume>> task = new Task<List<Volume>>() {
+            @Override
+            protected List<Volume> call() throws Exception {
+                startIndex += limit;
+                return DocumentQuery.getInstance().getDocumentsFromAPI(searchType.getSelectionModel().getSelectedItem().getValue(), apiPattern.getText(), startIndex, limit);
+            }
+        };
+        task.setOnSucceeded(e -> {
+            List<Volume> volumes = task.getValue();
+            if (volumes != null && !volumes.isEmpty()) {
+                documentListContainer.getChildren().removeLast();
+                for (Volume volume : volumes) {
+                    addVolume(volume);
+                }
+                documentListContainer.setPrefHeight(DocumentComponent.DOC_COMPONENT_HEIGHT_DETAIL * documentListContainer.getChildren().size() + loadMoreContainer.getPrefHeight());
+                documentListContainer.getChildren().add(loadMoreContainer);
+                Common.disable(loadMoreLoader);
+                Common.enable(loadMoreBtn);
+            } else {
+                Common.disable(loadMoreLoader);
+                Common.enable(loadMoreMessage);
+            }
+        });
+        new Thread(task).start();
+    }
+
+    /**
+     * Search books with api
      */
     @FXML
-    private void onSearchByISBN(ActionEvent event) {
-        Common.enable(isbnLoader);
-        Common.disable(docSearch);
-        Task<Volume> task = new Task<Volume>() {
+    private void onSearchWithAPI(ActionEvent event) {
+        Common.enable(searchLoader);
+        Common.disable(apiSearch);
+        Task<List<Volume>> task = new Task<>() {
             @Override
-            protected Volume call() throws Exception {
-                return DocumentQuery.getInstance().getDocumentByISBN(docISBN.getText());
+            protected List<Volume> call() throws Exception {
+                return DocumentQuery.getInstance().getDocumentsFromAPI(searchType.getSelectionModel().getSelectedItem().getValue(), apiPattern.getText(), startIndex, limit);
             }
         };
         task.setOnSucceeded((e) -> {
-            Volume volume = task.getValue();
-            if (volume != null) {
+            List<Volume> volumes = task.getValue();
+            documentListContainer.getChildren().clear();
+            if (volumes != null && !volumes.isEmpty()) {
+                documentListContainer.setPrefHeight(DocumentComponent.DOC_COMPONENT_HEIGHT_DETAIL * volumes.size() + loadMoreContainer.getPrefHeight());
                 searchMessage.setText("Searching complete!");
-                docTitle.setText(volume.getVolumeInfo().getTitle());
-                docAuthor.setText(String.join(", ", volume.getVolumeInfo().getAuthors()));
-                docDescription.setText(volume.getVolumeInfo().getDescription());
-                if (volume.getVolumeInfo().getImageLinks() != null) {
-                    docImageLink.setText(volume.getVolumeInfo().getImageLinks().getThumbnail());
+                for (Volume volume : volumes) {
+                    addVolume(volume);
                 }
-                String category = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "other";
-                Optional<Common.Choice> opt = docCategories.getItems().stream().filter(cat -> cat.getLabel().equals(category)).findFirst();
-                if (opt.isPresent()) {
-                    docCategories.getSelectionModel().selectItem(opt.get());
-                } else {
-                    docCategories.getSelectionModel().selectLast();
-                }
+                documentListContainer.getChildren().add(loadMoreContainer);
                 searchMessage.getStyleClass().clear();
                 searchMessage.getStyleClass().add("form-message--success");
             } else {
-                searchMessage.setText("ISBN not found!");
+                searchMessage.setText("No document found!");
                 searchMessage.getStyleClass().clear();
                 searchMessage.getStyleClass().add("form-message--error");
             }
             searchMessage.setVisible(true);
-            Common.disable(isbnLoader);
-            Common.enable(docSearch);
+            Common.disable(searchLoader);
+            Common.enable(apiSearch);
         });
         new Thread(task).start();
     }

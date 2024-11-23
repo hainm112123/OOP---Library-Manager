@@ -7,6 +7,10 @@
     -fx-pref-height: 40;
     -fx-font-weight: 700;
 }
+.document-title.document-detail-list {
+    -fx-pref-height: 28;
+    -fx-font-weight: 700;
+}
 
 .document-container {
     -fx-cursor: hand;
@@ -20,6 +24,15 @@
     -fx-border-radius: 4;
     -fx-cursor: hand;
 }
+.document-detail-container {
+    -fx-padding: 8;
+    -fx-pref-height: 166;
+    -fx-pref-width: 980;
+    -fx-background-color: #e6e6e6;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-cursor: hand;
+}
 
 .document-image {
     -fx-background-radius: 4;
@@ -27,7 +40,7 @@
 }
 
 .document-detail-box {
-    -fx-padding: 0 0 0 8;
+    -fx-padding: 0 8 0 8;
 }
 
 .document-data {
@@ -47,4 +60,18 @@
     -fx-pref-width: 332;
     -fx-pref-height: 120;
     -fx-wrap-text: true;
+}
+.document-detail-description {
+    -fx-pref-width: 850;
+    -fx-pref-height: 90;
+    -fx-wrap-text: true;
+}
+
+.modal-document-select-button {
+    -fx-background-color: #5C1C00cc;
+    -mfx-ripple-color: #5c1c00;
+    -fx-text-fill: #fff;
+    -fx-cursor: hand;
+    -fx-pref-width: 150;
+    -fx-pref-height: 150;
 }

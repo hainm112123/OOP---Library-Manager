@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="720.0" prefWidth="600.0" stylesheets="@../css/bookshelf.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.BookshelfContronller">
+    <children>
+        <AnchorPane prefHeight="550.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="170.0">
+            <children>
+                <MFXScrollPane fx:id="scrollPane" layoutY="80.0" maxHeight="-Infinity" minHeight="450.0" prefHeight="470.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <content>
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="280.0" prefWidth="1186.0">
+                     <children>
+                        <VBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="1200.0" stylesheets="@../css/home.css" VBox.vgrow="NEVER">
+                           <children>
+                              <Label maxHeight="40.0" minHeight="40.0" prefHeight="65.0" prefWidth="256.0" styleClass="title" text="Bookshelf" />
+                           </children>
+                        </VBox>
+                        <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="1200.0" VBox.vgrow="NEVER">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="308.0" styleClass="status-button-container">
+                                 <children>
+                                    <Label fx:id="readingBtn" prefHeight="51.0" prefWidth="71.0" text="Reading">
+                                       <styleClass>
+                                          <String fx:value="status-button" />
+                                          <String fx:value="status-button--active" />
+                                       </styleClass>
+                                    </Label>
+                                    <Label fx:id="wishlistBtn" prefHeight="82.0" prefWidth="88.0" styleClass="status-button" text="In wishlist" />
+                                    <Label fx:id="completedBtn" prefHeight="96.0" prefWidth="99.0" styleClass="status-button" text="Completed" />
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="36.0" />
+                           </padding>
+                        </HBox>
+                        <VBox fx:id="container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="1186.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </content></MFXScrollPane>
+            </children>
+        </AnchorPane>
+        <fx:include prefHeight="170.0" source="topbar.fxml" />
+    </children>
+</AnchorPane>

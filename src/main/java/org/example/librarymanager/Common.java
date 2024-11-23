@@ -18,10 +18,12 @@ public class Common {
     public static final String TOPBAR_DROPDOWN_BUTTON_BG = "#f0f0f0";
     public static final String TOPBAR_DROPDOWN_BUTTON_BG_HOVER = " #00000011";
     public static Image NO_IMAGE;
+    public static Image DEFAULT_PROFILE;
 
     static {
         try {
             NO_IMAGE = new Image("file:src/main/resources/org/example/librarymanager/image/no_image.jpg");
+            DEFAULT_PROFILE = new Image("file:src/main/resources/org/example/librarymanager/image/UserProfile.jpg");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,6 +42,18 @@ public class Common {
     @AllArgsConstructor
     public static class Choice {
         private int value;
+        private String label;
+
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class StrChoice {
+        private String value;
         private String label;
 
         @Override

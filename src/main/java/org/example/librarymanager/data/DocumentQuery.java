@@ -9,6 +9,7 @@ import com.google.api.services.books.model.Volumes;
 import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.Rating;
+import org.example.librarymanager.models.Service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -276,12 +277,13 @@ public class DocumentQuery implements DataAccessObject<Document> {
     /**
      * Get list of books from Google Books API by a search pattern.
      */
-    public List<Volume> getDocumentsFromAPI(String pattern) {
+    public List<Volume> getDocumentsFromAPI(String type, String pattern, int startIndex, int limit) {
         try {
             Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, null)
                     .setApplicationName(APPLICATION_NAME).build();
-            Books.Volumes.List volumeList = books.volumes().list(pattern).setKey(API_KEY);
-            volumeList.setMaxResults(30L);
+            Books.Volumes.List volumeList = books.volumes().list(type + pattern).setKey(API_KEY);
+            volumeList.setStartIndex((long)startIndex);
+            volumeList.setMaxResults((long)limit);
             Volumes volumes = volumeList.execute();
             return volumes.getItems();
         } catch (Exception e) {
@@ -379,5 +381,28 @@ public class DocumentQuery implements DataAccessObject<Document> {
 
     public List<Document> getNewestDocuments(int limit) {
         return getDocuments("addDate desc", limit);
+    }
+
+    public List<Document> getDocumentsByStatus(int userId, int status) {
+        List<Document> documents = new ArrayList<>();
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(
+                    "select d.*, avg(ratings.value) rating, categories.name categoryName from services as s join documents as d on s.documentId = d.id "
+                            + "left join ratings on d.id = ratings.documentId "
+                            + "left join categories on d.categoryId = categories.id "
+                            + "where s.userId = ? and status = ? group by d.id"
+            );
+            ps.setInt(1, userId);
+            ps.setInt(2, status);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                documents.add(new Document(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return documents;
     }
 }

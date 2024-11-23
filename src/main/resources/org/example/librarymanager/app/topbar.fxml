@@ -53,9 +53,9 @@
                         </Button>
                      </children>
                   </GridPane>
-                  <ImageView accessibleRole="BUTTON" fitHeight="56.0" fitWidth="290.0" layoutX="50.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView accessibleRole="BUTTON" fitHeight="96.0" layoutX="40.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../image/TinyIcon.png" />
+                        <Image url="@../image/logo.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="userBtn" fitHeight="48.0" fitWidth="48.0" layoutX="1100.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
@@ -119,7 +119,7 @@
          <content>
             <VBox fx:id="userBox" alignment="TOP_CENTER" layoutX="15.0" prefHeight="520.0" prefWidth="290.0" style="-fx-background-radius: 8; -fx-background-color: #f0f0f0;">
                <children>
-                  <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="profileImage" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../image/UserProfile.png" />
                      </image>

@@ -1,34 +1,28 @@
 package org.example.librarymanager.components;
 
-import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import org.example.librarymanager.app.EditDataController;
+import org.example.librarymanager.admin.EditDataController;
 import org.example.librarymanager.app.LibraryApplication;
 import org.example.librarymanager.data.DataAccessObject;
 import org.example.librarymanager.models.Model;
 
-import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataTable<E extends Model> {
     private AnchorPane container;
     private Label title;
     private Button searchBtn;
     private TextField searchBox;
+    private Button sortBtn;
+    private ComboBox<String> sortBox;
+
     private Pagination pagination;
 
     private TableView<List<Pair<String,String>>> table;
@@ -52,12 +46,7 @@ public class DataTable<E extends Model> {
         searchBtn.setOnAction(event -> searchOnClick());
         container.getChildren().add(searchBtn);
         container.getChildren().add(searchBox);
-//        searchBtn.setPrefWidth(50);
-//        HBox searchContainer = new HBox();
-//        Region spacer = new Region();
-//        HBox.setHgrow(spacer, Priority.ALWAYS);
-//        searchContainer.getChildren().addAll(spacer, searchBtn, searchBox);
-//        container.getChildren().add(searchContainer);
+
 
         this.dataAccessObject = dataAccessObject;
 
@@ -69,12 +58,6 @@ public class DataTable<E extends Model> {
 
         table = new TableView();
         table.setEditable(true);
-        table.setMinWidth(TABLE_WIDTH);
-        table.setPrefWidth(TABLE_WIDTH);
-        table.setMaxWidth(TABLE_WIDTH);
-        table.setMinHeight(TABLE_HEIGHT);
-        table.setPrefHeight(TABLE_HEIGHT);
-        table.setMaxHeight(TABLE_HEIGHT);
         addEditColumn();
 
         List<String> attributes = list.get(0).getAttributes();
@@ -107,6 +90,15 @@ public class DataTable<E extends Model> {
             updateTable(newValue.intValue() * TABLE_LIMIT,
                     Math.min(newValue.intValue() * TABLE_LIMIT + TABLE_LIMIT, this.list.size()));
         });
+
+
+        sortBtn = new Button();
+        sortBtn.setText("Sort by");
+        sortBtn.setOnAction(event -> sortOnClick());
+        container.getChildren().add(sortBtn);
+        sortBox = new ComboBox<>();
+        sortBox.getItems().addAll(attributes);
+        container.getChildren().add(sortBox);
 
         updateTable(0, Math.min(TABLE_LIMIT, list.size()));
 
@@ -192,6 +184,7 @@ public class DataTable<E extends Model> {
     }
 
     private void searchOnClick() {
+        sortBox.setValue(null);
         String text = searchBox.getText();
         if (text.isEmpty() || text.isBlank()) {
             list.clear();
@@ -211,18 +204,40 @@ public class DataTable<E extends Model> {
                     }
                 }
             }
-//            System.out.println("Button on click");
-//            System.out.println(text);
-//            System.out.println(list);
             updateTable(0, Math.min(TABLE_LIMIT, list.size()));
             pagination.setCurrentPageIndex(0);
         }
     }
 
+    private void sortOnClick() {
+        String tmp = sortBox.getValue();
+        System.out.println(tmp);
+        if (tmp.isBlank() || tmp.isEmpty()) {
+            return;
+        }
+
+        Collections.sort(list, new Comparator<E>() {
+            @Override
+            public int compare(E o1, E o2) {
+                List<Pair<String, String>> tmp1 = o1.getData();
+                List<Pair<String, String>> tmp2 = o2.getData();
+                for (int i = 0; i < tmp1.size(); i++) {
+                    if (tmp1.get(i).getKey().equals(tmp)) {
+                        return tmp1.get(i).getValue().compareTo(tmp2.get(i).getValue());
+                    }
+                }
+                return 0;
+            }
+        });
+        updateTable(0, Math.min(TABLE_LIMIT, list.size()));
+        pagination.setCurrentPageIndex(0);
+    }
+
     private void design() {
-        title.setStyle("-fx-font-size: 30");
+        //title.setStyle("-fx-font-size: 30");
         title.setLayoutX(23);
         title.setLayoutY(21);
+        this.title.getStyleClass().add("title");
 
         searchBox.setLayoutX(675);
         searchBox.setLayoutY(57);
@@ -233,9 +248,20 @@ public class DataTable<E extends Model> {
         searchBtn.setLayoutX(600);
         searchBtn.setPrefHeight(34);
 
+        sortBtn.setLayoutY(57);
+        sortBtn.setLayoutX(430);
+        sortBtn.setPrefHeight(34);
+
+        sortBox.setLayoutY(57);
+        sortBox.setLayoutX(490);
+        sortBox.setPrefHeight(34);
+        sortBox.setPrefWidth(100);
+
         AnchorPane.setLeftAnchor(table, 20.0);
         AnchorPane.setRightAnchor(table, 20.0);
         table.setLayoutY(100);
+        table.setPrefWidth(TABLE_WIDTH);
+        table.setPrefHeight(TABLE_HEIGHT);
 
         pagination.setPrefHeight(26);
         pagination.setLayoutX(384);

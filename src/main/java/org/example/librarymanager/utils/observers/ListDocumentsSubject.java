@@ -1,16 +1,16 @@
-package org.example.librarymanager.components;
+package org.example.librarymanager.utils.observers;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import lombok.Data;
+import org.example.librarymanager.components.DocumentComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ListDocumentsSubject implements Subject {
+public class ListDocumentsSubject extends Subject {
     private int displayType = DocumentComponent.VIEW_TYPE_GRID;
     private Label gridViewBtn;
     private Label listViewBtn;
@@ -30,23 +30,6 @@ public class ListDocumentsSubject implements Subject {
         this.listViewBtn = listViewBtn;
         this.gridIcon = gridIcon;
         this.listIcon = listIcon;
-    }
-
-    @Override
-    public void attach(Observer observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void detach(Observer observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update(this);
-        }
     }
 
     /**

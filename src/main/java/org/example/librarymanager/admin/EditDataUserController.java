@@ -1,12 +1,8 @@
-package org.example.librarymanager.app;
+package org.example.librarymanager.admin;
 
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import org.example.librarymanager.Common;
@@ -14,7 +10,6 @@ import org.example.librarymanager.data.UserQuery;
 import org.example.librarymanager.models.User;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class EditDataUserController extends EditDataController<User> {

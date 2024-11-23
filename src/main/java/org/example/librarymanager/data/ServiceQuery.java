@@ -38,9 +38,10 @@ public class ServiceQuery implements DataAccessObject<Service> {
     private Service getUndoneService(int userId, int documentId) {
         Service service = null;
         try (Connection connection = databaseConnection.getConnection();) {
-            PreparedStatement ps = connection.prepareStatement("select * from services where userId= ? and documentId= ? and returnDate is null");
+            PreparedStatement ps = connection.prepareStatement("select * from services where userId= ? and documentId= ? and status != ?");
             ps.setInt(1, userId);
             ps.setInt(2, documentId);
+            ps.setInt(3, Service.STATUS_COMPLETED);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 service = new Service(rs);
@@ -53,28 +54,20 @@ public class ServiceQuery implements DataAccessObject<Service> {
         return service;
     }
 
-    public List<Document> getBorrowingDocuments(int userId) {
-        List<Document> documents = new ArrayList<>();
-        try (Connection connection = databaseConnection.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement(
-                    "select d.* from services as s join documents as d on s.documentId = d.id " +
-                            "where s.userId = ? and s.returnDate is null;"
-            );
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                documents.add(new Document(rs));
-            }
-            rs.close();
-            ps.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return documents;
+    /**
+     * check if user is currently borrow a specific document
+     * @param userId
+     * @param documentId
+     * @return
+     */
+    public boolean isBorrowingDocument(int userId, int documentId) {
+        Service service = getUndoneService(userId, documentId);
+        return service != null && service.getStatus() == Service.STATUS_READING;
     }
 
-    public boolean isBorrowingDocument(int userId, int documentId) {
-        return getUndoneService(userId, documentId) != null;
+    public int getStatus(int userId, int documentId) {
+        Service service = getUndoneService(userId, documentId);
+        return service == null ? Service.STATUS_COMPLETED : service.getStatus();
     }
 
     @Override
@@ -105,16 +98,31 @@ public class ServiceQuery implements DataAccessObject<Service> {
     }
 
     @Override
-    public Service add(Service entity) {
-        return null;
+    public Service add(Service service) {
+        try (Connection connection = databaseConnection.getConnection();) {
+            PreparedStatement ps = connection.prepareStatement("insert into services (userId, documentId, status, borrowDate, returnDate) values(?, ?, ?, ?, ?)");
+            ps.setInt(1, service.getUserId());
+            ps.setInt(2, service.getDocumentId());
+            ps.setInt(3, service.getStatus());
+            ps.setDate(4, service.getBorrowDate() != null ? Date.valueOf(service.getBorrowDate()) : null);
+            ps.setDate(5, service.getReturnDate() != null ? Date.valueOf(service.getReturnDate()) : null);
+            ps.executeUpdate();
+            ps.close();
+            return service;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public boolean update(Service service) {
         try (Connection connection = databaseConnection.getConnection();) {
-            PreparedStatement ps = connection.prepareStatement("update services set returnDate = ? where id = ?");
-            ps.setDate(1, Date.valueOf(service.getReturnDate()));
-            ps.setInt(2, service.getId());
+            PreparedStatement ps = connection.prepareStatement("update services set status = ?, borrowDate = ?, returnDate = ? where id = ?");
+            ps.setInt(1, service.getStatus());
+            ps.setDate(2, service.getBorrowDate() != null ? Date.valueOf(service.getBorrowDate()) : null);
+            ps.setDate(3, service.getReturnDate() != null ? Date.valueOf(service.getReturnDate()) : null);
+            ps.setInt(4, service.getId());
             ps.executeUpdate();
             ps.close();
             return true;
@@ -125,8 +133,46 @@ public class ServiceQuery implements DataAccessObject<Service> {
     }
 
     @Override
-    public boolean delete(Service entity) {
-        return false;
+    public boolean delete(Service service) {
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("delete from services where id = ?");
+            ps.setInt(1, service.getId());
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * add a document to user's wishlist
+     * @param userId
+     * @param documentId
+     * @return
+     */
+    public boolean addToWishlist(int userId, int documentId) {
+        Service service = getUndoneService(userId, documentId);
+        if (service != null) return false;
+        service = new Service();
+        service.setUserId(userId);
+        service.setDocumentId(documentId);
+        service.setStatus(Service.STATUS_WISH_LIST);
+        add(service);
+        return true;
+    }
+
+    /**
+     * remove a document from user's wishlist
+     * @param userId
+     * @param documentId
+     * @return
+     */
+    public boolean removeFromWishlist(int userId, int documentId) {
+        Service service = getUndoneService(userId, documentId);
+        if (service == null || service.getStatus() != Service.STATUS_WISH_LIST) return false;
+        return delete(service);
     }
 
     /**
@@ -136,26 +182,32 @@ public class ServiceQuery implements DataAccessObject<Service> {
      * @return
      */
     public boolean borrowDocument(int userId, Document document) {
-        try (Connection connection = databaseConnection.getConnection();) {
-            Service service = getUndoneService(userId, document.getId());
-            if (service != null) return false;
-            if (document.getQuantityInStock() < 1) return false;
+        Service service = getUndoneService(userId, document.getId());
+        if (service != null && service.getStatus() != Service.STATUS_WISH_LIST) {
+            return false;
+        }
+        if (document.getQuantityInStock() < 1) return false;
 
+        boolean result = false;
+        if (service != null) {
+            service.setStatus(Service.STATUS_READING);
+            service.setBorrowDate(LocalDate.now());
+            result = update(service);
+        } else {
+            service = new Service();
+            service.setUserId(userId);
+            service.setDocumentId(document.getId());
+            service.setStatus(Service.STATUS_READING);
+            service.setBorrowDate(LocalDate.now());
+            result = add(service) != null;
+        }
+
+        if (result) {
             document.setQuantityInStock(document.getQuantityInStock() - 1);
             document.setBorrowedTimes(document.getBorrowedTimes() + 1);
             DocumentQuery.getInstance().update(document);
-
-            PreparedStatement ps = connection.prepareStatement("insert into services (userId, documentId) values(?, ?)");
-            ps.setInt(1, userId);
-            ps.setInt(2, document.getId());
-            ps.executeUpdate();
-            ps.close();
-
-            return true;
-        } catch(Exception e) {
-            e.printStackTrace();
-            return false;
         }
+        return result;
     }
 
     /**
@@ -168,11 +220,13 @@ public class ServiceQuery implements DataAccessObject<Service> {
         try {
             Service service = getUndoneService(userId, document.getId());
             if (service == null) return false;
+            if (service.getStatus() != Service.STATUS_READING) return false;
 
             document.setQuantityInStock(document.getQuantityInStock() + 1);
             DocumentQuery.getInstance().update(document);
 
             service.setReturnDate(LocalDate.now());
+            service.setStatus(Service.STATUS_COMPLETED);
             update(service);
 
             return true;
@@ -192,10 +246,11 @@ public class ServiceQuery implements DataAccessObject<Service> {
         try (Connection connection = databaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("select d.* from documents as d " +
                     "join services as s on s.documentId = d.id " +
-                    "where s.userId = ? and s.returnDate is null and datediff(CURRENT_DATE, s.borrowDate) > ?"
+                    "where s.userId = ? and status = ? and s.returnDate is null and datediff(CURRENT_DATE, s.borrowDate) > ?"
             );
             ps.setInt(1, userId);
-            ps.setInt(2, EXPIRATION_DAYS);
+            ps.setInt(2, Service.STATUS_READING);
+            ps.setInt(3, EXPIRATION_DAYS);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 documents.add(new Document(rs));
@@ -211,8 +266,9 @@ public class ServiceQuery implements DataAccessObject<Service> {
     public List<ServiceData> getServiceData(int userId) {
         List<ServiceData> data = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement("select userId, count(*) as count, borrowDate as date from services where userId = ? group by date");
+            PreparedStatement ps = connection.prepareStatement("select userId, count(*) as count, borrowDate as date from services where userId = ? and status != ? group by date");
             ps.setInt(1, userId);
+            ps.setInt(2, Service.STATUS_WISH_LIST);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 data.add(new ServiceData(rs));
@@ -223,5 +279,26 @@ public class ServiceQuery implements DataAccessObject<Service> {
             e.printStackTrace();
         }
         return data;
+    }
+
+    public List<Document> getWishlistAvailableDocuments(int userId) {
+        List<Document> documents = new ArrayList<>();
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(
+                    "select d.* from services as s join documents as d on s.documentId = d.id "
+                        + "where s.userId = ? and status = ? and quantityInStock > 0 group by d.id"
+            );
+            ps.setInt(1, userId);
+            ps.setInt(2, Service.STATUS_WISH_LIST);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                documents.add(new Document(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return documents;
     }
 }

@@ -17,4 +17,10 @@ public class ServiceData {
         this.count = rs.getInt("count");
         this.date = LocalDate.parse(rs.getString("date"));
     }
+    public int getCount() {
+        return count;
+    }
+    public LocalDate getDate() {
+        return date;
+    }
 }

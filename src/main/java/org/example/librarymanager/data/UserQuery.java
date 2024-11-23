@@ -135,9 +135,4 @@ public class UserQuery implements DataAccessObject<User> {
             return false;
         }
     }
-    public User ChangeName(User user, String Firstname, String Lastname) {
-        user.setFirstname(Firstname);
-        user.setLastname(Lastname);
-        return user;
-    }
 }

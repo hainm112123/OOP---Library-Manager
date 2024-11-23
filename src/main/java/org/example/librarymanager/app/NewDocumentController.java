@@ -72,6 +72,8 @@ public class NewDocumentController extends ControllerWrapper {
     private VBox documentListContainer;
     @FXML
     private MFXButton openModalBtn;
+    @FXML
+    private VBox closeModalBtn;
 
     private AnchorPane loadMoreContainer;
     private MFXButton loadMoreBtn;
@@ -134,6 +136,9 @@ public class NewDocumentController extends ControllerWrapper {
 
         openModalBtn.setOnAction(e -> {
             Common.enable(modalOverlay);
+        });
+        closeModalBtn.setOnMouseClicked(e -> {
+            Common.disable(modalOverlay);
         });
         DropShadow ds = new DropShadow();
         ds.setRadius(30);
@@ -257,6 +262,7 @@ public class NewDocumentController extends ControllerWrapper {
         };
         task.setOnSucceeded((e) -> {
             List<Volume> volumes = task.getValue();
+            documentListContainer.getChildren().clear();
             if (volumes != null && !volumes.isEmpty()) {
                 documentListContainer.setPrefHeight(DocumentComponent.DOC_COMPONENT_HEIGHT_DETAIL * volumes.size() + loadMoreContainer.getPrefHeight());
                 searchMessage.setText("Searching complete!");

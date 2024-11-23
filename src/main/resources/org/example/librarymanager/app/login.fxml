@@ -43,9 +43,9 @@
                 <Hyperlink fx:id="registerHyperlink" alignment="CENTER_RIGHT" onAction="#registerButtonOnAction" prefHeight="24.0" prefWidth="93.0" text="Register" textFill="#5c1c00" GridPane.columnIndex="1" />
             </children>
         </GridPane>
-        <ImageView fitHeight="111.0" fitWidth="144.0" layoutX="228.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="72.0" layoutX="184.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../image/Icon.png" />
+            <Image url="@../image/logo.png" />
          </image>
         </ImageView>
       <MFXProgressSpinner fx:id="progressSpinner" layoutX="283.0" layoutY="356.0" prefHeight="36.0" prefWidth="36.0" />

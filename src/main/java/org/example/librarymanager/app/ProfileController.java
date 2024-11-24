@@ -238,7 +238,6 @@ public class ProfileController extends ControllerWrapper {
             }
             currentDate = currentDate.plusDays(1);
         }
-
     }
     public void resetName(){
         FirstName.setText(getUser().getFirstname());

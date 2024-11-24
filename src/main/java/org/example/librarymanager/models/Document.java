@@ -121,15 +121,15 @@ public class Document implements Model {
         List<Pair<String, String>> list = new ArrayList<>();
         list.add(new Pair<>("id", String.valueOf(this.id)));
         list.add(new Pair<>("categoryName", String.valueOf(this.categoryName)));
-        list.add(new Pair<>("ownerName", String.valueOf(this.ownerName)));
-        list.add(new Pair<>("author", String.valueOf(this.author)));
-        list.add(new Pair<>("title", String.valueOf(this.title)));
-        list.add(new Pair<>("description", String.valueOf(this.description)));
-        list.add(new Pair<>("imageLink", String.valueOf(this.imageLink)));
+        list.add(new Pair<>("ownerName", (this.ownerName == null ? "" : this.ownerName)));
+        list.add(new Pair<>("author", (this.author == null ? "" : this.author)));
+        list.add(new Pair<>("title", (this.title == null ? "" : this.title)));
+        list.add(new Pair<>("description", (this.description == null ? "" : this.description)));
+        list.add(new Pair<>("imageLink", (this.imageLink == null ? "" : this.imageLink)));
         list.add(new Pair<>("quantity", String.valueOf(this.quantity)));
         list.add(new Pair<>("quantityInStock", String.valueOf(this.quantityInStock)));
         list.add(new Pair<>("borrowedTimes", String.valueOf(this.borrowedTimes)));
-        list.add(new Pair<>("addDate", String.valueOf(this.addDate)));
+        list.add(new Pair<>("addDate", (addDate == null ? "" : String.valueOf(this.addDate))));
         list.add(new Pair<>("rating", String.valueOf(this.rating)));
         return list;
     }

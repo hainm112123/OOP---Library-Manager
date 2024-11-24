@@ -8,9 +8,11 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.example.librarymanager.admin.AddDataController;
 import org.example.librarymanager.admin.EditDataController;
 import org.example.librarymanager.app.LibraryApplication;
 import org.example.librarymanager.data.DataAccessObject;
+import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Model;
 
 import java.util.*;
@@ -21,6 +23,7 @@ public class DataTable<E extends Model> {
     private Button searchBtn;
     private TextField searchBox;
     private Button sortBtn;
+    private Button addBtn;
     private ComboBox<String> sortBox;
 
     private Pagination pagination;
@@ -99,6 +102,11 @@ public class DataTable<E extends Model> {
         sortBox = new ComboBox<>();
         sortBox.getItems().addAll(attributes);
         container.getChildren().add(sortBox);
+
+        addBtn = new Button();
+        addBtn.setText("Add");
+        addBtn.setOnAction(event -> addOnClick());
+        if (clazz.getSimpleName().equals("Category")) container.getChildren().add(addBtn);
 
         updateTable(0, Math.min(TABLE_LIMIT, list.size()));
 
@@ -233,6 +241,48 @@ public class DataTable<E extends Model> {
         pagination.setCurrentPageIndex(0);
     }
 
+    private void addOnClick() {
+        try {
+            Stage subStage = new Stage();
+            E dataEntity;
+            Boolean[] isAdd = {Boolean.FALSE};
+            switch (clazz.getSimpleName()) {
+                case "Category":{
+                    Category tmp = new Category();
+                    dataEntity = (E) tmp;
+                    break;
+                }
+                default: {
+                    dataEntity = null;
+                    break;
+                }
+            }
+            subStage.initModality(Modality.WINDOW_MODAL);
+            subStage.initOwner(container.getScene().getWindow());
+            FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("add-data.fxml"));
+            Scene subScene = new Scene(fxmlLoader.load());
+            AddDataController<E> controller = fxmlLoader.getController();
+            controller.setData(dataEntity, clazz, isAdd);
+
+            subStage.setScene(subScene);
+            subStage.showAndWait();
+
+            if (Boolean.TRUE.equals(isAdd[0])) {
+                System.out.println("Yeah");
+                originalList.add(dataEntity);
+                list.clear();
+                for (E data : originalList) {
+                    list.add(data);
+                }
+                updateTable(0, Math.min(TABLE_LIMIT, list.size()));
+                pagination.setCurrentPageIndex(0);
+            }
+            table.refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void design() {
         //title.setStyle("-fx-font-size: 30");
         title.setLayoutX(23);
@@ -249,13 +299,17 @@ public class DataTable<E extends Model> {
         searchBtn.setPrefHeight(34);
 
         sortBtn.setLayoutY(57);
-        sortBtn.setLayoutX(430);
+        sortBtn.setLayoutX(410);
         sortBtn.setPrefHeight(34);
 
         sortBox.setLayoutY(57);
         sortBox.setLayoutX(490);
         sortBox.setPrefHeight(34);
         sortBox.setPrefWidth(100);
+
+        addBtn.setLayoutY(57);
+        addBtn.setLayoutX(350);
+        addBtn.setPrefHeight(34);
 
         AnchorPane.setLeftAnchor(table, 20.0);
         AnchorPane.setRightAnchor(table, 20.0);

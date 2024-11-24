@@ -16,12 +16,16 @@
     * [Notifications](#notifications)
     * [User Menu](#user-menu)
     * [Search bar](#search-bar)
-  * [Book detail](#book-detail)
+  * [Book's detail](#book-s-detail)
   * [Book shelf](#book-shelf)
+  * [Rating](#rating)
   * [Categories](#categories)
-  * [Advanced search](#advandced-search)
-  * [Add a new book](#add-a-new-book)
-  * [Manage](#manage)
+  * [Advanced search](#advanced-search)
+  * [Manage your books](#manage-your-books)
+    * [Add a new book](#add-a-new-book)
+    * [Edit books](#edit-books)
+  * [Recommendation system](#recommendation-system)
+  * [Manage app](#manage-app)
 
 ## Overview
 libify is a library app that simulates a real library. You can search for books, borrow them, and store them in your bookshelf. You can also post your own books here and share them with others.
@@ -79,7 +83,7 @@ Show notifications when a book you borrowed is overdue or when a book on your wi
 </div>
 
 
-If you are an moderator, there will be addition features [Add-a-new-book](#add-a-new-book) and [My-books](#my-books) (books that your added to the library). If you are an admin, you can access [Manage](#manage).
+If you are an moderator, there will be addition features [Add-a-new-book](#add-a-new-book) and [My-books](#my-books) (books that your added to the library). If you are an admin, you can access [Manage](#manage-app).
 
 #### Search bar
 
@@ -87,3 +91,51 @@ If you are an moderator, there will be addition features [Add-a-new-book](#add-a
 
 A search bar allows you to quickly search for books by their titles.
 
+### Book's detail
+
+![image](https://github.com/user-attachments/assets/090b8f43-1c0b-4ddd-9078-9df3a319c9b6)
+
+By clicked on a book, libify will navigate to book detail screen. Here, informations such as title, author, description, rating, review, etc will be displayed. From this screen, you can borrow/return this book or add it to your wishlist if it is currently unavailable. You can also see other users' reviews at the bottom.
+
+After you borrow a book or add it to your wishlist, it will appear in your [book shelf](#book-shelf)
+After you return a book, libify will navigate to [rating screen](#rating).
+
+![image](https://github.com/user-attachments/assets/fc2172f3-d889-4662-af04-d85bdca09f8a)
+
+If you are the book's owner, you will allow to [edit](#edit-books) it.
+
+### Book shelf
+
+![image](https://github.com/user-attachments/assets/91ada9bc-aab4-4127-8edc-0d1436ceb870)
+
+Store books that you are reading/borrowing, have completed reading, and books that are in your wishlist.
+
+### Rating
+
+![image](https://github.com/user-attachments/assets/75cca33d-5ecc-46e1-a9da-944ef36af657)
+
+After you return a book, the app will navigate to this screen. Here you can rate and write a review to share you feeling about this book with other users.
+
+![image](https://github.com/user-attachments/assets/8b6145d8-4783-4aee-b9b0-1b27e3e4ff64)
+
+Your reviews will apear on the bottom of in [book's detail screen](#book-s-detail)
+
+### Categories
+
+![image](https://github.com/user-attachments/assets/e5f28b14-add3-40bb-a96e-d7aa4f36986e)
+
+![image](https://github.com/user-attachments/assets/a364ad79-6007-4348-8b84-e3e74c3c35a0)
+
+libify provides a lot of categories to classify books. Through the categories button in the top bar, you can access books with a specific category.
+
+### Advanced search
+
+![image](https://github.com/user-attachments/assets/5ed20801-4036-477e-9f59-dbf982b90962)
+
+A powerful search engine that allows you to use variety of sorting options and filters.
+
+### Manage your books
+
+#### Add a new book
+
+#### Edit books

@@ -16,6 +16,8 @@
     * [Notifications](#notifications)
     * [User Menu](#user-menu)
     * [Search bar](#search-bar)
+  * [Profile](#profile)
+  * [Change password](#change-password)
   * [Book's detail](#books-detail)
   * [Book shelf](#book-shelf)
   * [Rating](#rating)
@@ -82,14 +84,27 @@ Show notifications when a book you borrowed is overdue or when a book on your wi
   <img src="https://github.com/user-attachments/assets/772f510c-8f7c-490c-8e03-f5600ade0392" alt="Image 3" style="width: 30%;">
 </div>
 
-
-If you are an moderator, there will be addition features [Add-a-new-book](#add-a-new-book) and [My-books](#my-books) (books that your added to the library). If you are an admin, you can access [Manage](#manage-app).
+From this menu, you can:
+* Access your [profile](#profile)
+* [Change password](#change-password)
+* Access your [book shelf](#book-shelf)
+If you are an moderator, there will be addition features [Add a new book](#add-a-new-book) and [My books](#my-books) (books that your added to the library). If you are an admin, you can access [Manage](#manage-app).
 
 #### Search bar
 
 ![image](https://github.com/user-attachments/assets/5bcb97f7-9a2b-43da-8cbf-5d7c1c76fcea)
 
 A search bar allows you to quickly search for books by their titles.
+
+### Profile
+
+![image](https://github.com/user-attachments/assets/0a682a43-8453-4f29-84ed-0099f60b1978)
+
+In this screen, you will see your informations, avatar, a recap of your books borrowing. You can also change your avatar in this screen.
+
+### Change password
+
+![image](https://github.com/user-attachments/assets/3c12d01c-5293-48d2-9d21-bd8af99bbc91)
 
 ### Book's detail
 

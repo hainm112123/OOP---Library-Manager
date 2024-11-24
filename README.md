@@ -16,7 +16,7 @@
     * [Notifications](#notifications)
     * [User Menu](#user-menu)
     * [Search bar](#search-bar)
-  * [Book's detail](#book-s-detail)
+  * [Book's detail](#books-detail)
   * [Book shelf](#book-shelf)
   * [Rating](#rating)
   * [Categories](#categories)
@@ -118,7 +118,7 @@ After you return a book, the app will navigate to this screen. Here you can rate
 
 ![image](https://github.com/user-attachments/assets/8b6145d8-4783-4aee-b9b0-1b27e3e4ff64)
 
-Your reviews will apear on the bottom of in [book's detail screen](#book-s-detail)
+Your reviews will apear on the bottom of in [book's detail screen](#books-detail)
 
 ### Categories
 
@@ -138,4 +138,28 @@ A powerful search engine that allows you to use variety of sorting options and f
 
 #### Add a new book
 
+![image](https://github.com/user-attachments/assets/654b2cdb-abb3-4426-b63f-2b277fc28e88)
+
+If you are a moderator or an admin, you are allowed to add a new book to library. You can access this screen through [user menu](#user-menu). There are 2 ways to add new a book: manually fill the form above,
+
+![image](https://github.com/user-attachments/assets/321016b8-8954-45ff-876f-93eddb801455) 
+
+or search books by title, authors, subject, isbn, etc., using Google Books APIs, which will automically fill out the form when you select a book.
+
 #### Edit books
+
+![image](https://github.com/user-attachments/assets/3786342f-e832-41b1-9785-86a26b294082)
+
+You are allowed to edit a book if you are its owner. After access this screen through [book's detail](#books-detail) screen, you can edit the book's informations or remove it from library.
+
+### Recommendation system
+
+![image](https://github.com/user-attachments/assets/3dc5cd40-3027-4b2d-b7cf-014addf3d6a5)
+
+New books, most popular books, high rated books and books that user may like (based on users' activities) will be displayed in home screen.
+
+### Manage app
+
+![image](https://github.com/user-attachments/assets/3e98a24b-9ffe-4392-b106-38c5b973213b)
+
+If you are an admin, you are allowed to access this screen through [user menu](#user-menu). In this screen, you can view app data and allow to edit some of it.

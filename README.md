@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/palexdev/MaterialFX">
+  <a href="https://github.com/hainm112123/OOP---Library-Manager">
     <img src="https://github.com/user-attachments/assets/842c8633-ef07-484e-bb88-468b1edf57b9" alt="Logo">
   </a>
 </p>

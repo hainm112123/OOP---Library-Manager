@@ -48,14 +48,14 @@
                      </font></Button>
                </children>
             </GridPane>
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="25.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="97.0" fitWidth="200.0" layoutX="25.0" layoutY="88.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../image/Icon.png" />
+                  <Image url="@../image/logo.png" />
                </image>
             </ImageView>
-                <MFXButton fx:id="exitBtn" layoutX="35.0" layoutY="626.0" prefHeight="45.0" prefWidth="180.0" styleClass="exit-button" text="Exit" />
+                <MFXButton fx:id="exitBtn" layoutX="35.0" layoutY="607.0" prefHeight="45.0" prefWidth="180.0" styleClass="exit-button" text="Exit" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="root" layoutX="250.0" prefHeight="720.0" prefWidth="950.0" />
+      <AnchorPane fx:id="root" layoutX="250.0" maxHeight="720.0" maxWidth="950.0" prefHeight="720.0" prefWidth="950.0" />
    </children>
 </AnchorPane>

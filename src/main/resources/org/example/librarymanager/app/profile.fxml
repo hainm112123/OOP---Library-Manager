@@ -161,7 +161,7 @@
                       </ScatterChart>
                      <ImageView fitHeight="28.0" fitWidth="81.0" layoutX="1010.0" layoutY="694.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                           <Image url="@../../../../../../../../../Users/khanh/OneDrive/Pictures/Screenshots/LTM.png" />
+                           <Image url="@../image/LTM.png" />
                         </image>
                      </ImageView>
                      <Label layoutX="974.0" layoutY="691.0" prefHeight="18.0" prefWidth="36.0" text="Less" textFill="#a19898" />

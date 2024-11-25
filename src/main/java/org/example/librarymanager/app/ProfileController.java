@@ -1,10 +1,22 @@
 package org.example.librarymanager.app;
 
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
-import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.controls.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.chart.*;
+import javafx.scene.control.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import org.example.librarymanager.Common;
+import org.example.librarymanager.data.AuthQuery;
+import org.example.librarymanager.data.AuthResult;
+import org.example.librarymanager.data.ServiceQuery;
+
 import javafx.scene.Cursor;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.control.*;
@@ -17,20 +29,36 @@ import javafx.stage.FileChooser;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.Avatar;
 import org.example.librarymanager.data.Backblaze;
+
 import org.example.librarymanager.data.UserQuery;
+import org.example.librarymanager.models.Category;
+import org.example.librarymanager.models.ServiceData;
 import org.example.librarymanager.models.User;
 
 import java.io.File;
 import java.net.URL;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.List;
+
+import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
+
 import java.util.ResourceBundle;
 
+import static java.time.DayOfWeek.*;
+
 public class ProfileController extends ControllerWrapper {
+    final static String[] Colors = {"#d3d3d3","#90ee90","#32cd32","#228B22","#006400"};
     @FXML
     private Label FirstName;
     @FXML
     private Label LastName;
     @FXML
     private Label Gender;
+    @FXML
+    private Label DateOfBirth;
     @FXML
     private MFXButton ChangeName;
     @FXML
@@ -42,7 +70,11 @@ public class ProfileController extends ControllerWrapper {
     @FXML
     private MFXTextField LName;
     @FXML
-    private AreaChart<String,Number> StatisticalTimeUse;
+    private ScatterChart<Number,String> BorrowChart;
+    @FXML
+    private MFXComboBox<String> GenderField;
+    @FXML
+    private MFXDatePicker DateOfBirthField;
     @FXML
     private Label UserName;
     @FXML
@@ -58,7 +90,13 @@ public class ProfileController extends ControllerWrapper {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        GenderField.getItems().addAll("Male", "Female");
+        Common.disable(GenderField);
+        Common.disable(DateOfBirthField);
         resetName();
+
+        InitChart();
+
         UserName.setText((String)("@" + User.USER_TYPE_STRING[getUser().getPermission()] + " " + getUser().getUsername()));
 
         Cancel.setRippleColor(Paint.valueOf(Common.PRIMARY_COLOR));
@@ -77,6 +115,10 @@ public class ProfileController extends ControllerWrapper {
         SaveName.setOnAction(event -> {
             getUser().setFirstname(FName.getText());
             getUser().setLastname(LName.getText());
+            getUser().setGender(GenderField.getValue());
+            if (DateOfBirthField.getValue() != null) {
+                getUser().setDateOfBirth(DateOfBirthField.getValue());
+            }
             Task<Boolean> task = new Task<Boolean>() {
                 @Override
                 protected Boolean call() throws Exception {
@@ -84,6 +126,7 @@ public class ProfileController extends ControllerWrapper {
                 }
             };
             task.setOnSucceeded(e -> {
+                resetName();
                 NotChangeStatus();
             });
             new Thread(task).start();
@@ -135,13 +178,83 @@ public class ProfileController extends ControllerWrapper {
             new Thread(task).start();
         });
     }
+    public String getPointColor( int order ){
+        return "-fx-shape: 'M -5 -5 L 5 -5 L 5 5 L -5 5 Z';" +
+                "-fx-background-color: " + Colors[order > 4 ? 4 : order] + ";" +
+                "-fx-padding: 8px;";
+    }
+    public String getOrderDay(LocalDate date){
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        switch (dayOfWeek) {
+            case MONDAY:
+                return "Mon";
+            case TUESDAY:
+                return "Tue";
+            case WEDNESDAY:
+                return "Wed";
+            case THURSDAY:
+                return "Thu";
+            case FRIDAY:
+                return "Fri";
+            case SATURDAY:
+                return "Sat";
+            case SUNDAY:
+                return "Sun";
+            default:
+                return "";
+        }
+    }
+    /**
+     * Init BorrowChart
+     */
+    public void InitChart(){
+        List<ServiceData> ListBorrowDate = ServiceQuery.getInstance().getServiceData(getUser().getId());
 
+        XYChart.Series<Number , String> series = new XYChart.Series<>();
+
+        LocalDate today = LocalDate.now();
+        LocalDate lastYearSameDay = today.minusYears(1);
+        LocalDate currentDate = lastYearSameDay;
+
+        int curIndexBorrowDate = 0;
+        int orderColumn = 1;
+        BorrowChart.getData().add(series);
+        while (curIndexBorrowDate < ListBorrowDate.size() && ListBorrowDate.get(curIndexBorrowDate).getDate().isBefore(currentDate) )
+            ++curIndexBorrowDate;
+
+        while (!currentDate.isAfter(today)) {
+            int orderColor = 0;
+            if ( curIndexBorrowDate < ListBorrowDate.size() && ListBorrowDate.get(curIndexBorrowDate).getDate().isEqual(currentDate) ) {
+                orderColor = ListBorrowDate.get(curIndexBorrowDate).getCount() ;
+                ++curIndexBorrowDate;
+            }
+            series.getData().addAll(new XYChart.Data<>(orderColumn, getOrderDay(currentDate)));
+            XYChart.Data<Number, String> point = series.getData().get(series.getData().size()-1);
+            if( point.getNode() != null ) {
+                point.getNode().setStyle(getPointColor(orderColor));
+            }
+            if (getOrderDay(currentDate).equals("Sat")) {
+                ++orderColumn;
+            }
+            currentDate = currentDate.plusDays(1);
+        }
+    }
     public void resetName(){
         FirstName.setText(getUser().getFirstname());
         LastName.setText(getUser().getLastname());
         Gender.setText(getUser().getGender());
+        if (getUser().getDateOfBirth() != null) {
+            DateOfBirth.setText(getUser().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        } else {
+            DateOfBirth.setText("n/a");
+        }
         FName.setText(getUser().getFirstname());
         LName.setText(getUser().getLastname());
+        if (getUser().getGender() != null && getUser().getGender().equals("Male")) {
+            GenderField.getSelectionModel().selectFirst();
+        } else {
+            GenderField.getSelectionModel().selectLast();
+        }
     }
 
     public void ChangeStatus(){
@@ -152,6 +265,10 @@ public class ProfileController extends ControllerWrapper {
         Cancel.setVisible(true);
         SaveName.setVisible(true);
         ChangeName.setVisible(false);
+        Common.enable(GenderField);
+        Common.disable(Gender);
+        Common.enable(DateOfBirthField);
+        Common.disable(DateOfBirth);
     }
     public void NotChangeStatus(){
         FName.setVisible(false);
@@ -161,6 +278,10 @@ public class ProfileController extends ControllerWrapper {
         SaveName.setVisible(false);
         Cancel.setVisible(false);
         ChangeName.setVisible(true);
+        Common.disable(GenderField);
+        Common.enable(Gender);
+        Common.disable(DateOfBirthField);
+        Common.enable(DateOfBirth);
     }
 
 }

@@ -25,9 +25,9 @@ public class LibraryApplication extends Application {
 //                .setResolveAssets(true)
 //                .build()
 //                .setGlobal();
-        Image icon = new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/icon.png"));
+        Image icon = new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/logo_notext.png"));
         stage.getIcons().add(icon);
-        stage.setTitle("Library Manager");
+        stage.setTitle("libify");
         stage.setResizable(false);
 
         ControllerWrapper.setStage(stage);

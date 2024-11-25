@@ -49,7 +49,7 @@ public class ServiceTest {
     @Test
     public void testGetServiceData() {
         int userId = 2;
-        List<ServiceData> data = ServiceQuery.getInstance().getServiceData(userId);
+        List<ServiceData> data = ServiceQuery.getInstance().getServiceData(3);
         for (ServiceData serviceData : data) {
             System.out.println(serviceData);
         }

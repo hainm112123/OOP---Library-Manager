@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public class AdvancedSearchController extends ControllerWrapper {
     public static final int SORT_BY_BEST_MATCH = 0;
@@ -186,19 +187,19 @@ public class AdvancedSearchController extends ControllerWrapper {
 
         int categoryId = categoryFilter.getSelectionModel().getSelectedItem().getValue();
         if (categoryId != FILTER_CATEGORY_ANY) {
-            result = result.stream().filter(document -> document.getCategoryId() == categoryId).toList();
+            result = result.stream().filter(document -> document.getCategoryId() == categoryId).collect(Collectors.toList());
         }
         int status = statusFilter.getSelectionModel().getSelectedItem().getValue();
         if (status == FILTER_STATUS_REMAIN) {
-            result = result.stream().filter(document -> document.getQuantityInStock() > 0).toList();
+            result = result.stream().filter(document -> document.getQuantityInStock() > 0).collect(Collectors.toList());
         }
         if (status == FILTER_STATUS_REMAIN) {
-            result = result.stream().filter(document -> document.getQuantityInStock() == 0).toList();
+            result = result.stream().filter(document -> document.getQuantityInStock() == 0).collect(Collectors.toList());
         }
         int order = sortByFilter.getSelectionModel().getSelectedItem().getValue();
         switch (order) {
             case SORT_BY_TITLE_ASC: {
-                Collections.sort(result, new Document.SortByTitle());
+                result.sort(new Document.SortByTitle());
                 break;
             }
             case SORT_BY_TITLE_DESC: {

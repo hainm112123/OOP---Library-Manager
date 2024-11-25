@@ -1,5 +1,6 @@
 package org.example.librarymanager.models;
 
+import com.google.api.services.books.model.Volume;
 import javafx.util.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -84,6 +85,16 @@ public class Document implements Model {
         this.addDate = LocalDate.parse(luceneDocument.get("addDate"));
         this.rating = Double.parseDouble(luceneDocument.get("rating"));
         this.categoryName = luceneDocument.get("categoryName");
+    }
+
+    public Document(Volume volume) {
+        this.title = volume.getVolumeInfo().getTitle();
+        this.author = volume.getVolumeInfo().getAuthors() != null ? String.join(", ", volume.getVolumeInfo().getAuthors()) : "";
+        this.description = volume.getVolumeInfo().getDescription();
+        if (volume.getVolumeInfo().getImageLinks() != null) {
+            this.imageLink = volume.getVolumeInfo().getImageLinks().getThumbnail();
+        }
+        this.categoryName = volume.getVolumeInfo().getCategories() != null ? volume.getVolumeInfo().getCategories().getFirst() : "Uncategorized";
     }
 
     @Override

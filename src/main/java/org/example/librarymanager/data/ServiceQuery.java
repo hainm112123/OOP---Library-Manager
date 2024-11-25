@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceQuery implements DataAccessObject<Service> {
-    private static final int EXPIRATION_DAYS = 1;
+    private static final int EXPIRATION_DAYS = 0;
     private static ServiceQuery instance;
     private DatabaseConnection databaseConnection;
 

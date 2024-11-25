@@ -1,5 +1,7 @@
 package org.example.librarymanager.admin;
 
+import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.enums.FloatMode;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
@@ -33,19 +35,26 @@ public class EditDataUserController extends EditDataController<User> {
         Platform.runLater(() -> {
             enableApply();
             enableDelete();
-//            System.out.println(gridPane.getChildren().size());
             Node permissionNode = getGridPane(7, 1);
-            ComboBox<Common.Choice> comboBox = new ComboBox<>();
-//            comboBox.getItems().addAll(User.USER_TYPE_STRING);
-//            comboBox.setValue(User.USER_TYPE_STRING[data.getPermission()]);
-            comboBox.getItems().addAll(
-                    new Common.Choice(User.TYPE_USER, User.USER_TYPE_STRING[User.TYPE_USER]),
-                    new Common.Choice(User.TYPE_MODERATOR, User.USER_TYPE_STRING[User.TYPE_MODERATOR]),
-                    new Common.Choice(User.TYPE_ADMIN, User.USER_TYPE_STRING[User.TYPE_ADMIN])
-            );
-            comboBox.setValue(new Common.Choice(data.getPermission(), User.USER_TYPE_STRING[data.getPermission()]));
+            MFXComboBox<Common.Choice> comboBox = new MFXComboBox<>();
 
-//            comboBox.getItems().remove(User.USER_TYPE_STRING[data.getPermission()]);
+            comboBox.setFloatMode(FloatMode.DISABLED);
+            if (data.getPermission() == User.TYPE_ADMIN) {
+                comboBox.getItems().add(new Common.Choice(User.TYPE_ADMIN, User.USER_TYPE_STRING[User.TYPE_ADMIN]));
+                comboBox.getSelectionModel().selectFirst();
+                comboBox.setDisable(true);
+            } else {
+                comboBox.getItems().addAll(
+                        new Common.Choice(User.TYPE_USER, User.USER_TYPE_STRING[User.TYPE_USER]),
+                        new Common.Choice(User.TYPE_MODERATOR, User.USER_TYPE_STRING[User.TYPE_MODERATOR])//,
+                );
+                if (data.getPermission() == User.TYPE_USER) {
+                    comboBox.getSelectionModel().selectFirst();
+                } else {
+                    comboBox.getSelectionModel().selectLast();
+                }
+            }
+
             replaceGridPane(7, 1, comboBox);
             GridPane.setHgrow(comboBox, Priority.ALWAYS);
             comboBox.setMaxWidth(Double.MAX_VALUE);

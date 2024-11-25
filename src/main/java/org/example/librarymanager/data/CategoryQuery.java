@@ -2,10 +2,7 @@ package org.example.librarymanager.data;
 
 import org.example.librarymanager.models.Category;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +84,22 @@ public class CategoryQuery implements DataAccessObject<Category> {
 
     @Override
     public Category add(Category category) {
-        return null;
+        Category categoryEntity = null;
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO categories (name, description) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, category.getName());
+            ps.setString(2, category.getDescription());
+            ps.executeUpdate();
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                categoryEntity = getById(generatedKeys.getInt(1));
+            }
+            generatedKeys.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return categoryEntity;
     }
 
     @Override

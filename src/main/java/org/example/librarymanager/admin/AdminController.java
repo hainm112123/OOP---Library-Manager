@@ -1,5 +1,6 @@
 package org.example.librarymanager.admin;
 
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -19,7 +20,7 @@ public class AdminController extends ControllerWrapper {
     @FXML
     AnchorPane root;
     @FXML
-    Button exitBtn;
+    MFXButton exitBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

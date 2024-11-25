@@ -1,4 +1,6 @@
 @import "MFXTextField.css";
+@import "MFXComboBox.css";
+@import "MFXComboBoxCell.css";
 
 .form-text-field {
     -fx-pref-height: 36;
@@ -62,6 +64,10 @@
 .form-message--error {
     -fx-text-fill: #B22222;
 }
+
+
+.data-text-field {
+    -fx-pref-width: 100;
 
 .modal-overlay {
   -fx-background-color: rgba(0, 0, 0, 0.1);

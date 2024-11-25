@@ -72,10 +72,10 @@ public class Rating implements Model {
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
         list.add(new Pair<>("id", String.valueOf(id)));
-        list.add(new Pair<>("userName", userName));
-        list.add(new Pair<>("documentName", documentName));
+        list.add(new Pair<>("userName", (userName == null ? "" : userName)));
+        list.add(new Pair<>("documentName", (documentName == null ? "" : documentName)));
         list.add(new Pair<>("value", String.valueOf(value)));
-        list.add(new Pair<>("content", String.valueOf(content)));
+        list.add(new Pair<>("content", (content == null ? "" : content)));
         list.add(new Pair<>("postedTime", String.valueOf(postedTime)));
         return list;
     }

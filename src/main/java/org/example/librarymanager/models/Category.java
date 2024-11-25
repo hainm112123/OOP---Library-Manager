@@ -55,8 +55,8 @@ public class Category implements Model {
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
         list.add(new Pair<>("id", String.valueOf(this.id)));
-        list.add(new Pair<>("name", this.name));
-        list.add(new Pair<>("description", this.description));
+        list.add(new Pair<>("name", (this.name == null ? "" : this.name) ));
+        list.add(new Pair<>("description", (this.description == null ? "" : this.description) ));
         return list;
     }
 

@@ -1,5 +1,9 @@
 package org.example.librarymanager.components;
 
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.enums.FloatMode;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,9 +12,11 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.example.librarymanager.admin.AddDataController;
 import org.example.librarymanager.admin.EditDataController;
 import org.example.librarymanager.app.LibraryApplication;
 import org.example.librarymanager.data.DataAccessObject;
+import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Model;
 
 import java.util.*;
@@ -18,10 +24,11 @@ import java.util.*;
 public class DataTable<E extends Model> {
     private AnchorPane container;
     private Label title;
-    private Button searchBtn;
-    private TextField searchBox;
-    private Button sortBtn;
-    private ComboBox<String> sortBox;
+    private MFXButton searchBtn;
+    private MFXTextField searchBox;
+    private MFXButton sortBtn;
+    private MFXButton addBtn;
+    private MFXComboBox<String> sortBox;
 
     private Pagination pagination;
 
@@ -40,8 +47,8 @@ public class DataTable<E extends Model> {
         this.title = new Label(title);
         container.getChildren().add(this.title);
 
-        searchBox = new TextField();
-        searchBtn = new Button();
+        searchBox = new MFXTextField();
+        searchBtn = new MFXButton();
         searchBtn.setText("Search");
         searchBtn.setOnAction(event -> searchOnClick());
         container.getChildren().add(searchBtn);
@@ -92,13 +99,18 @@ public class DataTable<E extends Model> {
         });
 
 
-        sortBtn = new Button();
+        sortBtn = new MFXButton();
         sortBtn.setText("Sort by");
         sortBtn.setOnAction(event -> sortOnClick());
         container.getChildren().add(sortBtn);
-        sortBox = new ComboBox<>();
+        sortBox = new MFXComboBox<>();
         sortBox.getItems().addAll(attributes);
         container.getChildren().add(sortBox);
+
+        addBtn = new MFXButton();
+        addBtn.setText("Add");
+        addBtn.setOnAction(event -> addOnClick());
+        if (clazz.getSimpleName().equals("Category")) container.getChildren().add(addBtn);
 
         updateTable(0, Math.min(TABLE_LIMIT, list.size()));
 
@@ -145,9 +157,9 @@ public class DataTable<E extends Model> {
         TableColumn<List<Pair<String,String>>, Void> actionColumn = new TableColumn<>("");
         String finalFxmlFile = fxmlFile;
         actionColumn.setCellFactory(colCell -> new TableCell<List<Pair<String,String>>, Void>() {
-            private final Button button = new Button("Edit");
-
+            MFXButton button = new MFXButton("Edit");
             {
+                button.getStyleClass().add("form-primary-button");
                 button.setOnAction(event -> {
                     try {
                         Stage subStage = new Stage();
@@ -233,29 +245,86 @@ public class DataTable<E extends Model> {
         pagination.setCurrentPageIndex(0);
     }
 
+    private void addOnClick() {
+        try {
+            Stage subStage = new Stage();
+            E dataEntity;
+            Boolean[] isAdd = {Boolean.FALSE};
+            switch (clazz.getSimpleName()) {
+                case "Category":{
+                    Category tmp = new Category();
+                    dataEntity = (E) tmp;
+                    break;
+                }
+                default: {
+                    dataEntity = null;
+                    break;
+                }
+            }
+            subStage.initModality(Modality.WINDOW_MODAL);
+            subStage.initOwner(container.getScene().getWindow());
+            FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("add-data.fxml"));
+            Scene subScene = new Scene(fxmlLoader.load());
+            AddDataController<E> controller = fxmlLoader.getController();
+            controller.setData(dataEntity, clazz, isAdd);
+
+            subStage.setScene(subScene);
+            subStage.showAndWait();
+
+            if (Boolean.TRUE.equals(isAdd[0])) {
+                System.out.println("Yeah");
+                originalList.add(dataEntity);
+                list.clear();
+                for (E data : originalList) {
+                    list.add(data);
+                }
+                updateTable(0, Math.min(TABLE_LIMIT, list.size()));
+                pagination.setCurrentPageIndex(0);
+            }
+            table.refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void design() {
         //title.setStyle("-fx-font-size: 30");
+        container.getStylesheets().add(getClass().getResource("/org/example/librarymanager/css/form.css").toExternalForm());
+        container.setPrefWidth(950);
+        container.setPrefHeight(720);
         title.setLayoutX(23);
         title.setLayoutY(21);
         this.title.getStyleClass().add("title");
+
 
         searchBox.setLayoutX(675);
         searchBox.setLayoutY(57);
         searchBox.setPrefWidth(250);
         searchBox.setPrefHeight(34);
+        searchBox.getStyleClass().add("form-text-field");
+        searchBox.setFloatMode(FloatMode.DISABLED);
 
         searchBtn.setLayoutY(57);
         searchBtn.setLayoutX(600);
         searchBtn.setPrefHeight(34);
+        searchBtn.getStyleClass().add("form-primary-button");
 
         sortBtn.setLayoutY(57);
-        sortBtn.setLayoutX(430);
+        sortBtn.setLayoutX(380);
         sortBtn.setPrefHeight(34);
+        sortBtn.getStyleClass().add("form-primary-button");
 
         sortBox.setLayoutY(57);
-        sortBox.setLayoutX(490);
+        sortBox.setLayoutX(460);
         sortBox.setPrefHeight(34);
         sortBox.setPrefWidth(100);
+        sortBox.setFloatMode(FloatMode.DISABLED);
+
+        AnchorPane.setLeftAnchor(addBtn, 20.0);
+        addBtn.setLayoutY(57);
+        addBtn.setPrefHeight(34);
+        addBtn.setPrefWidth(64);
+        addBtn.getStyleClass().add("form-primary-button");
 
         AnchorPane.setLeftAnchor(table, 20.0);
         AnchorPane.setRightAnchor(table, 20.0);

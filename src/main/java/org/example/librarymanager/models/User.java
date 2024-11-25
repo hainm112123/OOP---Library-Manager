@@ -85,14 +85,14 @@ public class User implements Model{
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
         list.add(new Pair<>("id", String.valueOf(id)));
-        list.add(new Pair<>("username", username));
-        list.add(new Pair<>("password", password));
-        list.add(new Pair<>("firstname", firstname));
-        list.add(new Pair<>("lastname", lastname));
-        list.add(new Pair<>("gender", gender));
-        list.add(new Pair<>("dateOfBirth", dateOfBirth.toString()));
+        list.add(new Pair<>("username", (username == null ? "" : username)));
+        list.add(new Pair<>("password", (password == null ? "" : password)));
+        list.add(new Pair<>("firstname", (firstname == null ? "" : firstname)));
+        list.add(new Pair<>("lastname", (lastname == null ? "" : lastname)));
+        list.add(new Pair<>("gender", (gender == null ? "" : gender)));
+        list.add(new Pair<>("dateOfBirth", (dateOfBirth == null ? "" : dateOfBirth.toString())));
         list.add(new Pair<>("permission", USER_TYPE_STRING[permission]));
-        list.add(new Pair<>("imageLink", imageLink));
+        list.add(new Pair<>("imageLink", (imageLink == null ? "" : imageLink)));
         return list;
     }
 

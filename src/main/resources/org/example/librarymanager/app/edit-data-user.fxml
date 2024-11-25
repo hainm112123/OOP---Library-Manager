@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
-<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -9,19 +10,19 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="591.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.admin.EditDataUserController">
+<AnchorPane prefHeight="591.0" prefWidth="600.0" stylesheets="@../css/form.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.admin.EditDataUserController">
     <children>
         <VBox prefHeight="591.0" prefWidth="600.0">
             <children>
                 <AnchorPane prefHeight="67.0" prefWidth="600.0">
                     <children>
                         <Label fx:id="title" alignment="CENTER" layoutX="252.0" layoutY="17.0" prefHeight="31.0" prefWidth="95.0" text="Label" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                        <Button fx:id="backBtn" layoutX="31.0" layoutY="14.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="61.0" text="Back" />
+                        <MFXButton fx:id="backBtn" layoutX="30.0" layoutY="14.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="61.0" styleClass="form-primary-button" text="Back" />
                     </children>
                 </AnchorPane>
                 <MFXScrollPane prefHeight="433.0" prefWidth="600.0">
                     <content>
-                        <GridPane fx:id="gridPane" prefHeight="217.0" prefWidth="531.0">
+                        <GridPane fx:id="gridPane" prefHeight="217.0" prefWidth="500.0">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="233.33331298828125" minWidth="10.0" prefWidth="76.66664123535156" />
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="399.33335876464844" minWidth="10.0" prefWidth="399.33335876464844" />
@@ -32,11 +33,14 @@
                             </rowConstraints>
                         </GridPane>
                     </content>
+                    <padding>
+                        <Insets left="30.0" />
+                    </padding>
                 </MFXScrollPane>
                 <AnchorPane prefHeight="91.0" prefWidth="600.0">
                     <children>
-                        <Button fx:id="applyBtn" layoutX="181.0" layoutY="38.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="83.0" text="Apply" />
-                        <Button fx:id="deleteBtn" layoutX="326.0" layoutY="38.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="83.0" text="Delete" />
+                        <MFXButton fx:id="applyBtn" layoutX="181.0" layoutY="38.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="83.0" styleClass="form-primary-button" text="Apply" />
+                        <MFXButton fx:id="deleteBtn" layoutX="326.0" layoutY="38.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="83.0" styleClass="form-delete-button" text="Delete" />
                         <Label fx:id="message" alignment="CENTER" layoutX="129.0" layoutY="14.0" prefHeight="24.0" prefWidth="341.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                     </children>
                 </AnchorPane>

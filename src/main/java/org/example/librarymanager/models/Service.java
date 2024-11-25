@@ -78,10 +78,10 @@ public class Service implements Model {
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
         list.add(new Pair<>("id", String.valueOf(id)));
-        list.add(new Pair<>("borrowerName", borrowerName));
-        list.add(new Pair<>("documentName", documentName));
-        list.add(new Pair<>("borrowDate", borrowDate.toString()));
-        list.add(new Pair<>("returnDate", returnDate.toString()));
+        list.add(new Pair<>("borrowerName", (borrowerName == null ? "" : borrowerName)));
+        list.add(new Pair<>("documentName", (documentName == null ? "" : documentName)));
+        list.add(new Pair<>("borrowDate", (borrowDate == null ? "" : borrowDate.toString())));
+        list.add(new Pair<>("returnDate", (returnDate == null ? "" : returnDate.toString())));
         return list;
     }
 

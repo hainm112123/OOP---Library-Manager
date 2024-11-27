@@ -40,7 +40,7 @@ public class ListDocumentsComponent implements Component {
      * @param wrapper
      * @param controller
      */
-    public ListDocumentsComponent(List<Document> documents, MFXScrollPane wrapper, ControllerWrapper controller) {
+    public ListDocumentsComponent(List<Document> documents, MFXScrollPane wrapper, ControllerWrapper controller, boolean hasViewChange) {
         container = new VBox();
         grid = new GridPane();
         pagination = new Pagination();
@@ -67,14 +67,14 @@ public class ListDocumentsComponent implements Component {
         });
         setDocumentsGridPane(documents, pagination.getCurrentPageIndex());
 
-        gridViewBtn.setOnMouseClicked(e -> subject.changeDisplayType(DocumentComponent.VIEW_TYPE_GRID));
-        listViewBtn.setOnMouseClicked(e -> subject.changeDisplayType(DocumentComponent.VIEW_TYPE_LIST));
-
         btnGroup.getChildren().addAll(listViewBtn, gridViewBtn);
         btnGroup.getStyleClass().add("btn-group");
         listViewBtn.getStyleClass().add("view-type-btn");
         gridViewBtn.getStyleClass().add("view-type-btn");
-        container.getChildren().addAll(btnGroup, grid);
+        if (hasViewChange) {
+            container.getChildren().add(btnGroup);
+        }
+        container.getChildren().addAll(grid);
         container.getStylesheets().add(getClass().getResource("/org/example/librarymanager/css/list-document.css").toExternalForm());
         if (documents.size() > DOCUMENTS_PER_PAGE) {
             container.getChildren().add(pagination);

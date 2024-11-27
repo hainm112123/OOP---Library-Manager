@@ -4,6 +4,7 @@ import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.librarymanager.components.ListDocumentsComponent;
@@ -13,6 +14,8 @@ import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.Service;
 import org.example.librarymanager.utils.observers.BookshelfObserver;
 import org.example.librarymanager.utils.observers.BookshelfSubject;
+import org.example.librarymanager.utils.observers.ListDocumentsSubject;
+import org.example.librarymanager.utils.observers.Subject;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ public class BookshelfContronller extends ControllerWrapper {
     private ListDocumentsComponent readingComponent;
     private ListDocumentsComponent wishlistComponent;
     private ListDocumentsComponent completedComponent;
+    private HBox btnGroup;
 
     /**
      * Display all documents user currently borrow in a grid pane.
@@ -49,9 +53,16 @@ public class BookshelfContronller extends ControllerWrapper {
         Future<List<Document>> completedFu = executor.submit(() -> DocumentQuery.getInstance().getDocumentsByStatus(getUser().getId(), Service.STATUS_COMPLETED));
         executor.shutdown();
         try {
-            readingComponent = new ListDocumentsComponent(readingFu.get(), scrollPane, this);
-            wishlistComponent = new ListDocumentsComponent(wishlistFu.get(), scrollPane, this);
-            completedComponent = new ListDocumentsComponent(completedFu.get(), scrollPane, this);
+            readingComponent = new ListDocumentsComponent(readingFu.get(), scrollPane, this, false);
+            wishlistComponent = new ListDocumentsComponent(wishlistFu.get(), scrollPane, this, false);
+            completedComponent = new ListDocumentsComponent(completedFu.get(), scrollPane, this, false);
+            ListDocumentsSubject subject = readingComponent.getSubject();
+            btnGroup = readingComponent.getBtnGroup();
+            btnGroup.getStylesheets().add(getClass().getResource("/org/example/librarymanager/css/list-document.css").toExternalForm());
+            subject.attach(wishlistComponent.getObserver());
+            subject.attach(completedComponent.getObserver());
+            wishlistComponent.setSubject(subject);
+            completedComponent.setSubject(subject);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,9 +70,9 @@ public class BookshelfContronller extends ControllerWrapper {
         readingBtn.setCursor(Cursor.HAND);
         wishlistBtn.setCursor(Cursor.HAND);
         completedBtn.setCursor(Cursor.HAND);
-        container.getChildren().add(readingComponent.getElement());
+        container.getChildren().addAll(btnGroup, readingComponent.getElement());
         BookshelfSubject subject = new BookshelfSubject(readingBtn, wishlistBtn, completedBtn);
-        BookshelfObserver observer = new BookshelfObserver(container, readingComponent, wishlistComponent, completedComponent);
+        BookshelfObserver observer = new BookshelfObserver(container, readingComponent, wishlistComponent, completedComponent, btnGroup);
         subject.attach(observer);
     }
 }

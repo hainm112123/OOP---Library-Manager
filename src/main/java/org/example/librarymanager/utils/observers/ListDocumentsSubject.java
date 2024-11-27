@@ -16,7 +16,6 @@ public class ListDocumentsSubject extends Subject {
     private Label listViewBtn;
     private FontAwesomeIconView gridIcon;
     private FontAwesomeIconView listIcon;
-    private List<Observer> observers = new ArrayList<>();
 
     /**
      * list documents' subject: a button-group that can change view-type between grid-view and list-view
@@ -30,6 +29,8 @@ public class ListDocumentsSubject extends Subject {
         this.listViewBtn = listViewBtn;
         this.gridIcon = gridIcon;
         this.listIcon = listIcon;
+        gridViewBtn.setOnMouseClicked(e -> changeDisplayType(DocumentComponent.VIEW_TYPE_GRID));
+        listViewBtn.setOnMouseClicked(e -> changeDisplayType(DocumentComponent.VIEW_TYPE_LIST));
     }
 
     /**

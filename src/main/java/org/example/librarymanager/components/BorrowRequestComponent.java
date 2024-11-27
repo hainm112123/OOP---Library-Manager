@@ -10,9 +10,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.librarymanager.Common;
+import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.data.ServiceQuery;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.PendingService;
@@ -34,7 +36,7 @@ public class BorrowRequestComponent implements Component {
     private MFXButton declineButton;
     private MFXProgressBar progressBar;
 
-    public BorrowRequestComponent(PendingService service) {
+    public BorrowRequestComponent(PendingService service, Pane root) {
         wrapper = new VBox();
         container = new HBox();
         username = new Label(service.getUsername());
@@ -74,11 +76,11 @@ public class BorrowRequestComponent implements Component {
         wrapper.getChildren().addAll(container, gap);
 
         Common.hide(progressBar);
-        approveButton.setOnAction(e -> onButtonClicked(service, true));
-        declineButton.setOnAction(e -> onButtonClicked(service, false));
+        approveButton.setOnAction(e -> onButtonClicked(service, true, root));
+        declineButton.setOnAction(e -> onButtonClicked(service, false, root));
     }
 
-    private void onButtonClicked(PendingService service, boolean isApproved) {
+    private void onButtonClicked(PendingService service, boolean isApproved, Pane root) {
         Common.hide(approveButton);
         Common.hide(declineButton);
         Common.show(progressBar);
@@ -98,6 +100,16 @@ public class BorrowRequestComponent implements Component {
                     parent.getChildren().remove(wrapper);
                     parent.setPrefHeight(parent.getChildren().size() * BorrowRequestComponent.COMPONENT_HEIGHT);
                 }
+            } else {
+                DialogComponent dialog = new DialogComponent(
+                        isApproved ? "Approve" : "Decline",
+                        isApproved ? "There is no book remain." : "Some errors occurred! Please try again.",
+                        DialogComponent.DIALOG_WARNING,
+                        ControllerWrapper.getStage(),
+                        root
+                );
+                dialog.addConfirmAction(event -> dialog.close());
+                dialog.show();
             }
         });
         new Thread(task).start();

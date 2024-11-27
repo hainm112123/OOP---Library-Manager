@@ -2,6 +2,7 @@ package org.example.librarymanager.app;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.librarymanager.components.BorrowRequestComponent;
@@ -18,6 +19,8 @@ import java.util.concurrent.Future;
 public class BorrowRequestController extends ControllerWrapper {
     @FXML
     private VBox container;
+    @FXML
+    private AnchorPane root;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -26,7 +29,7 @@ public class BorrowRequestController extends ControllerWrapper {
         try {
             List<PendingService> services = future.get();
             for (PendingService service : services) {
-                container.getChildren().add(new BorrowRequestComponent(service).getElement());
+                container.getChildren().add(new BorrowRequestComponent(service, root).getElement());
             }
             container.setAlignment(Pos.TOP_CENTER);
             container.setPrefHeight(services.size() * BorrowRequestComponent.COMPONENT_HEIGHT);

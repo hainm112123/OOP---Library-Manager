@@ -65,18 +65,18 @@ public class Rating implements Model {
 
     @Override
     public List<String> getAttributes() {
-        return List.of("id", "userName", "documentName", "value", "content", "postedTime");
+        return List.of("ID", "User", "Document", "Value", "Content", "Posted Time");
     }
 
     @Override
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
-        list.add(new Pair<>("id", String.valueOf(id)));
-        list.add(new Pair<>("userName", (userName == null ? "" : userName)));
-        list.add(new Pair<>("documentName", (documentName == null ? "" : documentName)));
-        list.add(new Pair<>("value", String.valueOf(value)));
-        list.add(new Pair<>("content", (content == null ? "" : content)));
-        list.add(new Pair<>("postedTime", String.valueOf(postedTime)));
+        list.add(new Pair<>("ID", String.valueOf(id)));
+        list.add(new Pair<>("User", (userName == null ? "" : userName)));
+        list.add(new Pair<>("Document", (documentName == null ? "" : documentName)));
+        list.add(new Pair<>("Value", String.valueOf(value)));
+        list.add(new Pair<>("Content", (content == null ? "" : content)));
+        list.add(new Pair<>("Posted Time", String.valueOf(postedTime)));
         return list;
     }
 

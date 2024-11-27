@@ -1,6 +1,7 @@
 package org.example.librarymanager.admin;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import io.github.palexdev.materialfx.enums.FloatMode;
 import javafx.application.Platform;
@@ -8,8 +9,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
@@ -44,12 +43,14 @@ public class EditDataController<E extends Model> extends ControllerWrapper {
 
     protected E data;
     protected Class<E> clazz;
+    Boolean[] isDel;
     protected String editableAttribute;
     protected DataAccessObject dataAccessObject;
 
-    public void setData(E data, Class<E> clazz) {
+    public void setData(E data, Class<E> clazz, Boolean[] isDel) {
         this.data = data;
         this.clazz = clazz;
+        this.isDel = isDel;
     }
 
     @Override
@@ -123,7 +124,7 @@ public class EditDataController<E extends Model> extends ControllerWrapper {
                 });
                 switch (clazz.getSimpleName()) {
                     case "User":
-                        editableAttribute = "permission";
+                        editableAttribute = "Permission";
                         break;
                     case "Document":
                         editableAttribute = "";
@@ -135,16 +136,12 @@ public class EditDataController<E extends Model> extends ControllerWrapper {
                         editableAttribute = "";
                         break;
                     case "Category":
-                        editableAttribute = "name,description";
+                        editableAttribute = "Name,Description";
                         break;
                     default:
                         break;
                 }
-                //if(!editableAttribute.isBlank() || !editableAttribute.isEmpty()) {
                 enableEdit();
-//                enableApply();
-//                enableDelete();
-                //}
             }
 
         });
@@ -192,6 +189,7 @@ public class EditDataController<E extends Model> extends ControllerWrapper {
             }
             if (dataAccessObject.delete(data)) {
                 data.setData(null);
+                isDel[0] = Boolean.TRUE;
                 message.setText("Successfully deleted!");
             }
         });
@@ -240,10 +238,10 @@ public class EditDataController<E extends Model> extends ControllerWrapper {
         String value = "";
         switch (node.getClass().getSimpleName()) {
             case "MFXTextField":
-                value = ((TextField) node).getText();
+                value = ((MFXTextField) node).getText();
                 break;
             case "MFXComboBox":
-                value = ((ComboBox<?>)node).getValue().toString();
+                value = ((MFXComboBox<?>)node).getValue().toString();
                 break;
             case "Label":
                 value = ((Label)node).getText();

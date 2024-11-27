@@ -123,25 +123,25 @@ public class Document implements Model {
 
     @Override
     public List<String> getAttributes() {
-        return List.of("id", "categoryName", "ownerName", "author", "title", "description",
-                "imageLink", "quantity", "quantityInStock", "borrowedTimes", "addDate", "rating" );
+        return List.of("ID", "Category", "Owner", "Author", "Title", "Description",
+                "Image Link", "Quantity", "Quantity In Stock", "Borrowed Times", "Add Date", "Rating" );
     }
 
     @Override
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
-        list.add(new Pair<>("id", String.valueOf(this.id)));
-        list.add(new Pair<>("categoryName", String.valueOf(this.categoryName)));
-        list.add(new Pair<>("ownerName", (this.ownerName == null ? "" : this.ownerName)));
-        list.add(new Pair<>("author", (this.author == null ? "" : this.author)));
-        list.add(new Pair<>("title", (this.title == null ? "" : this.title)));
-        list.add(new Pair<>("description", (this.description == null ? "" : this.description)));
-        list.add(new Pair<>("imageLink", (this.imageLink == null ? "" : this.imageLink)));
-        list.add(new Pair<>("quantity", String.valueOf(this.quantity)));
-        list.add(new Pair<>("quantityInStock", String.valueOf(this.quantityInStock)));
-        list.add(new Pair<>("borrowedTimes", String.valueOf(this.borrowedTimes)));
-        list.add(new Pair<>("addDate", (addDate == null ? "" : String.valueOf(this.addDate))));
-        list.add(new Pair<>("rating", String.valueOf(this.rating)));
+        list.add(new Pair<>("ID", String.valueOf(this.id)));
+        list.add(new Pair<>("Category", String.valueOf(this.categoryName)));
+        list.add(new Pair<>("Owner", (this.ownerName == null ? "" : this.ownerName)));
+        list.add(new Pair<>("Author", (this.author == null ? "" : this.author)));
+        list.add(new Pair<>("Title", (this.title == null ? "" : this.title)));
+        list.add(new Pair<>("Description", (this.description == null ? "" : this.description)));
+        list.add(new Pair<>("Image Link", (this.imageLink == null ? "" : this.imageLink)));
+        list.add(new Pair<>("Quantity", String.valueOf(this.quantity)));
+        list.add(new Pair<>("Quantity In Stock", String.valueOf(this.quantityInStock)));
+        list.add(new Pair<>("Borrowed Times", String.valueOf(this.borrowedTimes)));
+        list.add(new Pair<>("Add Date", (addDate == null ? "" : String.valueOf(this.addDate))));
+        list.add(new Pair<>("Rating", String.valueOf(this.rating)));
         return list;
     }
 

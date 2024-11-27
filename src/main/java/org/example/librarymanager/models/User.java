@@ -78,36 +78,49 @@ public class User implements Model{
 
     @Override
     public List<String> getAttributes() {
-        return List.of("id", "username", "password", "firstname", "lastname", "gender", "dateOfBirth", "permission", "imageLink");
+        return List.of("ID", "Username", "Password", "First Name", "Last Name", "Gender", "Date Of Birth", "Permission", "Image Link");
     }
 
     @Override
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
-        list.add(new Pair<>("id", String.valueOf(id)));
-        list.add(new Pair<>("username", (username == null ? "" : username)));
-        list.add(new Pair<>("password", (password == null ? "" : password)));
-        list.add(new Pair<>("firstname", (firstname == null ? "" : firstname)));
-        list.add(new Pair<>("lastname", (lastname == null ? "" : lastname)));
-        list.add(new Pair<>("gender", (gender == null ? "" : gender)));
-        list.add(new Pair<>("dateOfBirth", (dateOfBirth == null ? "" : dateOfBirth.toString())));
-        list.add(new Pair<>("permission", USER_TYPE_STRING[permission]));
-        list.add(new Pair<>("imageLink", (imageLink == null ? "" : imageLink)));
+        list.add(new Pair<>("ID", String.valueOf(id)));
+        list.add(new Pair<>("Username", (username == null ? "" : username)));
+        list.add(new Pair<>("Password", (password == null ? "" : password)));
+        list.add(new Pair<>("First Name", (firstname == null ? "" : firstname)));
+        list.add(new Pair<>("Last Name", (lastname == null ? "" : lastname)));
+        list.add(new Pair<>("Gender", (gender == null ? "" : gender)));
+        list.add(new Pair<>("Date Of Birth", (dateOfBirth == null ? "" : dateOfBirth.toString())));
+        list.add(new Pair<>("Permission", USER_TYPE_STRING[permission]));
+        list.add(new Pair<>("Image Link", (imageLink == null ? "" : imageLink)));
         return list;
     }
 
     @Override
     public void setData(List<Pair<String, String>> data) {
-        this.id = Integer.parseInt(data.get(0).getValue());
-        this.username = data.get(1).getValue();
-        this.password = data.get(2).getValue();
-        this.firstname = data.get(3).getValue();
-        this.lastname = data.get(4).getValue();
-        this.gender = data.get(5).getValue();
-        this.dateOfBirth = LocalDate.parse(data.get(6).getValue());
-        for (int i = 0; i < 3; i++) if (data.get(7).getValue().equals(USER_TYPE_STRING[i])) {
-            this.permission = i;
+        if (data == null) {
+            this.id = 0;
+            this.username = "";
+            this.password = "";
+            this.firstname = "";
+            this.lastname = "";
+            this.gender = "";
+            this.dateOfBirth = null;
+            this.permission = 0;
+            this.imageLink = "";
+        } else {
+            this.id = Integer.parseInt(data.get(0).getValue());
+            this.username = data.get(1).getValue();
+            this.password = data.get(2).getValue();
+            this.firstname = data.get(3).getValue();
+            this.lastname = data.get(4).getValue();
+            this.gender = data.get(5).getValue();
+            this.dateOfBirth = LocalDate.parse(data.get(6).getValue());
+            for (int i = 0; i < 3; i++)
+                if (data.get(7).getValue().equals(USER_TYPE_STRING[i])) {
+                    this.permission = i;
+                }
+            this.imageLink = data.get(8).getValue();
         }
-        this.imageLink = data.get(8).getValue();
     }
 }

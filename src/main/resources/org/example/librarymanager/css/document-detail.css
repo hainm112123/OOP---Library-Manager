@@ -12,6 +12,12 @@
     -fx-font-weight: 700;
 }
 
+.pending-button {
+    -fx-background-color: #9c9c74;
+    -fx-text-fill: #fff;
+    -fx-font-weight: 700;
+}
+
 .return-button {
     -fx-background-color: #5C1C00cc;
     -fx-text-fill: #fff;

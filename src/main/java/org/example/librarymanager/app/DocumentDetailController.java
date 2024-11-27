@@ -59,6 +59,8 @@ public class DocumentDetailController extends ControllerWrapper {
     @FXML
     private MFXButton returnBtn;
     @FXML
+    private MFXButton pendingBtn;
+    @FXML
     private MFXButton editBtn;
     @FXML
     private MFXButton addWishlistBtn;
@@ -145,23 +147,35 @@ public class DocumentDetailController extends ControllerWrapper {
                 Common.enable(removeWishlistBtn);
                 Common.enable(borrowBtn);
                 Common.disable(returnBtn);
+                Common.disable(pendingBtn);
             } else if (status == Service.STATUS_READING) {
                 Common.disable(borrowBtn);
                 Common.enable(returnBtn);
                 Common.disable(addWishlistBtn);
                 Common.disable(removeWishlistBtn);
+                Common.disable(pendingBtn);
+            }
+            else if (status == Service.STATUS_PENDING) {
+                Common.disable(borrowBtn);
+                Common.disable(returnBtn);
+                Common.disable(addWishlistBtn);
+                Common.disable(removeWishlistBtn);
+                Common.enable(pendingBtn);
+                pendingBtn.setDisable(true);
             }
             else {
                 Common.enable(borrowBtn);
                 Common.disable(returnBtn);
                 Common.enable(addWishlistBtn);
                 Common.disable(removeWishlistBtn);
+                Common.disable(pendingBtn);
             }
             if (ownerFu.get().getId() == getUser().getId()) {
                 Common.disable(borrowBtn);
                 Common.disable(returnBtn);
                 Common.disable(addWishlistBtn);
                 Common.disable(removeWishlistBtn);
+                Common.disable(pendingBtn);
                 Common.enable(editBtn);
             } else {
                 Common.disable(editBtn);
@@ -209,7 +223,7 @@ public class DocumentDetailController extends ControllerWrapper {
                     } else {
                         DialogComponent dialog = new DialogComponent(
                                 "",
-                                "There is no more book currently available. Please comback later.",
+                                "There is no more book currently available. Please come back later.",
                                 DialogComponent.DIALOG_INFO,
                                 stage,
                                 container

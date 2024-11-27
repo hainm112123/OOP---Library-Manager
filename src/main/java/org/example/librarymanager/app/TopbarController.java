@@ -35,6 +35,7 @@ import java.util.concurrent.Future;
 public class TopbarController extends ControllerWrapper {
     private static final int CATEGORY_CHOICE_WIDTH = 150;
     private static final int CATEGORY_CHOICE_HEIGHT = 42;
+    private static final int USER_MENU_HEIGHT = 560;
 
     @FXML
     private Button homeBtn;
@@ -84,6 +85,8 @@ public class TopbarController extends ControllerWrapper {
     private HBox mydocBtn;
     @FXML
     private HBox newdocBtn;
+    @FXML
+    private HBox requestBtn;
     @FXML
     private HBox manageBtn;
     @FXML
@@ -221,6 +224,10 @@ public class TopbarController extends ControllerWrapper {
             Common.disable(userPane);
             safeSwitchScene("new-document.fxml");
         });
+        requestBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("borrow-request.fxml");
+        });
         manageBtn.setOnMouseClicked(event -> {
             Common.disable(userPane);
             safeSwitchScene("admin.fxml");
@@ -241,15 +248,27 @@ public class TopbarController extends ControllerWrapper {
                 node.setCursor(Cursor.HAND);
             }
         }
-        if (getUser().getPermission() == User.TYPE_USER) {
-            userBox.getChildren().subList(7, 10).clear();
-            userBox.setPrefHeight(400);
-            userBox.setMaxHeight(400);
-        } else if (getUser().getPermission() == User.TYPE_MODERATOR) {
-            userBox.getChildren().subList(9, 10).clear();
-            userBox.setPrefHeight(480);
-            userBox.setMaxHeight(480);
+        int unavailableRows = 0;
+        if (getUser().getPermission() != User.TYPE_ADMIN) {
+            userBox.getChildren().remove(manageBtn);
+            unavailableRows ++;
+//            userBox.getChildren().subList(9, 10).clear();
+//            userBox.setPrefHeight(480);
+//            userBox.setMaxHeight(480);
         }
+        if (getUser().getPermission() == User.TYPE_USER) {
+            userBox.getChildren().remove(mydocBtn);
+            userBox.getChildren().remove(newdocBtn);
+            userBox.getChildren().remove(requestBtn);
+            userBox.getChildren().remove(manageBtn);
+//            userBox.getChildren().subList(7, 10).clear();
+//            userBox.setPrefHeight(400);
+//            userBox.setMaxHeight(400);
+            unavailableRows += 4;
+        }
+        userBox.setPrefHeight(USER_MENU_HEIGHT - unavailableRows * 40);
+        userBox.setMaxHeight(USER_MENU_HEIGHT - unavailableRows * 40);
+
         userBtn.setOnMouseClicked(e -> {
             if (userPane.isDisable()) {
                 Common.enable(userPane);

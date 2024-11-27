@@ -1,7 +1,7 @@
 package org.example.librarymanager.data;
 
 import org.example.librarymanager.models.Document;
-import org.example.librarymanager.models.Rating;
+import org.example.librarymanager.models.PendingService;
 import org.example.librarymanager.models.Service;
 import org.example.librarymanager.models.ServiceData;
 
@@ -35,13 +35,14 @@ public class ServiceQuery implements DataAccessObject<Service> {
      * @param documentId
      * @return
      */
-    private Service getUndoneService(int userId, int documentId) {
+    public Service getUndoneService(int userId, int documentId) {
         Service service = null;
         try (Connection connection = databaseConnection.getConnection();) {
-            PreparedStatement ps = connection.prepareStatement("select * from services where userId= ? and documentId= ? and status != ?");
+            PreparedStatement ps = connection.prepareStatement("select * from services where userId= ? and documentId= ? and status != ? and status != ?");
             ps.setInt(1, userId);
             ps.setInt(2, documentId);
             ps.setInt(3, Service.STATUS_COMPLETED);
+            ps.setInt(4, Service.STATUS_DECLINED);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 service = new Service(rs);
@@ -190,19 +191,38 @@ public class ServiceQuery implements DataAccessObject<Service> {
 
         boolean result = false;
         if (service != null) {
-            service.setStatus(Service.STATUS_READING);
-            service.setBorrowDate(LocalDate.now());
+            service.setStatus(Service.STATUS_PENDING);
             result = update(service);
         } else {
             service = new Service();
             service.setUserId(userId);
             service.setDocumentId(document.getId());
-            service.setStatus(Service.STATUS_READING);
-            service.setBorrowDate(LocalDate.now());
+            service.setStatus(Service.STATUS_PENDING);
             result = add(service) != null;
         }
+        return result;
+    }
 
-        if (result) {
+    /**
+     * handle borrow request
+     */
+    public boolean executeBorrowRequest(int userId, int documentId, boolean isApproved) {
+        Service service = getUndoneService(userId, documentId);
+        if (service == null || service.getStatus() != Service.STATUS_PENDING) {
+            return false;
+        }
+
+        Document document = DocumentQuery.getInstance().getById(documentId);
+        if (isApproved) {
+            if (document.getQuantityInStock() < 1) return false;
+            service.setStatus(Service.STATUS_READING);
+            service.setBorrowDate(LocalDate.now());
+        } else {
+            service.setStatus(Service.STATUS_DECLINED);
+        }
+        boolean result = update(service);
+
+        if (result && isApproved) {
             document.setQuantityInStock(document.getQuantityInStock() - 1);
             document.setBorrowedTimes(document.getBorrowedTimes() + 1);
             DocumentQuery.getInstance().update(document);
@@ -300,5 +320,28 @@ public class ServiceQuery implements DataAccessObject<Service> {
             e.printStackTrace();
         }
         return documents;
+    }
+
+    public List<PendingService> getPendingServices() {
+        List<PendingService> services = new ArrayList<>();
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(
+                    "select s.userId, s.documentId, u.username as username, u.imageLink as userAvatar, d.title as documentTitle, c.name as documentCategory, d.imageLink as documentImage from services as s\n" +
+                            "join documents as d on d.id = s.documentId\n" +
+                            "join users as u on u.id = s.userId\n" +
+                            "join categories as c on c.id = d.categoryId\n" +
+                            "where s.status = ?"
+            );
+            ps.setInt(1, Service.STATUS_PENDING);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                services.add(new PendingService(rs));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return services;
     }
 }

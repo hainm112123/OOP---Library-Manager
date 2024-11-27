@@ -2,9 +2,11 @@ package org.example.librarymanager;
 
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.concurrent.Task;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
@@ -23,10 +25,31 @@ public class Common {
     static {
         try {
             NO_IMAGE = new Image("file:src/main/resources/org/example/librarymanager/image/no_image.jpg");
-            DEFAULT_PROFILE = new Image("file:src/main/resources/org/example/librarymanager/image/UserProfile.jpg");
+            DEFAULT_PROFILE = new Image("file:src/main/resources/org/example/librarymanager/image/UserProfile.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static ImageView loadImage(ImageView imageView, int width, int height, String imageLink) {
+        imageView.setImage(Common.NO_IMAGE);
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
+        Task<Image> imgTask = new Task<>() {
+            @Override
+            protected Image call() throws Exception {
+                try {
+                    return new Image(imageLink);
+                } catch (Exception e) {
+                    return Common.NO_IMAGE;
+                }
+            }
+        };
+        imgTask.setOnSucceeded(e -> {
+            imageView.setImage(imgTask.getValue());
+        });
+        new Thread(imgTask).start();
+        return imageView;
     }
 
     public static boolean isInteger(String str) {
@@ -103,6 +126,18 @@ public class Common {
         node.setMouseTransparent(false);
         node.setManaged(true);
     }
+
+
+    public static void hide(Node node) {
+        node.setDisable(true);
+        node.setVisible(false);
+    }
+
+    public static void show(Node node) {
+        node.setDisable(false);
+        node.setVisible(true);
+    }
+
 
     /**
      * Hide message when edit input.

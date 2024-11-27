@@ -117,7 +117,7 @@
       </VBox>
       <MFXScrollPane fx:id="userPane" disable="true" hbarPolicy="NEVER" layoutX="878.0" layoutY="94.0" mouseTransparent="true" prefHeight="360.0" prefWidth="300.0" style="-fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: transparent;" visible="false">
          <content>
-            <VBox fx:id="userBox" alignment="TOP_CENTER" layoutX="15.0" prefHeight="520.0" prefWidth="290.0" style="-fx-background-radius: 8; -fx-background-color: #f0f0f0;">
+            <VBox fx:id="userBox" alignment="TOP_CENTER" layoutX="15.0" prefHeight="560.0" prefWidth="290.0" style="-fx-background-radius: 8; -fx-background-color: #f0f0f0;">
                <children>
                   <ImageView fx:id="profileImage" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -191,6 +191,19 @@
                      <children>
                         <FontAwesomeIconView glyphName="FILE" size="24" wrappingWidth="48.0" />
                         <Label prefHeight="26.0" prefWidth="222.0" style="-fx-font-weight: 700;" text="Add a new book">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="8.0" right="8.0" />
+                     </padding>
+                  </HBox>
+                  <HBox fx:id="requestBtn" alignment="CENTER" layoutX="22.0" layoutY="358.0" prefHeight="40.0" prefWidth="254.0">
+                     <children>
+                        <FontAwesomeIconView glyphName="QUESTION" size="24" wrappingWidth="48.0" />
+                        <Label prefHeight="26.0" prefWidth="222.0" style="-fx-font-weight: 700;" text="Borrow requests">
                            <font>
                               <Font size="14.0" />
                            </font>

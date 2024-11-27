@@ -34,6 +34,8 @@ public class BookshelfContronller extends ControllerWrapper {
     @FXML
     private Label completedBtn;
     @FXML
+    private Label pendingBtn;
+    @FXML
     private VBox container;
 
     private ListDocumentsComponent readingComponent;
@@ -71,7 +73,7 @@ public class BookshelfContronller extends ControllerWrapper {
         wishlistBtn.setCursor(Cursor.HAND);
         completedBtn.setCursor(Cursor.HAND);
         container.getChildren().addAll(btnGroup, readingComponent.getElement());
-        BookshelfSubject subject = new BookshelfSubject(readingBtn, wishlistBtn, completedBtn);
+        BookshelfSubject subject = new BookshelfSubject(readingBtn, wishlistBtn, completedBtn, pendingBtn);
         BookshelfObserver observer = new BookshelfObserver(container, readingComponent, wishlistComponent, completedComponent, btnGroup);
         subject.attach(observer);
     }

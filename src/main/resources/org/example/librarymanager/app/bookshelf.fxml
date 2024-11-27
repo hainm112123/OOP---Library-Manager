@@ -23,7 +23,7 @@
                         </VBox>
                         <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="1200.0" VBox.vgrow="NEVER">
                            <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="308.0" styleClass="status-button-container">
+                              <HBox alignment="CENTER_LEFT" maxWidth="408.0" prefHeight="40.0" prefWidth="408.0" styleClass="status-button-container">
                                  <children>
                                     <Label fx:id="readingBtn" prefHeight="51.0" prefWidth="71.0" text="Reading">
                                        <styleClass>
@@ -33,6 +33,7 @@
                                     </Label>
                                     <Label fx:id="wishlistBtn" prefHeight="82.0" prefWidth="88.0" styleClass="status-button" text="In wishlist" />
                                     <Label fx:id="completedBtn" prefHeight="96.0" prefWidth="99.0" styleClass="status-button" text="Completed" />
+                                    <Label fx:id="pendingBtn" layoutX="214.0" layoutY="14.0" prefHeight="96.0" prefWidth="99.0" styleClass="status-button" text="Pending" />
                                  </children>
                                  <HBox.margin>
                                     <Insets />

@@ -1,0 +1,64 @@
+@import "home.css";
+
+.request-container {
+    -fx-pref-width: 1130;
+    -fx-pref-height: 64;
+    -fx-padding: 5 5 5 12;
+    -fx-background-color: #e6e6e6;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+}
+
+.request-username {
+    -fx-font-size: 14px;
+    -fx-pref-height: 24;
+    -fx-font-weight: 700;
+    -fx-pref-width: 120;
+    -fx-padding: 4;
+}
+
+
+.request-document-image {
+    -fx-fit-to-width: 40;
+    -fx-fit-to-height: 60;
+    -fx-pref-width: 40;
+    -fx-pref-height: 60;
+}
+
+.request-document-box {
+    -fx-pref-width: 700;
+    -fx-padding: 0 0 0 6;
+}
+
+.request-document-title {
+    -fx-font-size: 14px;
+    -fx-pref-height: 24;
+    -fx-font-weight: 700;
+}
+
+.request-document-category {
+    -fx-font-weight: bold;
+    -fx-padding: 2;
+}
+
+.request-button-group {
+    -fx-pref-width: 120;
+}
+
+.request-approve-button {
+    -fx-pref-height: 24;
+    -fx-pref-width: 120;
+    -fx-background-color: #539058;
+    -fx-text-fill: #fff;
+    -fx-font-weight: 700;
+}
+.request-decline-button {
+    -fx-pref-height: 24;
+    -fx-pref-width: 120;
+    -fx-background-color: #B22222;
+    -fx-text-fill: #fff;
+    -fx-font-weight: 700;
+}
+

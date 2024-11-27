@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.data.ServiceQuery;
@@ -18,8 +19,9 @@ import org.example.librarymanager.models.PendingService;
 import org.example.librarymanager.models.User;
 
 public class BorrowRequestComponent implements Component {
-    public static final int COMPONENT_HEIGHT = 64;
+    public static final int COMPONENT_HEIGHT = 64 + 24;
 
+    private VBox wrapper;
     private HBox container;
     private Label username;
     private ImageView userAvatar;
@@ -33,6 +35,7 @@ public class BorrowRequestComponent implements Component {
     private MFXProgressBar progressBar;
 
     public BorrowRequestComponent(PendingService service) {
+        wrapper = new VBox();
         container = new HBox();
         username = new Label(service.getUsername());
         userAvatar = (ImageView) new Avatar(new ImageView(), 54, service.getUserAvatar()).getElement();
@@ -50,6 +53,10 @@ public class BorrowRequestComponent implements Component {
         Separator separtor2 = new Separator(Orientation.VERTICAL);
         separtor1.setPrefWidth(40);
         separtor2.setPrefWidth(40);
+        StackPane gap = new StackPane();
+        gap.setPrefHeight(24);
+        gap.setStyle("-fx-background-color: #fff");
+        container.getChildren().add(gap);
 
         container.getStylesheets().add(getClass().getResource("/org/example/librarymanager/css/request.css").toExternalForm());
         container.getStyleClass().add("request-container");
@@ -64,8 +71,9 @@ public class BorrowRequestComponent implements Component {
         documentBox.getChildren().addAll(documentTitle, documentCategory);
         buttonGroup.getChildren().addAll(approveButton, progressBar, declineButton);
         container.getChildren().addAll(userAvatar, username, separtor1, documentImage, documentBox, separtor2, buttonGroup);
-        Common.hide(progressBar);
+        wrapper.getChildren().addAll(container, gap);
 
+        Common.hide(progressBar);
         approveButton.setOnAction(e -> onButtonClicked(service, true));
         declineButton.setOnAction(e -> onButtonClicked(service, false));
     }
@@ -85,8 +93,10 @@ public class BorrowRequestComponent implements Component {
             Common.show(declineButton);
             Common.hide(progressBar);
             if (task.getValue()) {
-                if (container.getParent() instanceof VBox) {
-                    ((VBox) container.getParent()).getChildren().remove(container);
+                if (wrapper.getParent() instanceof VBox) {
+                    VBox parent = (VBox) wrapper.getParent();
+                    parent.getChildren().remove(wrapper);
+                    parent.setPrefHeight(parent.getChildren().size() * BorrowRequestComponent.COMPONENT_HEIGHT);
                 }
             }
         });
@@ -95,6 +105,6 @@ public class BorrowRequestComponent implements Component {
 
     @Override
     public Node getElement() {
-        return container;
+        return wrapper;
     }
 }

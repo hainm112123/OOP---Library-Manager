@@ -27,13 +27,9 @@ public class BorrowRequestController extends ControllerWrapper {
             List<PendingService> services = future.get();
             for (PendingService service : services) {
                 container.getChildren().add(new BorrowRequestComponent(service).getElement());
-                StackPane gap = new StackPane();
-                gap.setPrefHeight(24);
-                gap.setStyle("-fx-background-color: #fff");
-                container.getChildren().add(gap);
             }
             container.setAlignment(Pos.TOP_CENTER);
-            container.setPrefHeight(services.size() * (BorrowRequestComponent.COMPONENT_HEIGHT + 24));
+            container.setPrefHeight(services.size() * BorrowRequestComponent.COMPONENT_HEIGHT);
         } catch (Exception e) {
             e.printStackTrace();
         }

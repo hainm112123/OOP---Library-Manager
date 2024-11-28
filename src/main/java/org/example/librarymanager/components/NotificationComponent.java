@@ -27,17 +27,18 @@ public class NotificationComponent implements Component {
 
     private static final int IMAGE_WIDTH = 32;
     private static final int IMAGE_HEIGHT = 48;
+    public static final int COMPONENT_HEIGHT = 68;
 
-    public NotificationComponent(Document document, ControllerWrapper controller, String titleStr, String messageStr, Node pane) {
+    public NotificationComponent(Document document, ControllerWrapper controller, String titleStr, String messageStr, String destination, Node pane) {
         this.controller = controller;
         container = new HBox();
         content = new VBox();
         imageWrapper = new VBox();
-        imageView = new ImageView(new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg")));
+        imageView = document != null ? new ImageView(Common.NO_IMAGE) : new ImageView(new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/logo_notext.png")));
         title = new Label(titleStr);
         message = new Label(messageStr);
 
-        if (document.getImageLink() != null) {
+        if (document != null && document.getImageLink() != null) {
             Task<Image> task = new Task<Image>() {
                 @Override
                 protected Image call() {
@@ -45,7 +46,7 @@ public class NotificationComponent implements Component {
                         return new Image(document.getImageLink(), true);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        return new Image(getClass().getResourceAsStream("/org/example/librarymanager/image/no_image.jpg"));
+                        return Common.NO_IMAGE;
                     }
                 }
             };
@@ -77,9 +78,11 @@ public class NotificationComponent implements Component {
             container.setStyle("-fx-background-color: " + Common.TOPBAR_DROPDOWN_BUTTON_BG + ";");
         });
         container.setOnMouseClicked(e -> {
-            ControllerWrapper.setCurrentDocument(document);
+            if (document != null) {
+                ControllerWrapper.setCurrentDocument(document);
+            }
             Common.disable(pane);
-            controller.safeSwitchScene("document-detail.fxml");
+            controller.safeSwitchScene(destination);
         });
     }
 

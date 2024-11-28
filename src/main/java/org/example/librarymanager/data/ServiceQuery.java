@@ -344,4 +344,26 @@ public class ServiceQuery implements DataAccessObject<Service> {
         }
         return services;
     }
+
+    public int getNumberOfPendingServices() {
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement(
+                    "select count(*) from services as s\n" +
+                            "join documents as d on d.id = s.documentId\n" +
+                            "join users as u on u.id = s.userId\n" +
+                            "join categories as c on c.id = d.categoryId\n" +
+                            "where s.status = ?"
+            );
+            ps.setInt(1, Service.STATUS_PENDING);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

@@ -68,4 +68,9 @@ public class ServiceTest {
         }
         Assertions.assertNotNull(data);
     }
+
+    @Test
+    public void testGetPendingService() {
+        System.out.println(ServiceQuery.getInstance().getNumberOfPendingServices());
+    }
 }

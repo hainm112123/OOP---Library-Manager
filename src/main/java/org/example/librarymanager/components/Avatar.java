@@ -19,9 +19,8 @@ public class Avatar implements Component {
         Task<Image> imgTask = new Task<>() {
             @Override
             protected Image call() throws Exception {
-                Image image = new Image(imageLink);
-                if (image != null) {
-                    return image;
+                if (imageLink != null && !imageLink.isEmpty()) {
+                    return new Image(imageLink);
                 }
                 return Common.DEFAULT_PROFILE;
             }

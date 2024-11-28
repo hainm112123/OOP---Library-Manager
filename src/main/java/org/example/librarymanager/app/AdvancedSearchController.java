@@ -118,7 +118,7 @@ public class AdvancedSearchController extends ControllerWrapper {
         statusFilter.getSelectionModel().selectFirst();
 
         documentsContainer.getChildren().clear();
-        documentsContainer.getChildren().add(new ListDocumentsComponent(documents, scrollPane, this).getElement());
+        documentsContainer.getChildren().add(new ListDocumentsComponent(documents, scrollPane, this, true).getElement());
 
         searchButton.setOnAction(e -> search());
     }
@@ -232,6 +232,6 @@ public class AdvancedSearchController extends ControllerWrapper {
             }
         }
         documentsContainer.getChildren().clear();
-        documentsContainer.getChildren().add(new ListDocumentsComponent(result, scrollPane, this).getElement());
+        documentsContainer.getChildren().add(new ListDocumentsComponent(result, scrollPane, this, true).getElement());
     }
 }

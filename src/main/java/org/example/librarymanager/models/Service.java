@@ -18,6 +18,9 @@ public class Service implements Model {
     public static final int STATUS_READING = 0;
     public static final int STATUS_WISH_LIST = 1;
     public static final int STATUS_COMPLETED = 2;
+    public static final int STATUS_PENDING = 3;
+    public static final int STATUS_DECLINED = 4;
+    public static final String[] STATUS_LABELS = {"Reading", "In wishlist", "Completed", "Pending", "Declined"};
   
     private int id;
     private int userId;

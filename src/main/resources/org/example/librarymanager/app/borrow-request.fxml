@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/request.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.BorrowRequestController">
+   <children>
+      <AnchorPane layoutY="170.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="170.0">
+         <children>
+            <MFXScrollPane prefHeight="550.0" prefWidth="1200.0">
+               <content>
+                  <VBox>
+                     <children>
+                        <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="1185.0">
+                           <children>
+                              <Label styleClass="title" text="Borrow requests" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="container" prefHeight="500.0" prefWidth="1185.0">
+                           <padding>
+                              <Insets left="35.0" right="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </MFXScrollPane>
+         </children>
+      </AnchorPane>
+      <fx:include prefHeight="170.0" source="topbar.fxml" />
+   </children>
+</AnchorPane>

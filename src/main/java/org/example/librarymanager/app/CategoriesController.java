@@ -43,7 +43,7 @@ public class CategoriesController extends ControllerWrapper {
         VBox container = new VBox();
         StackPane stackPane = new StackPane();
         stackPane.setPrefHeight(30);
-        container.getChildren().addAll(stackPane, new ListDocumentsComponent(documents, scrollPane, this).getElement());
+        container.getChildren().addAll(stackPane, new ListDocumentsComponent(documents, scrollPane, this, true).getElement());
         scrollPane.setContent(container);
     }
 }

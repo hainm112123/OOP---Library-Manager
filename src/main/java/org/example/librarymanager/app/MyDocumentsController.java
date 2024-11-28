@@ -38,6 +38,6 @@ public class MyDocumentsController extends ControllerWrapper {
             e.printStackTrace();
         }
 
-        container.getChildren().add(new ListDocumentsComponent(documents, scrollPane, this).getElement());
+        container.getChildren().add(new ListDocumentsComponent(documents, scrollPane, this, true).getElement());
     }
 }

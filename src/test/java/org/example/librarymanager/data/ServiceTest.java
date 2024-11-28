@@ -23,16 +23,29 @@ public class ServiceTest {
     }
 
     @Test
+    public void testGetUndoneServicesTest() {
+        int userId = 5;
+        int documentId = 1;
+        System.out.println(ServiceQuery.getInstance().getUndoneService(userId, documentId));
+    }
+
+    @Test
     public void testBorrowDocument() {
-        int userId = 2;
-        int documentId = 28;
+        int userId = 5;
+        int documentId = 1;
         Assertions.assertTrue(ServiceQuery.getInstance().borrowDocument(userId, DocumentQuery.getInstance().getById(documentId)));
+    }
+
+    @Test void testExecuteBorrowRequest() {
+        int userId = 5;
+        int documentId = 1;
+        Assertions.assertTrue(ServiceQuery.getInstance().executeBorrowRequest(userId, documentId, false));
     }
 
     @Test
     public void testReturnDocument() {
-        int userId = 2;
-        int documentId = 28;
+        int userId = 5;
+        int documentId = 1;
         Assertions.assertTrue(ServiceQuery.getInstance().returnDocument(userId, DocumentQuery.getInstance().getById(documentId)));
     }
 
@@ -54,5 +67,10 @@ public class ServiceTest {
             System.out.println(serviceData);
         }
         Assertions.assertNotNull(data);
+    }
+
+    @Test
+    public void testGetPendingService() {
+        System.out.println(ServiceQuery.getInstance().getNumberOfPendingServices());
     }
 }

@@ -1,5 +1,6 @@
 package org.example.librarymanager.utils.observers;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.AllArgsConstructor;
 import org.example.librarymanager.components.ListDocumentsComponent;
@@ -14,12 +15,14 @@ public class BookshelfObserver extends Observer {
     private ListDocumentsComponent readingComponent;
     private ListDocumentsComponent wishlistComponent;
     private ListDocumentsComponent completedComponent;
+    private HBox btnGroup;
 
     @Override
     public void update(Subject subject) {
         if (!(subject instanceof BookshelfSubject)) return;
         BookshelfSubject bookshelfSubject = (BookshelfSubject) subject;
         container.getChildren().clear();
+        container.getChildren().add(btnGroup);
         if (bookshelfSubject.getStatus() == Service.STATUS_READING) {
             container.getChildren().add(readingComponent.getElement());
         } else if (bookshelfSubject.getStatus() == Service.STATUS_COMPLETED) {

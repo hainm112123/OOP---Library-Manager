@@ -26,6 +26,7 @@ import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.User;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -35,6 +36,12 @@ import java.util.concurrent.Future;
 public class TopbarController extends ControllerWrapper {
     private static final int CATEGORY_CHOICE_WIDTH = 150;
     private static final int CATEGORY_CHOICE_HEIGHT = 42;
+    private static final int USER_MENU_HEIGHT = 560;
+
+    private static final int NOTIFICATION_ALL = 7;
+    private static final int NOTIFICATION_OTHER = 1;
+    private static final int NOTIFICATION_OVERDUE = 2;
+    private static final int NOTIFICATION_WISHLIST = 4;
 
     @FXML
     private Button homeBtn;
@@ -67,6 +74,14 @@ public class TopbarController extends ControllerWrapper {
     @FXML
     private VBox notificationBox;
     @FXML
+    private Label notificationAllBtn;
+    @FXML
+    private Label notificationOverdueBtn;
+    @FXML
+    private Label notificationWishlistBtn;
+    @FXML
+    private Label notificationOtherBtn;
+    @FXML
     private MFXScrollPane userPane;
     @FXML
     private Label usernameLabel;
@@ -85,6 +100,8 @@ public class TopbarController extends ControllerWrapper {
     @FXML
     private HBox newdocBtn;
     @FXML
+    private HBox requestBtn;
+    @FXML
     private HBox manageBtn;
     @FXML
     private HBox signoutBtn;
@@ -94,6 +111,11 @@ public class TopbarController extends ControllerWrapper {
     private Future<List<Category>> categoryFu;
     private Future<List<Document>> overdueDocumentFu;
     private Future<List<Document>> wishlistDocumentFu;
+    private Future<Integer> pendingFu;
+
+    private List<NotificationComponent> overdues;
+    private List<NotificationComponent> wishlist;
+    private List<NotificationComponent> others;
 
     private void initCategory() {
         try {
@@ -152,29 +174,67 @@ public class TopbarController extends ControllerWrapper {
         });
     }
 
+    private void setNotificationBox(int type) {
+        notificationBox.getChildren().clear();
+        if ((type & NOTIFICATION_OTHER) != 0) {
+            for (NotificationComponent component: others) {
+                notificationBox.getChildren().add(component.getElement());
+            }
+        }
+        if ((type & NOTIFICATION_OVERDUE) != 0) {
+            for (NotificationComponent component: overdues) {
+                notificationBox.getChildren().add(component.getElement());
+            }
+        }
+        if ((type & NOTIFICATION_WISHLIST) != 0) {
+            for (NotificationComponent component: wishlist) {
+                notificationBox.getChildren().add(component.getElement());
+            }
+        }
+        notificationBox.setPrefHeight(notificationBox.getChildren().size() * NotificationComponent.COMPONENT_HEIGHT);
+        notificationBox.setMinHeight(notificationBox.getChildren().size() * NotificationComponent.COMPONENT_HEIGHT);
+        notificationBox.setMaxHeight(notificationBox.getChildren().size() * NotificationComponent.COMPONENT_HEIGHT);
+    }
+
     private void initNotification() {
         Common.disable(notificationPane);
         try {
             List<Document> documents = overdueDocumentFu.get();
             List<Document> wishlistDocuments = wishlistDocumentFu.get();
+            overdues = new ArrayList<>();
+            wishlist = new ArrayList<>();
+            others = new ArrayList<>();
+            if (pendingFu.get() > 0 && getUser().getPermission() != User.TYPE_USER) {
+                others.add(new NotificationComponent(
+                        null, this,
+                        "New borrow requests",
+                        String.format("There are %d new borrow requests. Go check them now!", pendingFu.get()),
+                        "borrow-request.fxml",
+                        notificationPane
+                ));
+            }
             for (Document document : documents) {
-                notificationBox.getChildren().add(new NotificationComponent(
+                overdues.add(new NotificationComponent(
                         document, this,
                         "You should return this book soon!",
                         "You have borrowed \"" + document.getTitle() + "\" more than 14 days, you should return it soon. Otherwise, you must pay fine due to overdue.",
+                        "document-detail.fxml",
                         notificationPane
-                ).getElement());
+                ));
             }
             for (Document document: wishlistDocuments) {
-                notificationBox.getChildren().add(new NotificationComponent(
+                wishlist.add(new NotificationComponent(
                         document, this,
                         "A book in your wishlist is now available",
                         "\"" + document.getTitle() + "\" is currently available. You can go borrow it right now!",
+                        "document-detail.fxml",
                         notificationPane
-                ).getElement());
+                ));
             }
-            notificationBadge.setText(""+notificationBox.getChildren().size());
-            if (notificationBox.getChildren().isEmpty()) {
+            int size = others.size() + overdues.size() + wishlist.size();
+            notificationBadge.setText(String.valueOf(size));
+            setNotificationBox(NOTIFICATION_ALL);
+            if (size == 0) {
                 Common.disable(notificationBadge);
             }
             else {
@@ -190,6 +250,35 @@ public class TopbarController extends ControllerWrapper {
             DropShadow ds = new DropShadow();
             ds.setRadius(10);
             notificationPane.setEffect(ds);
+
+            notificationAllBtn.setOnMouseClicked(e -> {
+                notificationAllBtn.getStyleClass().add("notification-type-button--active");
+                notificationWishlistBtn.getStyleClass().removeAll("notification-type-button--active");
+                notificationOverdueBtn.getStyleClass().removeAll("notification-type-button--active");
+                notificationOtherBtn.getStyleClass().removeAll("notification-type-button--active");
+                setNotificationBox(NOTIFICATION_ALL);
+            });
+            notificationOverdueBtn.setOnMouseClicked(e -> {
+                notificationAllBtn.getStyleClass().removeAll("notification-type-button--active");
+                notificationWishlistBtn.getStyleClass().removeAll("notification-type-button--active");
+                notificationOverdueBtn.getStyleClass().add("notification-type-button--active");
+                notificationOtherBtn.getStyleClass().removeAll("notification-type-button--active");
+                setNotificationBox(NOTIFICATION_OVERDUE);
+            });
+            notificationWishlistBtn.setOnMouseClicked(e -> {
+                notificationAllBtn.getStyleClass().removeAll("notification-type-button--active");
+                notificationWishlistBtn.getStyleClass().add("notification-type-button--active");
+                notificationOverdueBtn.getStyleClass().removeAll("notification-type-button--active");
+                notificationOtherBtn.getStyleClass().removeAll("notification-type-button--active");
+                setNotificationBox(NOTIFICATION_WISHLIST);
+            });
+            notificationOtherBtn.setOnMouseClicked(e -> {
+                notificationAllBtn.getStyleClass().removeAll("notification-type-button--active");
+                notificationWishlistBtn.getStyleClass().removeAll("notification-type-button--active");
+                notificationOverdueBtn.getStyleClass().removeAll("notification-type-button--active");
+                notificationOtherBtn.getStyleClass().add("notification-type-button--active");
+                setNotificationBox(NOTIFICATION_OTHER);
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -201,6 +290,14 @@ public class TopbarController extends ControllerWrapper {
 
         usernameLabel.setText(getUser().getUsername());
         usertypeLabel.setText(User.USER_TYPE_STRING[getUser().getPermission()]);
+        try {
+            if (requestBtn.getChildren().getLast() instanceof Label) {
+                ((Label) requestBtn.getChildren().getLast()).setText(String.format("Borrow requests (%d)", pendingFu.get()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         profileBtn.setOnMouseClicked(event -> {
             Common.disable(userPane);
             safeSwitchScene("profile.fxml");
@@ -220,6 +317,10 @@ public class TopbarController extends ControllerWrapper {
         newdocBtn.setOnMouseClicked(event -> {
             Common.disable(userPane);
             safeSwitchScene("new-document.fxml");
+        });
+        requestBtn.setOnMouseClicked(event -> {
+            Common.disable(userPane);
+            safeSwitchScene("borrow-request.fxml");
         });
         manageBtn.setOnMouseClicked(event -> {
             Common.disable(userPane);
@@ -241,15 +342,27 @@ public class TopbarController extends ControllerWrapper {
                 node.setCursor(Cursor.HAND);
             }
         }
-        if (getUser().getPermission() == User.TYPE_USER) {
-            userBox.getChildren().subList(7, 10).clear();
-            userBox.setPrefHeight(400);
-            userBox.setMaxHeight(400);
-        } else if (getUser().getPermission() == User.TYPE_MODERATOR) {
-            userBox.getChildren().subList(9, 10).clear();
-            userBox.setPrefHeight(480);
-            userBox.setMaxHeight(480);
+        int unavailableRows = 0;
+        if (getUser().getPermission() != User.TYPE_ADMIN) {
+            userBox.getChildren().remove(manageBtn);
+            unavailableRows ++;
+//            userBox.getChildren().subList(9, 10).clear();
+//            userBox.setPrefHeight(480);
+//            userBox.setMaxHeight(480);
         }
+        if (getUser().getPermission() == User.TYPE_USER) {
+            userBox.getChildren().remove(mydocBtn);
+            userBox.getChildren().remove(newdocBtn);
+            userBox.getChildren().remove(requestBtn);
+            userBox.getChildren().remove(manageBtn);
+//            userBox.getChildren().subList(7, 10).clear();
+//            userBox.setPrefHeight(400);
+//            userBox.setMaxHeight(400);
+            unavailableRows += 4;
+        }
+        userBox.setPrefHeight(USER_MENU_HEIGHT - unavailableRows * 40);
+        userBox.setMaxHeight(USER_MENU_HEIGHT - unavailableRows * 40);
+
         userBtn.setOnMouseClicked(e -> {
             if (userPane.isDisable()) {
                 Common.enable(userPane);
@@ -277,10 +390,11 @@ public class TopbarController extends ControllerWrapper {
             }
         });
 
-        executor = Executors.newFixedThreadPool(3);
+        executor = Executors.newFixedThreadPool(4);
         categoryFu = executor.submit(() -> CategoryQuery.getInstance().getAll());
         overdueDocumentFu = executor.submit(() -> ServiceQuery.getInstance().getOverdueDocuments(getUser().getId()));
         wishlistDocumentFu = executor.submit(() -> ServiceQuery.getInstance().getWishlistAvailableDocuments(getUser().getId()));
+        pendingFu = executor.submit(() -> ServiceQuery.getInstance().getNumberOfPendingServices());
         executor.shutdown();
 
         try {

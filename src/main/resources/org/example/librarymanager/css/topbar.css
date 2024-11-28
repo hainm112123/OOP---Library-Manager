@@ -56,3 +56,23 @@
     -fx-border-color: -fx-color-main;
     -fx-boder-with: 2;
 }
+
+.notification-type-button {
+    -fx-pref-width: 72;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-pref-height: 40;
+}
+
+.notification-type-button--active {
+    -fx-text-fill: -fx-color-main;
+    -fx-border-width: 0 0 4 0;
+    -fx-border-color: -fx-color-main;
+}
+
+.notification-header {
+    -fx-font-weight: 700;
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 8;
+    -fx-text-fill: -fx-color-main;
+}

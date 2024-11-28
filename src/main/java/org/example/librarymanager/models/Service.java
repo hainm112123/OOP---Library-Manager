@@ -74,26 +74,34 @@ public class Service implements Model {
 
     @Override
     public List<String> getAttributes() {
-        return List.of("id", "borrowerName", "documentName", "borrowDate", "returnDate");
+        return List.of("ID", "Borrower", "Document", "Borrow Date", "Return Date");
     }
 
     @Override
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
-        list.add(new Pair<>("id", String.valueOf(id)));
-        list.add(new Pair<>("borrowerName", (borrowerName == null ? "" : borrowerName)));
-        list.add(new Pair<>("documentName", (documentName == null ? "" : documentName)));
-        list.add(new Pair<>("borrowDate", (borrowDate == null ? "" : borrowDate.toString())));
-        list.add(new Pair<>("returnDate", (returnDate == null ? "" : returnDate.toString())));
+        list.add(new Pair<>("ID", String.valueOf(id)));
+        list.add(new Pair<>("Borrower", (borrowerName == null ? "" : borrowerName)));
+        list.add(new Pair<>("Document", (documentName == null ? "" : documentName)));
+        list.add(new Pair<>("Borrow Date", (borrowDate == null ? "" : borrowDate.toString())));
+        list.add(new Pair<>("Return Date", (returnDate == null ? "" : returnDate.toString())));
         return list;
     }
 
     @Override
     public void setData(List<Pair<String, String>> data) {
-        this.id = Integer.parseInt(data.get(0).getValue());
-        this.borrowerName = data.get(1).getValue();
-        this.documentName = data.get(2).getValue();
-        this.borrowDate = LocalDate.parse(data.get(3).getValue());
-        this.returnDate = LocalDate.parse(data.get(4).getValue());
+        if (data == null) {
+            this.id = 0;
+            this.borrowerName = "";
+            this.documentName = "";
+            this.borrowDate = null;
+            this.returnDate = null;
+        } else {
+            this.id = Integer.parseInt(data.get(0).getValue());
+            this.borrowerName = data.get(1).getValue();
+            this.documentName = data.get(2).getValue();
+            this.borrowDate = LocalDate.parse(data.get(3).getValue());
+            this.returnDate = LocalDate.parse(data.get(4).getValue());
+        }
     }
 }

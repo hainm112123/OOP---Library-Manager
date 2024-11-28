@@ -48,22 +48,28 @@ public class Category implements Model {
 
     @Override
     public List<String> getAttributes() {
-        return List.of("id", "name", "description");
+        return List.of("ID", "Name", "Description");
     }
 
     @Override
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
-        list.add(new Pair<>("id", String.valueOf(this.id)));
-        list.add(new Pair<>("name", (this.name == null ? "" : this.name) ));
-        list.add(new Pair<>("description", (this.description == null ? "" : this.description) ));
+        list.add(new Pair<>("ID", String.valueOf(this.id)));
+        list.add(new Pair<>("Name", (this.name == null ? "" : this.name) ));
+        list.add(new Pair<>("Description", (this.description == null ? "" : this.description) ));
         return list;
     }
 
     @Override
     public void setData(List<Pair<String, String>> data) {
-        this.id = Integer.parseInt(data.get(0).getValue());
-        this.name = (String) data.get(1).getValue();
-        this.description = (String) data.get(2).getValue();
+        if (data == null) {
+            this.id = 0;
+            this.name = "";
+            this.description = "";
+        } else {
+            this.id = Integer.parseInt(data.get(0).getValue());
+            this.name = (String) data.get(1).getValue();
+            this.description = (String) data.get(2).getValue();
+        }
     }
 }

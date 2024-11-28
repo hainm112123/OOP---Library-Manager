@@ -30,6 +30,25 @@ public class ServiceQuery implements DataAccessObject<Service> {
     }
 
     /**
+     * Count data.
+     */
+    public int count() {
+        int cnt = 0;
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM services;");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                cnt = rs.getInt(1);
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cnt;
+    }
+
+    /**
      * get service of a specific user and the document if user haven't returned it
      * @param userId
      * @param documentId

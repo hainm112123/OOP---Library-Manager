@@ -16,8 +16,7 @@ import org.example.librarymanager.admin.AddDataController;
 import org.example.librarymanager.admin.EditDataController;
 import org.example.librarymanager.app.LibraryApplication;
 import org.example.librarymanager.data.DataAccessObject;
-import org.example.librarymanager.models.Category;
-import org.example.librarymanager.models.Model;
+import org.example.librarymanager.models.*;
 
 import java.util.*;
 
@@ -37,6 +36,7 @@ public class DataTable<E extends Model> {
     private List<E> originalList;
     private List<E> list;
     private Class<E> clazz;
+    private E sampleModel;
     private static final int TABLE_WIDTH = 920;
     private static final int TABLE_HEIGHT = 565;
     private static final int TABLE_LIMIT = 13;
@@ -61,13 +61,37 @@ public class DataTable<E extends Model> {
         this.list = new ArrayList<>(originalList);
 
         this.clazz = clazz;
-
+        switch (clazz.getSimpleName()) {
+            case "User" : {
+                sampleModel = (E) new User();
+                break;
+            }
+            case "Category" : {
+                sampleModel = (E) new Category();
+                break;
+            }
+            case "Document" : {
+                sampleModel = (E) new Document();
+                break;
+            }
+            case "Rating" : {
+                sampleModel = (E) new Rating();
+                break;
+            }
+            case "Service" : {
+                sampleModel = (E) new Service();
+                break;
+            }
+            default : {
+                break;
+            }
+        }
 
         table = new TableView();
         table.setEditable(true);
         addEditColumn();
 
-        List<String> attributes = list.get(0).getAttributes();
+        List<String> attributes = sampleModel.getAttributes();
         for (int j = 0; j < attributes.size(); j++) {
             String attribute = attributes.get(j);
             TableColumn<List<Pair<String,String>>, String> col = new TableColumn<>(attribute);
@@ -168,13 +192,24 @@ public class DataTable<E extends Model> {
                         FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource(finalFxmlFile));
                         Scene subScene = new Scene(fxmlLoader.load());
                         EditDataController<E> controller = fxmlLoader.getController();
-
+                        Boolean[] isDel = {Boolean.FALSE};
                         E tmp = (E) list.get(pagination.getCurrentPageIndex()*TABLE_LIMIT + getTableRow().getIndex());
-                        controller.setData(tmp, clazz);
+                        controller.setData(tmp, clazz, isDel);
                         subStage.setScene(subScene);
                         subStage.showAndWait();
                         int index = getIndex();
                         table.getItems().set(index, tmp.getData());
+                        if (Boolean.TRUE.equals(isDel[0])) {
+                            originalList.remove(tmp);
+                            list.clear();
+                            for (E data : originalList) {
+                                list.add(data);
+                            }
+                            updateTable(0, Math.min(TABLE_LIMIT, list.size()));
+
+                            pagination.setPageCount((list.size() - 1) / TABLE_LIMIT + 1);
+                            pagination.setCurrentPageIndex(0);
+                        }
                         table.refresh();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -223,7 +258,9 @@ public class DataTable<E extends Model> {
 
     private void sortOnClick() {
         String tmp = sortBox.getValue();
-        System.out.println(tmp);
+        if (tmp == null) {
+            return;
+        }
         if (tmp.isBlank() || tmp.isEmpty()) {
             return;
         }
@@ -272,13 +309,15 @@ public class DataTable<E extends Model> {
             subStage.showAndWait();
 
             if (Boolean.TRUE.equals(isAdd[0])) {
-                System.out.println("Yeah");
+                //System.out.println("Yeah");
                 originalList.add(dataEntity);
                 list.clear();
                 for (E data : originalList) {
                     list.add(data);
                 }
                 updateTable(0, Math.min(TABLE_LIMIT, list.size()));
+
+                pagination.setPageCount((list.size() - 1) / TABLE_LIMIT + 1);
                 pagination.setCurrentPageIndex(0);
             }
             table.refresh();

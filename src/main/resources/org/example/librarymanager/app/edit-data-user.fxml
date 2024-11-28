@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="591.0" prefWidth="600.0" stylesheets="@../css/form.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.admin.EditDataUserController">
+<AnchorPane prefHeight="591.0" prefWidth="600.0" style="-fx-background-color: #FFE7BA;" stylesheets="@../css/form.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.admin.EditDataUserController">
     <children>
         <VBox prefHeight="591.0" prefWidth="600.0">
             <children>
@@ -20,7 +20,7 @@
                         <MFXButton fx:id="backBtn" layoutX="30.0" layoutY="14.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="61.0" styleClass="form-primary-button" text="Back" />
                     </children>
                 </AnchorPane>
-                <MFXScrollPane prefHeight="433.0" prefWidth="600.0">
+                <MFXScrollPane prefHeight="433.0" prefWidth="600.0" style="-fx-background-color: #FFE7BA;">
                     <content>
                         <GridPane fx:id="gridPane" prefHeight="217.0" prefWidth="500.0">
                             <columnConstraints>

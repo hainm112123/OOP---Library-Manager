@@ -2,15 +2,23 @@ package org.example.librarymanager.admin;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.Node;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import org.example.librarymanager.Common;
 import org.example.librarymanager.app.ControllerWrapper;
 import org.example.librarymanager.components.DataTable;
 import org.example.librarymanager.data.*;
 import org.example.librarymanager.models.*;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -21,17 +29,96 @@ public class AdminController extends ControllerWrapper {
     AnchorPane root;
     @FXML
     MFXButton exitBtn;
+    @FXML
+    Label userLabel;
+    @FXML
+    Label documentLabel;
+    @FXML
+    Label borrowtimeLabel;
+    @FXML
+    BarChart<String, Number> barChart;
+
+
+    private int rootChildrenNum;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        userButtonOnClick();
+        rootChildrenNum = root.getChildren().size();
+        showOverviewData();
+//        userButtonOnClick();
         exitBtn.setOnAction(event -> {
             safeSwitchScene("home.fxml");
         });
     }
 
+    private void setState(boolean state) {
+        while(root.getChildren().size() > rootChildrenNum) {
+            root.getChildren().remove(root.getChildren().size() - 1);
+        }
+        if (state) {
+            for (Node node : root.getChildren()) {
+                Common.enable(node);
+            }
+        } else {
+            for (Node node : root.getChildren()) {
+                Common.disable(node);
+            }
+        }
+    }
+
+    public void showOverviewData() {
+        setState(true);
+        userLabel.setText(String.valueOf(UserQuery.getInstance().count()));
+        documentLabel.setText(String.valueOf(DocumentQuery.getInstance().count()));
+        borrowtimeLabel.setText(String.valueOf(ServiceQuery.getInstance().count()));
+
+        barChart.getData().clear();
+        List<Service> serviceList = ServiceQuery.getInstance().getAll();
+        XYChart.Series<String, Number> borrowData = new XYChart.Series<>();
+        borrowData.setName("Borrow time");
+        XYChart.Series<String, Number> returnData = new XYChart.Series<>();
+        returnData.setName("Return time");
+
+        Map<String, Integer> data1 = new HashMap<>();
+        Map<String, Integer> data2 = new HashMap<>();
+        LocalDate today = LocalDate.now();
+        for (int i = 9; i >= 0; i--) {
+            data1.put(String.valueOf(today.minusDays(i)), 0);
+            data2.put(String.valueOf(today.minusDays(i)), 0);
+        }
+
+        for (Service service : serviceList) {
+            Period period = Period.between(service.getBorrowDate(), today);
+            if (period.getDays() <= 9) {
+                String day = String.valueOf(service.getBorrowDate());
+                data1.put(day, data1.get(day) + 1);
+            }
+            period = Period.between(service.getReturnDate(), today);
+            if (period.getDays() <= 9) {
+                String day = String.valueOf(service.getReturnDate());
+                data2.put(day, data2.get(day) + 1);
+            }
+        }
+
+        for (Map.Entry<String, Integer> entry : data1.entrySet()) {
+            borrowData.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+        for (Map.Entry<String, Integer> entry : data2.entrySet()) {
+            returnData.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+
+//        borrowData.getData().add(new XYChart.Data<>("30-11-2024", 50));
+//        borrowData.getData().add(new XYChart.Data<>("31-11-2024", 65));
+//        returnData.getData().add(new XYChart.Data<>("30-11-2024", 40));
+//        returnData.getData().add(new XYChart.Data<>("31-11-2024", 80));
+
+        barChart.getData().add(borrowData);
+        barChart.getData().add(returnData);
+
+    }
+
     public void userButtonOnClick() {
-        root.getChildren().clear();
+        setState(false);
         if (executor != null) {
             executor.shutdownNow();
         }
@@ -48,7 +135,7 @@ public class AdminController extends ControllerWrapper {
     }
 
     public void documentButtonOnClick() {
-        root.getChildren().clear();
+        setState(false);
         if (executor != null) {
             executor.shutdownNow();
         }
@@ -65,7 +152,7 @@ public class AdminController extends ControllerWrapper {
     }
 
     public void categoryButtonOnClick() {
-        root.getChildren().clear();
+        setState(false);
         if (executor != null) {
             executor.shutdownNow();
         }
@@ -81,7 +168,7 @@ public class AdminController extends ControllerWrapper {
     }
 
     public void ratingButtonOnClick() {
-        root.getChildren().clear();
+        setState(false);
         if (executor != null) {
             executor.shutdownNow();
         }
@@ -97,7 +184,7 @@ public class AdminController extends ControllerWrapper {
     }
 
     public void serviceButtonOnClick() {
-        root.getChildren().clear();
+        setState(false);
         if (executor != null) {
             executor.shutdownNow();
         }

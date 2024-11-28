@@ -34,7 +34,10 @@ public class EditDataUserController extends EditDataController<User> {
         dataAccessObject = UserQuery.getInstance();
         Platform.runLater(() -> {
             enableApply();
-            enableDelete();
+            if (data.getPermission() != User.TYPE_ADMIN) {
+                enableDelete();
+            }
+
             Node permissionNode = getGridPane(7, 1);
             MFXComboBox<Common.Choice> comboBox = new MFXComboBox<>();
 
@@ -61,25 +64,4 @@ public class EditDataUserController extends EditDataController<User> {
         });
     }
 
-    @Override
-    protected void enableApply() {
-        applyBtn.setOnAction(e -> {
-            applyQuery();
-        });
-    }
-
-//    @Override
-//    protected void applyQuery() {
-//        int id = Integer.parseInt(((TextField)gridPane.getChildren().get(1)).getText());
-//        ComboBox text = (ComboBox)gridPane.getChildren().get(15);
-//        String value = (String)text.getValue();
-//        int t = 3;
-//        for (int i = 0; i < 3; i++) if(value == User.USER_TYPE_STRING[i]) {
-//            t = i;
-//            break;
-//        }
-//        if (UserQuery.getInstance().updatePermissionById(id, t)) {
-//            message.setText("Successfully applied!");
-//        }
-//    }
 }

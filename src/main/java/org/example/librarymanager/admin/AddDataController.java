@@ -1,5 +1,8 @@
 package org.example.librarymanager.admin;
 
+import io.github.palexdev.materialfx.controls.MFXComboBox;
+import io.github.palexdev.materialfx.controls.MFXTextField;
+import io.github.palexdev.materialfx.enums.FloatMode;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -26,6 +29,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class AddDataController<E extends Model>  extends ControllerWrapper {
+    private static final int LABEL_WIDTH = 150;
+    private static final int VALUE_WIDTH = 350;
     @FXML
     protected GridPane gridPane;
     @FXML
@@ -52,7 +57,9 @@ public class AddDataController<E extends Model>  extends ControllerWrapper {
     public void initialize(URL location, ResourceBundle resources) {
         Platform.runLater(() -> {
             if (clazz != null) {
+                title.getParent().getStylesheets().add(getClass().getResource("/org/example/librarymanager/css/form.css").toExternalForm());
                 title.setText(clazz.getSimpleName());
+                title.getStyleClass().add("form-title");
                 gridPane.getChildren().clear();
                 gridPane.getRowConstraints().clear();
                 gridPane.getColumnConstraints().clear();
@@ -62,12 +69,18 @@ public class AddDataController<E extends Model>  extends ControllerWrapper {
 
                 // Thiết lập ColumnConstraints (Căn giữa cột)
                 ColumnConstraints col1 = new ColumnConstraints();
-                col1.setHgrow(Priority.ALWAYS);
-                col1.setHalignment(HPos.CENTER);  // Căn giữa theo chiều ngang
+//                col1.setHgrow(Priority.ALWAYS);
+                col1.setMinWidth(LABEL_WIDTH);
+                col1.setPrefWidth(LABEL_WIDTH);
+                col1.setMaxWidth(LABEL_WIDTH);
+                col1.setHalignment(HPos.LEFT);  // Căn giữa theo chiều ngang
 
                 ColumnConstraints col2 = new ColumnConstraints();
-                col2.setHgrow(Priority.ALWAYS);
-                col2.setHalignment(HPos.CENTER);  // Căn giữa theo chiều ngang
+//                col2.setHgrow(Priority.ALWAYS);
+                col2.setMinWidth(VALUE_WIDTH);
+                col2.setPrefWidth(VALUE_WIDTH);
+                col2.setMaxWidth(VALUE_WIDTH);
+                col2.setHalignment(HPos.LEFT);  // Căn giữa theo chiều ngang
                 gridPane.getColumnConstraints().addAll(col1, col2);
 
 //                String dataString = data.toString();
@@ -79,7 +92,17 @@ public class AddDataController<E extends Model>  extends ControllerWrapper {
                         continue;
                     }
                     Label key = new Label(attribute.getKey());
-                    TextField value = new TextField(attribute.getValue());
+                    key.setPrefWidth(LABEL_WIDTH);
+                    key.setMinWidth(LABEL_WIDTH);
+                    key.setMaxWidth(LABEL_WIDTH);
+                    key.getStyleClass().add("form-label");
+                    MFXTextField value = new MFXTextField(attribute.getValue());
+//                    value.setEditable(false);
+                    value.getStyleClass().add("data-text-field");
+                    value.setFloatMode(FloatMode.DISABLED);
+                    value.setMinWidth(VALUE_WIDTH);
+                    value.setPrefWidth(VALUE_WIDTH);
+                    value.setMaxWidth(VALUE_WIDTH);
 
                     RowConstraints rowConstraints = new RowConstraints();
                     rowConstraints.setMinHeight(50);
@@ -135,7 +158,7 @@ public class AddDataController<E extends Model>  extends ControllerWrapper {
     protected E getCurrentData() {
         try {
             List<Pair<String, String>> attributes = new ArrayList<>();
-            attributes.add(new Pair<String, String>("id", "0"));
+            attributes.add(new Pair<String, String>("ID", "0"));
             for (int i = 0; i < gridPane.getChildren().size(); i += 2) {
                 Pair<String, String> tmp = new Pair<>
                         (getNodeText(gridPane.getChildren().get(i)),
@@ -154,11 +177,11 @@ public class AddDataController<E extends Model>  extends ControllerWrapper {
     protected String getNodeText(Node node) {
         String value = "";
         switch (node.getClass().getSimpleName()) {
-            case "TextField":
-                value = ((TextField) node).getText();
+            case "MFXTextField":
+                value = ((MFXTextField) node).getText();
                 break;
-            case "ComboBox":
-                value = ((ComboBox<?>)node).getValue().toString();
+            case "MFXComboBox":
+                value = ((MFXComboBox<?>)node).getValue().toString();
                 break;
             case "Label":
                 value = ((Label)node).getText();

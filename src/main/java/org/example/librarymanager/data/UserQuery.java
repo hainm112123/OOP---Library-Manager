@@ -21,6 +21,25 @@ public class UserQuery implements DataAccessObject<User> {
         return instance;
     }
 
+    /**
+     * Count data.
+     */
+    public int count() {
+        int cnt = 0;
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM users;");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                cnt = rs.getInt(1);
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cnt;
+    }
+
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();

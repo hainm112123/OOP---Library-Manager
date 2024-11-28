@@ -38,6 +38,25 @@ public class DocumentQuery implements DataAccessObject<Document> {
     }
 
     /**
+     * Count data.
+     */
+    public int count() {
+        int cnt = 0;
+        try (Connection connection = databaseConnection.getConnection()) {
+            PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM documents;");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                cnt = rs.getInt(1);
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cnt;
+    }
+
+    /**
      * Get a document by id
      */
     @Override

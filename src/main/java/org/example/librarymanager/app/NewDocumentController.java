@@ -16,7 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.DocumentComponent;
-import org.example.librarymanager.data.Backblaze;
+import org.example.librarymanager.services.Backblaze;
 import org.example.librarymanager.data.CategoryQuery;
 import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.models.Category;

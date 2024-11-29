@@ -15,8 +15,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.app.ControllerWrapper;
+import org.example.librarymanager.data.NotificationQuery;
 import org.example.librarymanager.data.ServiceQuery;
 import org.example.librarymanager.models.Document;
+import org.example.librarymanager.models.Notification;
 import org.example.librarymanager.models.PendingService;
 import org.example.librarymanager.models.User;
 
@@ -87,6 +89,8 @@ public class BorrowRequestComponent implements Component {
         Task<Boolean> task = new Task<Boolean>() {
             @Override
             protected Boolean call() throws Exception {
+                Notification notification = new Notification(service.getUserId(), service.getDocumentId(), isApproved ? Notification.TYPE.REQUEST_APPROVED.ordinal() : Notification.TYPE.REQUEST_DECLINED.ordinal());
+                NotificationQuery.getInstance().add(notification);
                 return ServiceQuery.getInstance().executeBorrowRequest(service.getUserId(), service.getDocumentId(), isApproved);
             }
         };

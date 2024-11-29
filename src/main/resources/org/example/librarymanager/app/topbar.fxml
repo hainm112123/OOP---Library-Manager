@@ -93,7 +93,7 @@
             <VBox fx:id="suggestionsBox" prefHeight="30.0" prefWidth="515.0" style="-fx-background-radius: 4; -fx-border-radius: 4; -fx-background-color: #fff;" />
          </content>
       </MFXScrollPane>
-      <VBox fx:id="notificationPane" disable="true" layoutX="878.0" layoutY="94.0" mouseTransparent="true" prefHeight="400.0" style="-fx-background-color: #f0f0f0; -fx-background-radius: 8;" visible="false">
+      <VBox fx:id="notificationPane" layoutX="878.0" layoutY="94.0" mouseTransparent="true" prefHeight="400.0" style="-fx-background-color: #f0f0f0; -fx-background-radius: 8;">
          <children>
             <Label alignment="CENTER" prefHeight="30.0" prefWidth="300.0" styleClass="notification-header" text="Notifications">
                <font>
@@ -110,7 +110,7 @@
                   </Label>
                   <Label fx:id="notificationOverdueBtn" styleClass="notification-type-button" text="Overdue" />
                   <Label fx:id="notificationWishlistBtn" styleClass="notification-type-button" text="Wishlist" />
-                  <Label fx:id="notificationOtherBtn" styleClass="notification-type-button" text="Other" />
+                  <Label fx:id="notificationRequestBtn" layoutX="232.0" layoutY="10.0" styleClass="notification-type-button" text="Request" />
                </children>
             </HBox>
             <MFXScrollPane hbarPolicy="NEVER" prefHeight="300.0" prefWidth="300.0" style="-fx-background-color: transparent; -fx-border-radius: 8; -fx-background-radius: 8;">

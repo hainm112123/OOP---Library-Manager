@@ -2,27 +2,22 @@ package org.example.librarymanager.app;
 
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
 import javafx.util.Pair;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.components.Avatar;
 import org.example.librarymanager.components.NotificationComponent;
-import org.example.librarymanager.data.CategoryQuery;
-import org.example.librarymanager.data.DocumentQuery;
-import org.example.librarymanager.data.ServiceQuery;
-import org.example.librarymanager.data.Trie;
+import org.example.librarymanager.data.*;
 import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.Document;
+import org.example.librarymanager.models.Notification;
 import org.example.librarymanager.models.User;
 
 import java.net.URL;
@@ -38,10 +33,11 @@ public class TopbarController extends ControllerWrapper {
     private static final int CATEGORY_CHOICE_HEIGHT = 42;
     private static final int USER_MENU_HEIGHT = 560;
 
-    private static final int NOTIFICATION_ALL = 7;
+    private static final int NOTIFICATION_ALL = 15;
     private static final int NOTIFICATION_OTHER = 1;
     private static final int NOTIFICATION_OVERDUE = 2;
     private static final int NOTIFICATION_WISHLIST = 4;
+    private static final int NOTIFICATION_REQUEST = 8;
 
     @FXML
     private Button homeBtn;
@@ -80,6 +76,8 @@ public class TopbarController extends ControllerWrapper {
     @FXML
     private Label notificationWishlistBtn;
     @FXML
+    private Label notificationRequestBtn;
+    @FXML
     private Label notificationOtherBtn;
     @FXML
     private MFXScrollPane userPane;
@@ -112,10 +110,14 @@ public class TopbarController extends ControllerWrapper {
     private Future<List<Document>> overdueDocumentFu;
     private Future<List<Document>> wishlistDocumentFu;
     private Future<Integer> pendingFu;
+    private Future<List<Notification>> requestNotificationFu;
 
     private List<NotificationComponent> overdues;
     private List<NotificationComponent> wishlist;
+    private List<NotificationComponent> requests;
     private List<NotificationComponent> others;
+
+    private List<Label> notificationButtons = new ArrayList<>();
 
     private void initCategory() {
         try {
@@ -186,6 +188,11 @@ public class TopbarController extends ControllerWrapper {
                 notificationBox.getChildren().add(component.getElement());
             }
         }
+        if ((type & NOTIFICATION_REQUEST) != 0) {
+            for (NotificationComponent component: requests) {
+                notificationBox.getChildren().add(component.getElement());
+            }
+        }
         if ((type & NOTIFICATION_WISHLIST) != 0) {
             for (NotificationComponent component: wishlist) {
                 notificationBox.getChildren().add(component.getElement());
@@ -196,17 +203,30 @@ public class TopbarController extends ControllerWrapper {
         notificationBox.setMaxHeight(notificationBox.getChildren().size() * NotificationComponent.COMPONENT_HEIGHT);
     }
 
+    private void setNotificationButtonStatus(Label activeButton, int notificationButtonStatus) {
+        for (Label button: notificationButtons) {
+            if (button == activeButton) {
+                button.getStyleClass().add("notification-type-button--active");
+            } else {
+                button.getStyleClass().removeAll("notification-type-button--active");
+            }
+        }
+        setNotificationBox(notificationButtonStatus);
+    }
+
     private void initNotification() {
         Common.disable(notificationPane);
         try {
             List<Document> documents = overdueDocumentFu.get();
             List<Document> wishlistDocuments = wishlistDocumentFu.get();
+            List<Notification> requestNotifications = requestNotificationFu.get();
             overdues = new ArrayList<>();
             wishlist = new ArrayList<>();
+            requests = new ArrayList<>();
             others = new ArrayList<>();
             if (pendingFu.get() > 0 && getUser().getPermission() != User.TYPE_USER) {
-                others.add(new NotificationComponent(
-                        null, this,
+                requests.add(new NotificationComponent(
+                        null, null, this,
                         "New borrow requests",
                         String.format("There are %d new borrow requests. Go check them now!", pendingFu.get()),
                         "borrow-request.fxml",
@@ -215,7 +235,7 @@ public class TopbarController extends ControllerWrapper {
             }
             for (Document document : documents) {
                 overdues.add(new NotificationComponent(
-                        document, this,
+                        document, null, this,
                         "You should return this book soon!",
                         "You have borrowed \"" + document.getTitle() + "\" more than 14 days, you should return it soon. Otherwise, you must pay fine due to overdue.",
                         "document-detail.fxml",
@@ -224,14 +244,25 @@ public class TopbarController extends ControllerWrapper {
             }
             for (Document document: wishlistDocuments) {
                 wishlist.add(new NotificationComponent(
-                        document, this,
+                        document, null, this,
                         "A book in your wishlist is now available",
                         "\"" + document.getTitle() + "\" is currently available. You can go borrow it right now!",
                         "document-detail.fxml",
                         notificationPane
                 ));
             }
-            int size = others.size() + overdues.size() + wishlist.size();
+            for (Notification notification: requestNotifications) {
+                String type = notification.getType() == Notification.TYPE.REQUEST_APPROVED.ordinal() ? "approved" : "declined";
+                requests.add(new NotificationComponent(
+                        notification.getDocument(), notification, this,
+                        "Your borrow request was " + type,
+                        "Your borrow request for \"" + notification.getDocument().getTitle() + "\" was " + type,
+                        "document-detail.fxml",
+                        notificationPane
+                ));
+            }
+
+            int size = others.size() + overdues.size() + wishlist.size() + requests.size();
             notificationBadge.setText(String.valueOf(size));
             setNotificationBox(NOTIFICATION_ALL);
             if (size == 0) {
@@ -251,34 +282,16 @@ public class TopbarController extends ControllerWrapper {
             ds.setRadius(10);
             notificationPane.setEffect(ds);
 
-            notificationAllBtn.setOnMouseClicked(e -> {
-                notificationAllBtn.getStyleClass().add("notification-type-button--active");
-                notificationWishlistBtn.getStyleClass().removeAll("notification-type-button--active");
-                notificationOverdueBtn.getStyleClass().removeAll("notification-type-button--active");
-                notificationOtherBtn.getStyleClass().removeAll("notification-type-button--active");
-                setNotificationBox(NOTIFICATION_ALL);
-            });
-            notificationOverdueBtn.setOnMouseClicked(e -> {
-                notificationAllBtn.getStyleClass().removeAll("notification-type-button--active");
-                notificationWishlistBtn.getStyleClass().removeAll("notification-type-button--active");
-                notificationOverdueBtn.getStyleClass().add("notification-type-button--active");
-                notificationOtherBtn.getStyleClass().removeAll("notification-type-button--active");
-                setNotificationBox(NOTIFICATION_OVERDUE);
-            });
-            notificationWishlistBtn.setOnMouseClicked(e -> {
-                notificationAllBtn.getStyleClass().removeAll("notification-type-button--active");
-                notificationWishlistBtn.getStyleClass().add("notification-type-button--active");
-                notificationOverdueBtn.getStyleClass().removeAll("notification-type-button--active");
-                notificationOtherBtn.getStyleClass().removeAll("notification-type-button--active");
-                setNotificationBox(NOTIFICATION_WISHLIST);
-            });
-            notificationOtherBtn.setOnMouseClicked(e -> {
-                notificationAllBtn.getStyleClass().removeAll("notification-type-button--active");
-                notificationWishlistBtn.getStyleClass().removeAll("notification-type-button--active");
-                notificationOverdueBtn.getStyleClass().removeAll("notification-type-button--active");
-                notificationOtherBtn.getStyleClass().add("notification-type-button--active");
-                setNotificationBox(NOTIFICATION_OTHER);
-            });
+            notificationButtons.add(notificationAllBtn);
+            notificationButtons.add(notificationOverdueBtn);
+            notificationButtons.add(notificationWishlistBtn);
+            notificationButtons.add(notificationRequestBtn);
+//            notificationButtons.add(notificationOtherBtn);
+            notificationAllBtn.setOnMouseClicked(e -> setNotificationButtonStatus(notificationAllBtn, NOTIFICATION_ALL));
+            notificationOverdueBtn.setOnMouseClicked(e -> setNotificationButtonStatus(notificationOverdueBtn, NOTIFICATION_OVERDUE));
+            notificationWishlistBtn.setOnMouseClicked(e -> setNotificationButtonStatus(notificationWishlistBtn, NOTIFICATION_WISHLIST));
+            notificationRequestBtn.setOnMouseClicked(e -> setNotificationButtonStatus(notificationRequestBtn, NOTIFICATION_REQUEST));
+//            notificationOtherBtn.setOnMouseClicked(e -> setNotificationButtonStatus(notificationOtherBtn, NOTIFICATION_OTHER));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -390,11 +403,12 @@ public class TopbarController extends ControllerWrapper {
             }
         });
 
-        executor = Executors.newFixedThreadPool(4);
+        executor = Executors.newFixedThreadPool(5);
         categoryFu = executor.submit(() -> CategoryQuery.getInstance().getAll());
         overdueDocumentFu = executor.submit(() -> ServiceQuery.getInstance().getOverdueDocuments(getUser().getId()));
         wishlistDocumentFu = executor.submit(() -> ServiceQuery.getInstance().getWishlistAvailableDocuments(getUser().getId()));
         pendingFu = executor.submit(() -> ServiceQuery.getInstance().getNumberOfPendingServices());
+        requestNotificationFu = executor.submit(() -> NotificationQuery.getInstance().getUnreadNotifications(getUser().getId()));
         executor.shutdown();
 
         try {

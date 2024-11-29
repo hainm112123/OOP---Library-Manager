@@ -12,7 +12,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.example.librarymanager.Common;
 import org.example.librarymanager.app.ControllerWrapper;
+import org.example.librarymanager.data.NotificationQuery;
 import org.example.librarymanager.models.Document;
+import org.example.librarymanager.models.Notification;
 
 import java.awt.event.MouseEvent;
 
@@ -29,7 +31,7 @@ public class NotificationComponent implements Component {
     private static final int IMAGE_HEIGHT = 48;
     public static final int COMPONENT_HEIGHT = 68;
 
-    public NotificationComponent(Document document, ControllerWrapper controller, String titleStr, String messageStr, String destination, Node pane) {
+    public NotificationComponent(Document document, Notification notification, ControllerWrapper controller, String titleStr, String messageStr, String destination, Node pane) {
         this.controller = controller;
         container = new HBox();
         content = new VBox();
@@ -80,6 +82,16 @@ public class NotificationComponent implements Component {
         container.setOnMouseClicked(e -> {
             if (document != null) {
                 ControllerWrapper.setCurrentDocument(document);
+            }
+            if (notification != null) {
+                Task<Boolean> task = new Task<>() {
+                    @Override
+                    protected Boolean call() {
+                        notification.setStatus(Notification.STATUS.READ.ordinal());
+                        return NotificationQuery.getInstance().update(notification);
+                    }
+                };
+                new Thread(task).start();
             }
             Common.disable(pane);
             controller.safeSwitchScene(destination);

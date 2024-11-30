@@ -67,28 +67,27 @@ public class AddDataController<E extends Model>  extends ControllerWrapper {
                 gridPane.setVgap(5);
                 gridPane.setHgap(5);
 
-                // Thiết lập ColumnConstraints (Căn giữa cột)
+
                 ColumnConstraints col1 = new ColumnConstraints();
 //                col1.setHgrow(Priority.ALWAYS);
                 col1.setMinWidth(LABEL_WIDTH);
                 col1.setPrefWidth(LABEL_WIDTH);
                 col1.setMaxWidth(LABEL_WIDTH);
-                col1.setHalignment(HPos.LEFT);  // Căn giữa theo chiều ngang
+                col1.setHalignment(HPos.LEFT);
 
                 ColumnConstraints col2 = new ColumnConstraints();
 //                col2.setHgrow(Priority.ALWAYS);
                 col2.setMinWidth(VALUE_WIDTH);
                 col2.setPrefWidth(VALUE_WIDTH);
                 col2.setMaxWidth(VALUE_WIDTH);
-                col2.setHalignment(HPos.LEFT);  // Căn giữa theo chiều ngang
+                col2.setHalignment(HPos.LEFT);
                 gridPane.getColumnConstraints().addAll(col1, col2);
 
-//                String dataString = data.toString();
-//                String[] fields = dataString.split("\n");
+
                 List<Pair<String, String>> attributes = data.getData();
                 int row = 0;
                 for (Pair<String, String> attribute : attributes) {
-                    if (attribute.getKey().equals("id")) {
+                    if (attribute.getKey().equals("ID")) {
                         continue;
                     }
                     Label key = new Label(attribute.getKey());

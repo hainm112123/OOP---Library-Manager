@@ -268,14 +268,28 @@ public class DataTable<E extends Model> {
         Collections.sort(list, new Comparator<E>() {
             @Override
             public int compare(E o1, E o2) {
-                List<Pair<String, String>> tmp1 = o1.getData();
-                List<Pair<String, String>> tmp2 = o2.getData();
-                for (int i = 0; i < tmp1.size(); i++) {
-                    if (tmp1.get(i).getKey().equals(tmp)) {
-                        return tmp1.get(i).getValue().compareTo(tmp2.get(i).getValue());
+                if (tmp == "ID") {
+                    List<Pair<String, String>> tmp1 = o1.getData();
+                    List<Pair<String, String>> tmp2 = o2.getData();
+                    for (int i = 0; i < tmp1.size(); i++) {
+                        if (tmp1.get(i).getKey().equals(tmp)) {
+                            Integer x = Integer.parseInt(tmp1.get(i).getValue());
+                            Integer y = Integer.parseInt(tmp2.get(i).getValue());
+                            return x.compareTo(y);
+//                            return tmp1.get(i).getValue().compareTo(tmp2.get(i).getValue());
+                        }
                     }
+                    return 0;
+                } else {
+                    List<Pair<String, String>> tmp1 = o1.getData();
+                    List<Pair<String, String>> tmp2 = o2.getData();
+                    for (int i = 0; i < tmp1.size(); i++) {
+                        if (tmp1.get(i).getKey().equals(tmp)) {
+                            return tmp1.get(i).getValue().compareTo(tmp2.get(i).getValue());
+                        }
+                    }
+                    return 0;
                 }
-                return 0;
             }
         });
         updateTable(0, Math.min(TABLE_LIMIT, list.size()));

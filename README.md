@@ -89,7 +89,7 @@ From this menu, you can:
 * Access your [profile](#profile)
 * [Change password](#change-password)
 * Access your [book shelf](#book-shelf)
-If you are an moderator, there will be addition features [Add a new book](#add-a-new-book) and [My books](#my-books) (books that your added to the library). If you are an admin, you can access [Manage](#manage-app).
+If you are an moderator, there will be addition features [Add a new book](#add-a-new-book), [My books](#my-books) (books that your added to the library) and approve/decline users' borrow requests. If you are an admin, you can access [Manage](#manage-app).
 
 #### Search bar
 

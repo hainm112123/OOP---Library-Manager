@@ -38,7 +38,9 @@ public class ControllerWrapper implements Initializable {
      */
     private static void unsafeSwitchScene(String url) {
         try {
-            urls.add(url);
+            if (!urls.isEmpty() && !urls.getLast().equals(url)) {
+                urls.add(url);
+            }
             FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource(url));
             Scene scene = new Scene(fxmlLoader.load());
             stage.setScene(scene);

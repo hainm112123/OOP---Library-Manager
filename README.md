@@ -19,6 +19,7 @@
   * [Profile](#profile)
   * [Change password](#change-password)
   * [Book's detail](#books-detail)
+  * [Borrow requests](#borrow-requests)
   * [Book shelf](#book-shelf)
   * [Rating](#rating)
   * [Categories](#categories)
@@ -44,17 +45,17 @@ To use the app, you need to:
 
 ### Register and Log in
 
-This screen will appear when you open the app. Here you can login with username and password.
+This screen will appear when you open the app. Here you can login with email and password, or with your google accounts.
 
-![image](https://github.com/user-attachments/assets/abeac50a-ff36-4001-ac31-e6d89d46c844)
+![image](https://github.com/user-attachments/assets/79758868-9ddf-4566-804d-752f901b0ff9)
 
 If you haven't have an account, go to register screen by click on "register" on the right-bottom.
 
-![image](https://github.com/user-attachments/assets/bcc9d1e6-b80e-4528-971f-84df944fa4ed)
+![image](https://github.com/user-attachments/assets/ee005e3e-dcb3-42b6-8f87-989b934adda9)
 
 ### Home screen
 
-After logged in, you will see the home screen. 
+After logged in, you will see the home screen.
 
 ![image](https://github.com/user-attachments/assets/7d9fe1ba-27a8-433f-869c-f738652d0612)
 
@@ -72,16 +73,16 @@ Navigate between main screens: Home, Categories and Advanced search.
 
 #### Notifications
 
-![image](https://github.com/user-attachments/assets/2f359a82-c560-46c5-aeb9-bb3c3ac7ab3c)
+![image](https://github.com/user-attachments/assets/390cd6db-4f79-4d5a-aba4-ab5d29ef0df7)
 
-Show notifications when a book you borrowed is overdue or when a book on your wishlist becomes available.
+Show notifications about newest informations such as when a book you borrowed is overdue, when a book on your wishlist becomes available or when your borrow request is approved/declined.
 
 #### User Menu
 
 <div style="display: flex; justify-content: space-around;">
   <img src="https://github.com/user-attachments/assets/f07ca408-89ef-4f05-a56f-4403473771e7" alt="Image 1" style="width: 30%;">
-  <img src="https://github.com/user-attachments/assets/cbd0f03b-2850-4e65-ae29-797ca30c1272" alt="Image 2" style="width: 30%;">
-  <img src="https://github.com/user-attachments/assets/772f510c-8f7c-490c-8e03-f5600ade0392" alt="Image 3" style="width: 30%;">
+  <img src="https://github.com/user-attachments/assets/9f894b77-704c-4233-be05-8bccb648188d" alt="Image 2" style="width: 30%;">
+  <img src="https://github.com/user-attachments/assets/6bcecf73-3478-4d74-8b10-cfefc3e5aa43" alt="Image 3" style="width: 30%;">
 </div>
 
 From this menu, you can:
@@ -112,12 +113,18 @@ In this screen, you will see your informations, avatar, a recap of your books bo
 
 By clicked on a book, libify will navigate to book detail screen. Here, informations such as title, author, description, rating, review, etc will be displayed. From this screen, you can borrow/return this book or add it to your wishlist if it is currently unavailable. You can also see other users' reviews at the bottom.
 
-After you borrow a book or add it to your wishlist, it will appear in your [book shelf](#book-shelf)
+After you successfully borrow a book or add it to your wishlist, it will appear in your [book shelf](#book-shelf). Note that, you will need admin or moderator to approve your [borrow requests](#borrow-requests).
 After you return a book, libify will navigate to [rating screen](#rating).
 
 ![image](https://github.com/user-attachments/assets/fc2172f3-d889-4662-af04-d85bdca09f8a)
 
 If you are the book's owner, you will allow to [edit](#edit-books) it.
+
+### Borrow requests
+
+![image](https://github.com/user-attachments/assets/3fe599cd-ed44-44b1-9127-6f85e508fea9)
+
+If you are a moderator or an admin, you can approve/decline users' borrow requests.
 
 ### Book shelf
 
@@ -175,6 +182,7 @@ New books, most popular books, high rated books and books that user may like (ba
 
 ### Manage app
 
-![image](https://github.com/user-attachments/assets/3e98a24b-9ffe-4392-b106-38c5b973213b)
+![image](https://github.com/user-attachments/assets/13791afc-826e-4e2a-8000-062ec1984c5b)
+![image](https://github.com/user-attachments/assets/541a1ece-48f7-48e2-b68c-04b567447e0d)
 
 If you are an admin, you are allowed to access this screen through [user menu](#user-menu). In this screen, you can view app data and allow to edit some of it.

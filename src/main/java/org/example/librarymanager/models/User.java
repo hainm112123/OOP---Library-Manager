@@ -22,6 +22,7 @@ public class User implements Model{
     public static final String[] USER_TYPE_STRING = {"User", "Moderator", "Admin"};
 
     private int id;
+    private String email;
     private String username;
     private String password;
     private String firstname;
@@ -31,7 +32,8 @@ public class User implements Model{
     private int permission;
     private String imageLink;
 
-    public User(String username, String password, String firstname, String lastname, String gender, LocalDate dateOfBirth) {
+    public User(String email, String username, String password, String firstname, String lastname, String gender, LocalDate dateOfBirth) {
+        this.email = email;
         this.username = username;
         this.password = password;
         this.firstname = firstname;
@@ -42,6 +44,7 @@ public class User implements Model{
 
     public User(ResultSet rs) throws SQLException {
         this.id = rs.getInt("id");
+        this.email = rs.getString("email");
         this.username = rs.getString("username");
         this.password = rs.getString("password");
         this.firstname = rs.getString("firstname");
@@ -57,6 +60,7 @@ public class User implements Model{
     @Override
     public String toString() {
         return "Id: " + id + "\n"
+                + "Email: " + email + "\n"
                 + "Username: " + username + "\n"
                 + "Password: " + password + "\n"
                 + "Firstname: " + firstname + "\n"
@@ -78,13 +82,14 @@ public class User implements Model{
 
     @Override
     public List<String> getAttributes() {
-        return List.of("ID", "Username", "Password", "First Name", "Last Name", "Gender", "Date Of Birth", "Permission", "Image Link");
+        return List.of("ID", "Email", "Username", "Password", "First Name", "Last Name", "Gender", "Date Of Birth", "Permission", "Image Link");
     }
 
     @Override
     public List<Pair<String, String>> getData() {
         List<Pair<String, String>> list = new ArrayList<>();
         list.add(new Pair<>("ID", String.valueOf(id)));
+        list.add(new Pair<>("Email", (email == null ? "" : email)));
         list.add(new Pair<>("Username", (username == null ? "" : username)));
         list.add(new Pair<>("Password", (password == null ? "" : password)));
         list.add(new Pair<>("First Name", (firstname == null ? "" : firstname)));
@@ -100,6 +105,7 @@ public class User implements Model{
     public void setData(List<Pair<String, String>> data) {
         if (data == null) {
             this.id = 0;
+            this.email = "";
             this.username = "";
             this.password = "";
             this.firstname = "";
@@ -110,17 +116,18 @@ public class User implements Model{
             this.imageLink = "";
         } else {
             this.id = Integer.parseInt(data.get(0).getValue());
-            this.username = data.get(1).getValue();
-            this.password = data.get(2).getValue();
-            this.firstname = data.get(3).getValue();
-            this.lastname = data.get(4).getValue();
-            this.gender = data.get(5).getValue();
-            this.dateOfBirth = LocalDate.parse(data.get(6).getValue());
+            this.email = data.get(1).getValue();
+            this.username = data.get(2).getValue();
+            this.password = data.get(3).getValue();
+            this.firstname = data.get(4).getValue();
+            this.lastname = data.get(5).getValue();
+            this.gender = data.get(6).getValue();
+            this.dateOfBirth = LocalDate.parse(data.get(7).getValue());
             for (int i = 0; i < 3; i++)
-                if (data.get(7).getValue().equals(USER_TYPE_STRING[i])) {
+                if (data.get(8).getValue().equals(USER_TYPE_STRING[i])) {
                     this.permission = i;
                 }
-            this.imageLink = data.get(8).getValue();
+            this.imageLink = data.get(9).getValue();
         }
     }
 }

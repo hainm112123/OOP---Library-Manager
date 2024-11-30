@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 
 public class LoginController extends ControllerWrapper {
     @FXML
-    private MFXTextField username;
+    private MFXTextField email;
     @FXML
     private MFXPasswordField password;
     @FXML
@@ -38,7 +38,7 @@ public class LoginController extends ControllerWrapper {
         Task<AuthResult> task = new Task<AuthResult>() {
             @Override
             protected AuthResult call() throws Exception {
-                return AuthQuery.getInstance().login(username.getText(), password.getText());
+                return AuthQuery.getInstance().login(email.getText(), password.getText());
             }
         };
         progressSpinner.setVisible(true);

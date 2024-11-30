@@ -26,7 +26,7 @@
               </Label>
          </children>
       </VBox>
-        <MFXTextField fx:id="username" floatingText="Username" layoutX="158.0" layoutY="191.0" prefHeight="36.0" prefWidth="283.0" styleClass="form-text-field" stylesheets="@../css/MFXTextField.css" />
+        <MFXTextField fx:id="email" floatingText="Email" layoutX="158.0" layoutY="191.0" prefHeight="36.0" prefWidth="283.0" styleClass="form-text-field" stylesheets="@../css/MFXTextField.css" />
         <MFXPasswordField fx:id="password" floatingText="Password" layoutX="158.0" layoutY="259.0" prefHeight="36.0" prefWidth="283.0" styleClass="form-text-field" stylesheets="@../css/MFXTextField.css" />
         <Label fx:id="loginMessageLabel" alignment="CENTER" layoutX="158.0" layoutY="327.0" prefHeight="18.0" prefWidth="283.0" textFill="#ff3321" />
         <MFXButton fx:id="submitBtn" layoutX="158.0" layoutY="356.0" mnemonicParsing="false" onAction="#loginButtonOnAction" prefHeight="36.0" prefWidth="283.0" styleClass="form-primary-button" text="Log in" />

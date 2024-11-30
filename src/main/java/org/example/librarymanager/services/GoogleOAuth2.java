@@ -2,6 +2,11 @@ package org.example.librarymanager.services;
 
 import com.github.scribejava.apis.GoogleApi20;
 import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.exceptions.OAuthException;
+import com.github.scribejava.core.model.OAuth2AccessToken;
+import com.github.scribejava.core.model.OAuthRequest;
+import com.github.scribejava.core.model.Response;
+import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import lombok.Data;
 
@@ -25,5 +30,18 @@ public class GoogleOAuth2 {
             instance = new GoogleOAuth2();
         }
         return instance;
+    }
+
+    public String handleCallback(String authCode) {
+        try {
+            OAuth2AccessToken accessToken = service.getAccessToken(authCode);
+            OAuthRequest request = new OAuthRequest(Verb.GET, OAUTH_USER_INFO_ENDPOINT);
+            service.signRequest(accessToken, request);
+            Response response = service.execute(request);
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

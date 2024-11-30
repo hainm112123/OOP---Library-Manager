@@ -28,6 +28,8 @@ module org.example.librarymanager {
     requires scribejava.core;
     requires scribejava.apis;
     requires javafx.web;
+    requires org.apache.commons.validator;
+    requires org.json;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

@@ -81,13 +81,15 @@ public class UserQuery implements DataAccessObject<User> {
     @Override
     public User add(User user) {
         try (Connection connection = databaseConnection.getConnection()) {
-            PreparedStatement createUserSt = connection.prepareStatement("insert into users (username, password, firstname, lastname, gender, dateOfBirth) values (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-            createUserSt.setString(1, user.getUsername());
-            createUserSt.setString(2, user.getPassword());
-            createUserSt.setString(3, user.getFirstname());
-            createUserSt.setString(4, user.getLastname());
-            createUserSt.setString(5, user.getGender());
-            createUserSt.setDate(6, Date.valueOf(user.getDateOfBirth()));
+            PreparedStatement createUserSt = connection.prepareStatement("insert into users (email, username, password, firstname, lastname, gender, dateOfBirth, imageLink) values (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            createUserSt.setString(1, user.getEmail());
+            createUserSt.setString(2, user.getUsername());
+            createUserSt.setString(3, user.getPassword());
+            createUserSt.setString(4, user.getFirstname());
+            createUserSt.setString(5, user.getLastname());
+            createUserSt.setString(6, user.getGender());
+            createUserSt.setDate(7, user.getDateOfBirth() != null ? Date.valueOf(user.getDateOfBirth()) : null);
+            createUserSt.setString(8, user.getImageLink());
             createUserSt.executeUpdate();
             ResultSet generatedKeys = createUserSt.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -106,18 +108,17 @@ public class UserQuery implements DataAccessObject<User> {
     public boolean update(User user) {
         try (Connection connection = databaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("update users set " +
-                    "username = ?, password = ?, firstname = ?, lastname = ?, gender = ?, dateOfBirth = ?, permission = ?, imageLink = ? " +
+                    "password = ?, firstname = ?, lastname = ?, gender = ?, dateOfBirth = ?, permission = ?, imageLink = ? " +
                     "where id = ?"
             );
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            ps.setString(3, user.getFirstname());
-            ps.setString(4, user.getLastname());
-            ps.setString(5, user.getGender());
-            ps.setDate(6, Date.valueOf(user.getDateOfBirth()));
-            ps.setInt(7, user.getPermission());
-            ps.setString(8, user.getImageLink());
-            ps.setInt(9, user.getId());
+            ps.setString(1, user.getPassword());
+            ps.setString(2, user.getFirstname());
+            ps.setString(3, user.getLastname());
+            ps.setString(4, user.getGender());
+            ps.setDate(5, Date.valueOf(user.getDateOfBirth()));
+            ps.setInt(6, user.getPermission());
+            ps.setString(7, user.getImageLink());
+            ps.setInt(8, user.getId());
             ps.executeUpdate();
             ps.close();
             return true;

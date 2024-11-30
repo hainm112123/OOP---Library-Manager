@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.FileInputStream;
+import java.security.MessageDigest;
 import java.util.Comparator;
 
 public class Common {
@@ -154,6 +155,21 @@ public class Common {
             ((MFXPasswordField) o).textProperty().addListener((observable, oldValue, newValue) -> {
                 ((Label) message).setVisible(false);
             });
+        }
+    }
+
+    public static String hashString(String input, int len) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(input.getBytes());
+            String result = "";
+            for (byte b : hash) {
+                result += String.format("%02x", b);
+            }
+            return len > result.length() ? result: result.substring(0, len);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
         }
     }
 }

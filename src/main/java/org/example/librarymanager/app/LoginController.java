@@ -81,11 +81,21 @@ public class LoginController extends ControllerWrapper {
         });
         googleBtn.setOnAction(e -> {
             OAuth20Service service = GoogleOAuth2.getInstance().getService();
-            String authorizeUrl = service.getAuthorizationUrl();
+            String authorizeUrl = service.createAuthorizationUrlBuilder()
+                    .additionalParams(GoogleOAuth2.getInstance().getAdditionalParams())
+                    .state(GoogleOAuth2.getInstance().getSecretState())
+                    .build();
             webView.getEngine().load(authorizeUrl);
             Common.enable(webView);
             Common.enable(webViewCloseBtn);
         });
+//        webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue == javafx.concurrent.Worker.State.SUCCEEDED) {
+//                webView.getEngine().executeScript("""
+//                    window.javaBridge.resizeWindow(536, 536);
+//                """);
+//            }
+//        });
     }
 
     public void loginButtonOnAction(ActionEvent event) {

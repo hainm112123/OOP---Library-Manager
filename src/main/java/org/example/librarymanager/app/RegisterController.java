@@ -96,7 +96,10 @@ public class RegisterController extends ControllerWrapper {
         });
         googleBtn.setOnAction(e -> {
             OAuth20Service service = GoogleOAuth2.getInstance().getService();
-            String authorizeUrl = service.getAuthorizationUrl();
+            String authorizeUrl = service.createAuthorizationUrlBuilder()
+                    .additionalParams(GoogleOAuth2.getInstance().getAdditionalParams())
+                    .state(GoogleOAuth2.getInstance().getSecretState())
+                    .build();
             webView.getEngine().load(authorizeUrl);
             Common.enable(webView);
             Common.enable(webViewCloseBtn);

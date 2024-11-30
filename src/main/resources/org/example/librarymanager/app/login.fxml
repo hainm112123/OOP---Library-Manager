@@ -67,7 +67,7 @@
         <WebView fx:id="webView" disable="true" layoutX="-22.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="32.0" />
         <VBox fx:id="webViewCloseBtn" alignment="CENTER" layoutX="538.0" layoutY="40.0" prefHeight="32.0" prefWidth="26.0" styleClass="modal-close-btn">
             <children>
-                <FontAwesomeIconView disable="true" fill="#5c1c00" glyphName="CLOSE" visible="false" />
+                <FontAwesomeIconView fill="#5c1c00" glyphName="CLOSE" />
             </children>
         </VBox>
     </children>

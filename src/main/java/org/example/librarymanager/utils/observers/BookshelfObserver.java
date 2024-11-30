@@ -15,6 +15,7 @@ public class BookshelfObserver extends Observer {
     private ListDocumentsComponent readingComponent;
     private ListDocumentsComponent wishlistComponent;
     private ListDocumentsComponent completedComponent;
+    private ListDocumentsComponent pendingComponent;
     private HBox btnGroup;
 
     @Override
@@ -27,8 +28,10 @@ public class BookshelfObserver extends Observer {
             container.getChildren().add(readingComponent.getElement());
         } else if (bookshelfSubject.getStatus() == Service.STATUS_COMPLETED) {
             container.getChildren().add(completedComponent.getElement());
-        } else {
+        } else if (bookshelfSubject.getStatus() == Service.STATUS_WISH_LIST) {
             container.getChildren().add(wishlistComponent.getElement());
+        } else {
+            container.getChildren().add(pendingComponent.getElement());
         }
     }
 }

@@ -9,6 +9,7 @@ import org.example.librarymanager.data.DocumentQuery;
 import org.example.librarymanager.data.RatingQuery;
 import org.example.librarymanager.models.Document;
 import org.example.librarymanager.models.RecommendationData;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.net.URL;
 import java.util.*;
@@ -71,17 +72,22 @@ public class HomeController extends ControllerWrapper{
                 }
             }
         }
-        if (rate.isEmpty()) {
+        if (rate.isEmpty() || !rate.containsKey(getUser().getId())) {
             return;
         }
         HashMap<Integer, Double> preference;
-        if (!rate.containsKey(getUser().getId())) {
-            List<Integer> keys = rate.keySet().stream().toList();
-            Random random = new Random();
-            preference = rate.get(keys.get(random.nextInt(keys.size())));
-        } else {
-            preference = rate.get(getUser().getId());
-        }
+//        if (!rate.containsKey(getUser().getId())) {
+//            List<Integer> keys = rate.keySet().stream().toList();
+////            Random random = new Random();
+////            preference = rate.get(keys.get(random.nextInt(keys.size())));
+//            Integer option = keys.getFirst();
+//            for (Integer key: keys) {
+//                if (rate.get(key).size() < rate.get(option).size()) option = key;
+//            }
+//            preference = rate.get(option);
+//        } else {
+        preference = rate.get(getUser().getId());
+//        }
         List<Common.Item<Integer, Double>> predicts = new ArrayList<>();
         for (Integer item1: diff.keySet()) {
             if (preference.containsKey(item1)) {

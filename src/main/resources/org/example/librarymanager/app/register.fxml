@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXComboBox?>
 <?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
@@ -9,14 +10,17 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="575.0" prefWidth="600.0" style="-fx-background-color: #FFE7BA;" stylesheets="@../css/form.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.RegisterController">
+<AnchorPane prefHeight="720.0" prefWidth="600.0" style="-fx-background-color: #FFE7BA;" stylesheets="@../css/form.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.librarymanager.app.RegisterController">
     <children>
       <VBox layoutY="42.0" prefHeight="36.0" prefWidth="600.0" styleClass="form-container">
          <children>
@@ -27,134 +31,87 @@
               </Label>
          </children>
       </VBox>
-        <Label fx:id="registrationMessageLabel" layoutX="240.0" layoutY="469.0" textFill="#3b10e0">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Label>
-        <GridPane layoutX="80.0" layoutY="103.0" prefHeight="30.0" prefWidth="439.0">
+        <GridPane layoutX="80.0" layoutY="103.0" prefHeight="382.0" prefWidth="439.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="185.33331298828125" minWidth="10.0" prefWidth="103.33332824707031" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="298.6666717529297" minWidth="10.0" prefWidth="276.6666717529297" />
             </columnConstraints>
             <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label styleClass="form-label" text="First name">
+            <Label styleClass="form-label" text="Email" />
+            <MFXTextField fx:id="email" floatMode="DISABLED" prefWidth="335.0" styleClass="form-text-field" GridPane.columnIndex="1" />
+                <Label styleClass="form-label" text="First name" GridPane.rowIndex="1">
                     <font>
                         <Font size="14.0" />
                     </font>
                 </Label>
-                <MFXTextField fx:id="firstname" floatMode="DISABLED" prefHeight="25.0" prefWidth="307.0" styleClass="form-text-field" GridPane.columnIndex="1" />
-            </children>
-        </GridPane>
-        <GridPane layoutX="80.0" layoutY="148.0" prefHeight="30.0" prefWidth="439.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="185.33331298828125" minWidth="10.0" prefWidth="103.33332824707031" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="298.6666717529297" minWidth="10.0" prefWidth="276.6666717529297" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <Label styleClass="form-label" text="Last name">
+                <MFXTextField fx:id="firstname" floatMode="DISABLED" prefHeight="25.0" prefWidth="307.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label styleClass="form-label" text="Last name" GridPane.rowIndex="2">
                     <font>
                         <Font size="14.0" />
                     </font>
                 </Label>
-                <MFXTextField fx:id="lastname" floatMode="DISABLED" prefHeight="25.0" prefWidth="307.0" styleClass="form-text-field" GridPane.columnIndex="1" />
-            </children>
-        </GridPane>
-        <GridPane layoutX="80.0" layoutY="190.0" prefHeight="30.0" prefWidth="439.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="185.33331298828125" minWidth="10.0" prefWidth="140.799951171875" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="298.6666717529297" minWidth="10.0" prefWidth="297.800048828125" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <Label styleClass="form-label" text="Gender">
+                <MFXTextField fx:id="lastname" floatMode="DISABLED" prefHeight="25.0" prefWidth="307.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label styleClass="form-label" text="Gender" GridPane.rowIndex="3">
                     <font>
                         <Font size="14.0" />
                     </font>
                 </Label>
-            <MFXComboBox fx:id="gender" floatMode="DISABLED" prefHeight="26.0" prefWidth="321.0" styleClass="form-text-field" GridPane.columnIndex="1">
+            <MFXComboBox fx:id="gender" floatMode="DISABLED" prefHeight="26.0" prefWidth="321.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <stylesheets>
                   <URL value="@../css/MFXComboBox.css" />
                   <URL value="@../css/MFXComboBoxCell.css" />
-               </stylesheets></MFXComboBox>
+               </stylesheets>
+            </MFXComboBox>
+                <Label styleClass="form-label" text="Date of birth" textAlignment="CENTER" GridPane.rowIndex="4" />
+                <MFXDatePicker fx:id="dateOfBirth" prefHeight="26.0" prefWidth="334.0" stylesheets="@../css/MFXDatePicker.css" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Label styleClass="form-label" text="Username" GridPane.rowIndex="5">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <MFXTextField fx:id="username" floatMode="DISABLED" prefHeight="25.0" prefWidth="307.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                <Label styleClass="form-label" text="Password" GridPane.rowIndex="6">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <MFXPasswordField fx:id="password" floatMode="DISABLED" prefHeight="25.0" prefWidth="307.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <Label styleClass="form-label" text="Confirm password" GridPane.rowIndex="7">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <MFXPasswordField fx:id="confirmPassword" floatMode="DISABLED" prefHeight="25.0" prefWidth="307.0" styleClass="form-text-field" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             </children>
         </GridPane>
-      <GridPane layoutX="80.0" layoutY="235.0" prefHeight="30.0" prefWidth="439.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="213.5999755859375" minWidth="10.0" prefWidth="139.99998779296874" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="302.4000244140625" minWidth="10.0" prefWidth="299.20001220703125" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <VBox layoutX="80.0" layoutY="500.0" prefHeight="138.0" prefWidth="439.0">
          <children>
-                <Label styleClass="form-label" text="Date of birth" textAlignment="CENTER" />
-                <MFXDatePicker fx:id="dateOfBirth" prefHeight="26.0" prefWidth="334.0" stylesheets="@../css/MFXDatePicker.css" GridPane.columnIndex="1" />
+              <Label fx:id="registerMessageLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="39.0" prefWidth="439.0" textFill="#f02913" />
+            <Pane>
+               <children>
+                    <MFXButton fx:id="submitBtn" mnemonicParsing="false" onAction="#registerButtonOnAction" prefHeight="26.0" prefWidth="439.0" styleClass="form-primary-button" text="Register" />
+                  <MFXProgressSpinner fx:id="loader" layoutX="207.0" prefHeight="26.0" prefWidth="26.0" />
+               </children>
+            </Pane>
+            <Separator prefHeight="40.0" prefWidth="439.0" />
+            <MFXButton fx:id="googleBtn" prefHeight="26.0" prefWidth="439.0" text="Continue with Google">
+               <graphic>
+                  <FontAwesomeIconView glyphName="GOOGLE" wrappingWidth="9.485725402832031" />
+               </graphic>
+            </MFXButton>
          </children>
-      </GridPane>
-        <GridPane layoutX="80.0" layoutY="289.0" prefHeight="30.0" prefWidth="439.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="185.33331298828125" minWidth="10.0" prefWidth="103.33332824707031" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="298.6666717529297" minWidth="10.0" prefWidth="276.6666717529297" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <Label styleClass="form-label" text="Username">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Label>
-                <MFXTextField fx:id="username" floatMode="DISABLED" prefHeight="25.0" prefWidth="307.0" styleClass="form-text-field" GridPane.columnIndex="1" />
-            </children>
-        </GridPane>
-        <GridPane layoutX="80.0" layoutY="342.0" prefHeight="30.0" prefWidth="439.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="185.33331298828125" minWidth="10.0" prefWidth="103.33332824707031" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="298.6666717529297" minWidth="10.0" prefWidth="276.6666717529297" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <Label styleClass="form-label" text="Password">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Label>
-                <MFXPasswordField fx:id="password" floatMode="DISABLED" prefHeight="25.0" prefWidth="307.0" styleClass="form-text-field" GridPane.columnIndex="1" />
-            </children>
-        </GridPane>
-        <GridPane layoutX="80.0" layoutY="393.0" prefHeight="30.0" prefWidth="439.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="185.33331298828125" minWidth="10.0" prefWidth="103.33332824707031" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="298.6666717529297" minWidth="10.0" prefWidth="276.6666717529297" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <Label styleClass="form-label" text="Confirm password">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Label>
-                <MFXPasswordField fx:id="confirmPassword" floatMode="DISABLED" prefHeight="25.0" prefWidth="307.0" styleClass="form-text-field" GridPane.columnIndex="1" />
-            </children>
-        </GridPane>
-        <Label fx:id="registerMessageLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="81.0" layoutY="436.0" prefHeight="18.0" prefWidth="439.0" textFill="#f02913" />
-      <MFXProgressSpinner fx:id="loader" layoutX="286.0" layoutY="465.0" prefHeight="26.0" prefWidth="26.0" />
-        <MFXButton fx:id="submitBtn" layoutX="80.0" layoutY="464.0" mnemonicParsing="false" onAction="#registerButtonOnAction" prefHeight="26.0" prefWidth="439.0" styleClass="form-primary-button" text="Register" />
-      <GridPane layoutX="78.0" layoutY="501.0" prefHeight="30.0" prefWidth="439.0">
+      </VBox>
+      <GridPane layoutX="79.0" layoutY="657.0" prefHeight="30.0" prefWidth="439.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="318.4" minWidth="10.0" prefWidth="302.0000366210937" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.5999755859375" minWidth="0.0" prefWidth="137.19996337890626" />
@@ -167,5 +124,11 @@
             <Hyperlink fx:id="loginHyperlink" alignment="CENTER_RIGHT" onAction="#loginButtonOnAction" prefHeight="24.0" prefWidth="169.0" text="Login" textFill="#5c1c00" GridPane.columnIndex="1" />
          </children>
       </GridPane>
+      <WebView fx:id="webView" disable="true" layoutX="-22.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="32.0" />
+      <VBox fx:id="webViewCloseBtn" alignment="CENTER" layoutX="538.0" layoutY="40.0" prefHeight="32.0" prefWidth="26.0" styleClass="modal-close-btn">
+         <children>
+            <FontAwesomeIconView fill="#5c1c00" glyphName="CLOSE" />
+         </children>
+      </VBox>
     </children>
 </AnchorPane>

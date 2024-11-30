@@ -4,34 +4,22 @@ import io.github.palexdev.materialfx.controls.*;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import org.example.librarymanager.Common;
-import org.example.librarymanager.data.AuthQuery;
-import org.example.librarymanager.data.AuthResult;
 import org.example.librarymanager.data.ServiceQuery;
 
 import javafx.scene.Cursor;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
-import org.example.librarymanager.Common;
 import org.example.librarymanager.components.Avatar;
-import org.example.librarymanager.data.Backblaze;
+import org.example.librarymanager.services.Backblaze;
 
 import org.example.librarymanager.data.UserQuery;
-import org.example.librarymanager.models.Category;
 import org.example.librarymanager.models.ServiceData;
 import org.example.librarymanager.models.User;
 
@@ -42,12 +30,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
-import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
 
 import java.util.ResourceBundle;
-
-import static java.time.DayOfWeek.*;
 
 public class ProfileController extends ControllerWrapper {
     final static String[] Colors = {"#d3d3d3","#90ee90","#32cd32","#228B22","#006400"};

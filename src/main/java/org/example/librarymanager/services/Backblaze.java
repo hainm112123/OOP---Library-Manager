@@ -1,4 +1,4 @@
-package org.example.librarymanager.data;
+package org.example.librarymanager.services;
 
 import org.example.librarymanager.Config;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;

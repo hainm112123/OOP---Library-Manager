@@ -88,13 +88,13 @@ public class AdminController extends ControllerWrapper {
         }
 
         for (Service service : serviceList) {
-            Period period = Period.between(service.getBorrowDate(), today);
-            if (period.getDays() <= 9) {
+            Period period = service.getBorrowDate() != null ? Period.between(service.getBorrowDate(), today) : Period.ofDays(100);
+            if (period.getDays() <= 9 && service.getBorrowDate() != null) {
                 String day = String.valueOf(service.getBorrowDate());
                 data1.put(day, data1.get(day) + 1);
             }
-            period = Period.between(service.getReturnDate(), today);
-            if (period.getDays() <= 9) {
+            period = service.getReturnDate() != null ? Period.between(service.getReturnDate(), today) : Period.ofDays(100);
+            if (period.getDays() <= 9 && service.getReturnDate() != null) {
                 String day = String.valueOf(service.getReturnDate());
                 data2.put(day, data2.get(day) + 1);
             }

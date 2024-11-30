@@ -74,7 +74,7 @@ public class Service implements Model {
 
     @Override
     public List<String> getAttributes() {
-        return List.of("ID", "Borrower", "Document", "Borrow Date", "Return Date");
+        return List.of("ID", "Borrower", "Document", "Status", "Borrow Date", "Return Date");
     }
 
     @Override
@@ -83,6 +83,7 @@ public class Service implements Model {
         list.add(new Pair<>("ID", String.valueOf(id)));
         list.add(new Pair<>("Borrower", (borrowerName == null ? "" : borrowerName)));
         list.add(new Pair<>("Document", (documentName == null ? "" : documentName)));
+        list.add(new Pair<>("Status", STATUS_LABELS[status]));
         list.add(new Pair<>("Borrow Date", (borrowDate == null ? "" : borrowDate.toString())));
         list.add(new Pair<>("Return Date", (returnDate == null ? "" : returnDate.toString())));
         return list;

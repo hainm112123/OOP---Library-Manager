@@ -25,6 +25,12 @@ module org.example.librarymanager {
     requires software.amazon.awssdk.services.s3;
     requires software.amazon.awssdk.regions;
     requires software.amazon.awssdk.auth;
+    requires scribejava.core;
+    requires scribejava.apis;
+    requires javafx.web;
+    requires org.apache.commons.validator;
+    requires org.json;
+    requires undertow.core;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

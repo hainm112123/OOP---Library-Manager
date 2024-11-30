@@ -89,8 +89,6 @@ public class BorrowRequestComponent implements Component {
         Task<Boolean> task = new Task<Boolean>() {
             @Override
             protected Boolean call() throws Exception {
-                Notification notification = new Notification(service.getUserId(), service.getDocumentId(), isApproved ? Notification.TYPE.REQUEST_APPROVED.ordinal() : Notification.TYPE.REQUEST_DECLINED.ordinal());
-                NotificationQuery.getInstance().add(notification);
                 return ServiceQuery.getInstance().executeBorrowRequest(service.getUserId(), service.getDocumentId(), isApproved);
             }
         };
@@ -104,6 +102,15 @@ public class BorrowRequestComponent implements Component {
                     parent.getChildren().remove(wrapper);
                     parent.setPrefHeight(parent.getChildren().size() * BorrowRequestComponent.COMPONENT_HEIGHT);
                 }
+                Task<Void> updateNotiTask = new Task<>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        Notification notification = new Notification(service.getUserId(), service.getDocumentId(), isApproved ? Notification.TYPE.REQUEST_APPROVED.ordinal() : Notification.TYPE.REQUEST_DECLINED.ordinal());
+                        NotificationQuery.getInstance().add(notification);
+                        return null;
+                    }
+                };
+                new Thread(updateNotiTask).start();
             } else {
                 DialogComponent dialog = new DialogComponent(
                         isApproved ? "Approve" : "Decline",

@@ -141,6 +141,14 @@ public class AuthQuery {
         return result;
     }
 
+    /**
+     * register with Google
+     * @param email
+     * @param firstName
+     * @param lastName
+     * @param imageLink
+     * @return
+     */
     public AuthResult registerWithGoogle(String email, String firstName, String lastName, String imageLink) {
         AuthResult result = new AuthResult();
         result.setMessage("register failed!");
@@ -164,6 +172,32 @@ public class AuthQuery {
                     result.setMessage("Registration successful!");
                     result.setUser(user);
                 }
+            }
+            ps.close();
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * log in with Google
+     * @param email
+     * @return
+     */
+    public AuthResult loginWithGoogle(String email) {
+        AuthResult result = new AuthResult();
+        result.setMessage("Login failed!");
+        try (Connection connection = databaseConnection.getConnection();) {
+            PreparedStatement ps = connection.prepareStatement("select * from users where email = ?");
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                result.setUser(new User(rs));
+                result.setMessage("Login successful!");
+            } else {
+                result.setMessage("Email have not been registered yet!");
             }
             ps.close();
             rs.close();

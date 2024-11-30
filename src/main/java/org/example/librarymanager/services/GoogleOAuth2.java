@@ -8,8 +8,15 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
+import io.undertow.Undertow;
+import io.undertow.util.Headers;
+import javafx.scene.Node;
+import javafx.scene.web.WebView;
 import lombok.Data;
+import org.example.librarymanager.Common;
 
+import java.awt.*;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -18,6 +25,11 @@ import static org.example.librarymanager.Config.*;
 
 @Data
 public class GoogleOAuth2 {
+    @FunctionalInterface
+    public interface OAuthCallback {
+        void execute(String authCode);
+    }
+
     private static GoogleOAuth2 instance;
     private OAuth20Service service;
     private Map<String, String> additionalParams;
@@ -52,6 +64,37 @@ public class GoogleOAuth2 {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void openOAuth(WebView webView, Node closeBtn, OAuthCallback callback) {
+        String authorizeUrl = service.createAuthorizationUrlBuilder()
+                .additionalParams(GoogleOAuth2.getInstance().getAdditionalParams())
+                .state(GoogleOAuth2.getInstance().getSecretState())
+                .build();
+        try {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(authorizeUrl));
+                Undertow server = Undertow.builder().addHttpListener(8080, "localhost")
+                        .setHandler(exchange -> {
+                            if (exchange.getRequestPath().equals("/callback")) {
+                                String authCode = exchange.getQueryParameters().get("code").getFirst();
+                                callback.execute(authCode);
+                                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
+                                exchange.getResponseSender().send("Authorization successful! You can close this window and go back to your app.");
+                            } else {
+                                exchange.setStatusCode(404);
+                                exchange.getResponseSender().send("Invalid endpoint.!");
+                            }
+                        }).build();
+                server.start();
+            } else {
+                webView.getEngine().load(authorizeUrl);
+                Common.enable(webView);
+                Common.enable(closeBtn);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

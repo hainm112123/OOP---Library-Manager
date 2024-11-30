@@ -56,46 +56,36 @@ public class LoginController extends ControllerWrapper {
         webView.getEngine().locationProperty().addListener((observableValue, oldLocation, newLocation) -> {
             if (newLocation.startsWith(Config.OAUTH_REDIRECT_URI)) {
                 String authCode = URLDecoder.decode(newLocation.split("code=")[1].split("&")[0], StandardCharsets.UTF_8);
-                Task<AuthResult> task = new Task<AuthResult>() {
-                    @Override
-                    protected AuthResult call() throws Exception {
-                        JSONObject response = new JSONObject(GoogleOAuth2.getInstance().handleCallback(authCode));
-                        return AuthQuery.getInstance().loginWithGoogle(response.getString("email"));
-                    }
-                };
-                task.setOnSucceeded(e -> {
-                    Common.disable(webView);
-                    Common.disable(webViewCloseBtn);
-                    AuthResult result = task.getValue();
-                    if (result.getUser() != null) {
-                        setUser(result.getUser());
-                        safeSwitchScene("home.fxml");
-                    } else {
-                        loginMessageLabel.setText(result.getMessage());
-                        loginMessageLabel.getStyleClass().clear();
-                        loginMessageLabel.getStyleClass().add("form-message--error");
-                    }
-                });
-                new Thread(task).start();
+                handleOAuthCallback(authCode);
             }
         });
         googleBtn.setOnAction(e -> {
-            OAuth20Service service = GoogleOAuth2.getInstance().getService();
-            String authorizeUrl = service.createAuthorizationUrlBuilder()
-                    .additionalParams(GoogleOAuth2.getInstance().getAdditionalParams())
-                    .state(GoogleOAuth2.getInstance().getSecretState())
-                    .build();
-            webView.getEngine().load(authorizeUrl);
-            Common.enable(webView);
-            Common.enable(webViewCloseBtn);
+            GoogleOAuth2.getInstance().openOAuth(webView, webViewCloseBtn, (this::handleOAuthCallback));
         });
-//        webView.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue == javafx.concurrent.Worker.State.SUCCEEDED) {
-//                webView.getEngine().executeScript("""
-//                    window.javaBridge.resizeWindow(536, 536);
-//                """);
-//            }
-//        });
+    }
+
+    private void handleOAuthCallback(String authCode) {
+        Task<AuthResult> task = new Task<AuthResult>() {
+            @Override
+            protected AuthResult call() throws Exception {
+                JSONObject response = new JSONObject(GoogleOAuth2.getInstance().handleCallback(authCode));
+                return AuthQuery.getInstance().loginWithGoogle(response.getString("email"));
+            }
+        };
+        task.setOnSucceeded(e -> {
+            Common.disable(webView);
+            Common.disable(webViewCloseBtn);
+            AuthResult result = task.getValue();
+            if (result.getUser() != null) {
+                setUser(result.getUser());
+                safeSwitchScene("home.fxml");
+            } else {
+                loginMessageLabel.setText(result.getMessage());
+                loginMessageLabel.getStyleClass().clear();
+                loginMessageLabel.getStyleClass().add("form-message--error");
+            }
+        });
+        new Thread(task).start();
     }
 
     public void loginButtonOnAction(ActionEvent event) {

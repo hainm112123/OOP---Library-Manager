@@ -66,45 +66,43 @@ public class RegisterController extends ControllerWrapper {
         webView.getEngine().locationProperty().addListener((observableValue, oldLocation, newLocation) -> {
             if (newLocation.startsWith(Config.OAUTH_REDIRECT_URI)) {
                 String authCode = URLDecoder.decode(newLocation.split("code=")[1].split("&")[0], StandardCharsets.UTF_8);
-                Task<AuthResult> task = new Task<AuthResult>() {
-                    @Override
-                    protected AuthResult call() throws Exception {
-                        JSONObject response = new JSONObject(GoogleOAuth2.getInstance().handleCallback(authCode));
-                        return AuthQuery.getInstance().registerWithGoogle(
-                                response.getString("email"),
-                                response.getString("given_name"),
-                                response.getString("family_name"),
-                                URLDecoder.decode(response.getString("picture"), StandardCharsets.UTF_8)
-                        );
-                    }
-                };
-                task.setOnSucceeded(e -> {
-                    Common.disable(webView);
-                    Common.disable(webViewCloseBtn);
-                    AuthResult result = task.getValue();
-                    if (result.getUser() != null) {
-                        setUser(result.getUser());
-                        safeSwitchScene("home.fxml");
-                    } else {
-                        registerMessageLabel.setText(result.getMessage());
-                        registerMessageLabel.getStyleClass().clear();
-                        registerMessageLabel.getStyleClass().add("form-message--error");
-                    }
-                });
-                new Thread(task).start();
+                handleOAuthCallback(authCode);
             }
         });
         googleBtn.setOnAction(e -> {
-            OAuth20Service service = GoogleOAuth2.getInstance().getService();
-            String authorizeUrl = service.createAuthorizationUrlBuilder()
-                    .additionalParams(GoogleOAuth2.getInstance().getAdditionalParams())
-                    .state(GoogleOAuth2.getInstance().getSecretState())
-                    .build();
-            webView.getEngine().load(authorizeUrl);
-            Common.enable(webView);
-            Common.enable(webViewCloseBtn);
+            GoogleOAuth2.getInstance().openOAuth(webView, webViewCloseBtn, this::handleOAuthCallback);
         });
     }
+
+    private void handleOAuthCallback(String authCode) {
+        Task<AuthResult> task = new Task<AuthResult>() {
+            @Override
+            protected AuthResult call() throws Exception {
+                JSONObject response = new JSONObject(GoogleOAuth2.getInstance().handleCallback(authCode));
+                return AuthQuery.getInstance().registerWithGoogle(
+                        response.getString("email"),
+                        response.getString("given_name"),
+                        response.getString("family_name"),
+                        URLDecoder.decode(response.getString("picture"), StandardCharsets.UTF_8)
+                );
+            }
+        };
+        task.setOnSucceeded(e -> {
+            Common.disable(webView);
+            Common.disable(webViewCloseBtn);
+            AuthResult result = task.getValue();
+            if (result.getUser() != null) {
+                setUser(result.getUser());
+                safeSwitchScene("home.fxml");
+            } else {
+                registerMessageLabel.setText(result.getMessage());
+                registerMessageLabel.getStyleClass().clear();
+                registerMessageLabel.getStyleClass().add("form-message--error");
+            }
+        });
+        new Thread(task).start();
+    }
+
 
     public void registerButtonOnAction(ActionEvent event) {
         Task<AuthResult> task = new Task<AuthResult>() {

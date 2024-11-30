@@ -30,6 +30,7 @@ module org.example.librarymanager {
     requires javafx.web;
     requires org.apache.commons.validator;
     requires org.json;
+    requires undertow.core;
 
     exports org.example.librarymanager.app;
     opens org.example.librarymanager.app to javafx.fxml;

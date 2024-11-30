@@ -122,7 +122,7 @@ public class User implements Model{
             this.firstname = data.get(4).getValue();
             this.lastname = data.get(5).getValue();
             this.gender = data.get(6).getValue();
-            this.dateOfBirth = LocalDate.parse(data.get(7).getValue());
+            this.dateOfBirth = data.get(7).getValue() != null && !data.get(7).getValue().isEmpty() ? LocalDate.parse(data.get(7).getValue()) : null;
             for (int i = 0; i < 3; i++)
                 if (data.get(8).getValue().equals(USER_TYPE_STRING[i])) {
                     this.permission = i;

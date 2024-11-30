@@ -95,12 +95,12 @@ public class LoginController extends ControllerWrapper {
                 return AuthQuery.getInstance().login(email.getText(), password.getText());
             }
         };
-        progressSpinner.setVisible(true);
-        submitBtn.setVisible(false);
+        Common.enable(progressSpinner);
+        Common.disable(submitBtn);
 
         task.setOnSucceeded((e) -> {
-            progressSpinner.setVisible(false);
-            submitBtn.setVisible(true);
+            Common.disable(progressSpinner);
+            Common.enable(submitBtn);
             AuthResult loginResult = task.getValue();
             loginMessageLabel.setText(loginResult.getMessage());
             if(loginResult.getUser() != null) {

@@ -38,7 +38,7 @@ public class EditDataUserController extends EditDataController<User> {
                 enableDelete();
             }
 
-            Node permissionNode = getGridPane(7, 1);
+            Node permissionNode = getGridPane(8, 1);
             MFXComboBox<Common.Choice> comboBox = new MFXComboBox<>();
 
             comboBox.setFloatMode(FloatMode.DISABLED);
@@ -58,7 +58,7 @@ public class EditDataUserController extends EditDataController<User> {
                 }
             }
 
-            replaceGridPane(7, 1, comboBox);
+            replaceGridPane(8, 1, comboBox);
             GridPane.setHgrow(comboBox, Priority.ALWAYS);
             comboBox.setMaxWidth(Double.MAX_VALUE);
         });

@@ -115,7 +115,7 @@ public class UserQuery implements DataAccessObject<User> {
             ps.setString(2, user.getFirstname());
             ps.setString(3, user.getLastname());
             ps.setString(4, user.getGender());
-            ps.setDate(5, Date.valueOf(user.getDateOfBirth()));
+            ps.setDate(5, user.getDateOfBirth() != null ? Date.valueOf(user.getDateOfBirth()) : null);
             ps.setInt(6, user.getPermission());
             ps.setString(7, user.getImageLink());
             ps.setInt(8, user.getId());

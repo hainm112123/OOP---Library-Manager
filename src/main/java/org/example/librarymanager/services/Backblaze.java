@@ -17,6 +17,9 @@ public class Backblaze {
     private static Backblaze instance;
     private S3Client b2;
 
+    /**
+     * backblaze for file uploading
+     */
     private Backblaze() {
         Matcher matcher = Pattern.compile("https://s3\\.([a-z0-9-]+)\\.backblazeb2\\.com").matcher(Config.BB_ENDPOINT);
         if (!matcher.find()) {
@@ -41,6 +44,12 @@ public class Backblaze {
         return instance;
     }
 
+    /**
+     * upload a file and return public url
+     * @param key
+     * @param path
+     * @return
+     */
     public String upload(String key, String path) {
         PutObjectResponse response = b2.putObject(PutObjectRequest.builder()
                 .bucket(Config.BB_BUCKET_NAME)

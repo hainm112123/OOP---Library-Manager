@@ -38,6 +38,11 @@ public class BorrowRequestComponent implements Component {
     private MFXButton declineButton;
     private MFXProgressBar progressBar;
 
+    /**
+     * users' borrow request
+     * @param service
+     * @param root
+     */
     public BorrowRequestComponent(PendingService service, Pane root) {
         wrapper = new VBox();
         container = new HBox();
@@ -82,6 +87,12 @@ public class BorrowRequestComponent implements Component {
         declineButton.setOnAction(e -> onButtonClicked(service, false, root));
     }
 
+    /**
+     * handle approve/decline action
+     * @param service
+     * @param isApproved
+     * @param root
+     */
     private void onButtonClicked(PendingService service, boolean isApproved, Pane root) {
         Common.hide(approveButton);
         Common.hide(declineButton);

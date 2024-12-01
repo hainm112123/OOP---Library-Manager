@@ -119,6 +119,9 @@ public class TopbarController extends ControllerWrapper {
 
     private List<Label> notificationButtons = new ArrayList<>();
 
+    /**
+     * init category menu
+     */
     private void initCategory() {
         try {
             List<Category> categoryList = categoryFu.get();
@@ -157,11 +160,17 @@ public class TopbarController extends ControllerWrapper {
         }
     }
 
+    /**
+     * init redirect button
+     */
     private void initRedirect() {
         homeBtn.setOnAction((event) -> safeSwitchScene("home.fxml"));
         advancedSearchBtn.setOnAction((event) -> safeSwitchScene("advanced-search.fxml"));
     }
 
+    /**
+     * init trie for searching
+     */
     private void initSearchBox() {
         if (Trie.getInstance().getCnt() == 0) {
             Trie.getInstance().buildTrie();
@@ -176,6 +185,10 @@ public class TopbarController extends ControllerWrapper {
         });
     }
 
+    /**
+     * set notification's elements
+     * @param type
+     */
     private void setNotificationBox(int type) {
         notificationBox.getChildren().clear();
         if ((type & NOTIFICATION_OTHER) != 0) {
@@ -203,6 +216,11 @@ public class TopbarController extends ControllerWrapper {
         notificationBox.setMaxHeight(notificationBox.getChildren().size() * NotificationComponent.COMPONENT_HEIGHT);
     }
 
+    /**
+     * change type of notification showed.
+     * @param activeButton
+     * @param notificationButtonStatus
+     */
     private void setNotificationButtonStatus(Label activeButton, int notificationButtonStatus) {
         for (Label button: notificationButtons) {
             if (button == activeButton) {
@@ -214,6 +232,9 @@ public class TopbarController extends ControllerWrapper {
         setNotificationBox(notificationButtonStatus);
     }
 
+    /**
+     * init notification's content
+     */
     private void initNotification() {
         Common.disable(notificationPane);
         try {
@@ -297,6 +318,9 @@ public class TopbarController extends ControllerWrapper {
         }
     }
 
+    /**
+     * init user's menu
+     */
     private void initUser() {
         userBtn = (ImageView) new Avatar(userBtn, 48, getUser().getImageLink()).getElement();
         profileImage = (ImageView) new Avatar(profileImage, 48, getUser().getImageLink()).getElement();
@@ -457,6 +481,11 @@ public class TopbarController extends ControllerWrapper {
         });
     }
 
+    /**
+     * show search box suggestions.
+     * @param first
+     * @param last
+     */
     private void displaySuggestionPane(Trie.Node first, Trie.Node last) {
         suggestionsBox.getChildren().clear();
         int buttonH = 30;

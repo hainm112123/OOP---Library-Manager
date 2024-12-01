@@ -31,6 +31,16 @@ public class NotificationComponent implements Component {
     private static final int IMAGE_HEIGHT = 48;
     public static final int COMPONENT_HEIGHT = 68;
 
+    /**
+     * notification.
+     * @param document
+     * @param notification
+     * @param controller
+     * @param titleStr
+     * @param messageStr
+     * @param destination
+     * @param pane
+     */
     public NotificationComponent(Document document, Notification notification, ControllerWrapper controller, String titleStr, String messageStr, String destination, Node pane) {
         this.controller = controller;
         container = new HBox();

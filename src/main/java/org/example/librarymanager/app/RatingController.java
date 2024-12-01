@@ -34,6 +34,9 @@ public class RatingController extends ControllerWrapper {
         ratingLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: 800;");
     }
 
+    /**
+     * post a review and rating
+     */
     @FXML
     private void post() {
         Task<Boolean> task = new Task<>() {

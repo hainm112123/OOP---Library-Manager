@@ -363,7 +363,8 @@ public class ServiceQuery implements DataAccessObject<Service> {
                             "join documents as d on d.id = s.documentId\n" +
                             "join users as u on u.id = s.userId\n" +
                             "join categories as c on c.id = d.categoryId\n" +
-                            "where s.status = ?"
+                            "where s.status = ? " +
+                            "order by s.id desc"
             );
             ps.setInt(1, Service.STATUS_PENDING);
             ResultSet rs = ps.executeQuery();

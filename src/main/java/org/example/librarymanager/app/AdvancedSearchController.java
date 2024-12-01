@@ -193,7 +193,7 @@ public class AdvancedSearchController extends ControllerWrapper {
         if (status == FILTER_STATUS_REMAIN) {
             result = result.stream().filter(document -> document.getQuantityInStock() > 0).collect(Collectors.toList());
         }
-        if (status == FILTER_STATUS_REMAIN) {
+        if (status == FILTER_STATUS_NO_REMAIN) {
             result = result.stream().filter(document -> document.getQuantityInStock() == 0).collect(Collectors.toList());
         }
         int order = sortByFilter.getSelectionModel().getSelectedItem().getValue();

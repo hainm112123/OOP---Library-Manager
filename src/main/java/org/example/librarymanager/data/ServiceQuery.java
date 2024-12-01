@@ -302,6 +302,11 @@ public class ServiceQuery implements DataAccessObject<Service> {
         return documents;
     }
 
+    /**
+     * service data for display in user's profile
+     * @param userId
+     * @return
+     */
     public List<ServiceData> getServiceData(int userId) {
         List<ServiceData> data = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {
@@ -320,6 +325,11 @@ public class ServiceQuery implements DataAccessObject<Service> {
         return data;
     }
 
+    /**
+     * documents in users' wishlist
+     * @param userId
+     * @return
+     */
     public List<Document> getWishlistAvailableDocuments(int userId) {
         List<Document> documents = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {
@@ -341,6 +351,10 @@ public class ServiceQuery implements DataAccessObject<Service> {
         return documents;
     }
 
+    /**
+     * get borrow request that wait for approving.
+     * @return
+     */
     public List<PendingService> getPendingServices() {
         List<PendingService> services = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {
@@ -364,6 +378,10 @@ public class ServiceQuery implements DataAccessObject<Service> {
         return services;
     }
 
+    /**
+     * get number of borrow requests.
+     * @return
+     */
     public int getNumberOfPendingServices() {
         try (Connection connection = databaseConnection.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(

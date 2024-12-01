@@ -35,6 +35,9 @@ public class GoogleOAuth2 {
     private Map<String, String> additionalParams;
     private String secretState;
 
+    /**
+     * oauth2 with Google.
+     */
     private GoogleOAuth2() {
         service = new ServiceBuilder(OAUTH_CLIENT_ID)
                 .apiSecret(OAUTH_CLIENT_SECRET)
@@ -54,6 +57,11 @@ public class GoogleOAuth2 {
         return instance;
     }
 
+    /**
+     * handle call back after login with Google account.
+     * @param authCode
+     * @return
+     */
     public String handleCallback(String authCode) {
         try {
             OAuth2AccessToken accessToken = service.getAccessToken(authCode);
@@ -67,6 +75,12 @@ public class GoogleOAuth2 {
         }
     }
 
+    /**
+     * open Google login website with browser or webview (in case browser unavailable.
+     * @param webView
+     * @param closeBtn
+     * @param callback
+     */
     public void openOAuth(WebView webView, Node closeBtn, OAuthCallback callback) {
         String authorizeUrl = service.createAuthorizationUrlBuilder()
                 .additionalParams(GoogleOAuth2.getInstance().getAdditionalParams())

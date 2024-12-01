@@ -129,11 +129,19 @@ public class Common {
     }
 
 
+    /**
+     * hide and disable node without remove it from layout calculations.
+     * @param node
+     */
     public static void hide(Node node) {
         node.setDisable(true);
         node.setVisible(false);
     }
 
+    /**
+     * show hided node back.
+     * @param node
+     */
     public static void show(Node node) {
         node.setDisable(false);
         node.setVisible(true);
@@ -158,6 +166,12 @@ public class Common {
         }
     }
 
+    /**
+     * hash input string and take first len characters.
+     * @param input
+     * @param len
+     * @return
+     */
     public static String hashString(String input, int len) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

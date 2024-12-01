@@ -123,6 +123,9 @@ public class AdvancedSearchController extends ControllerWrapper {
         searchButton.setOnAction(e -> search());
     }
 
+    /**
+     * init data and analyzer for searching
+     */
     private void initSearch() {
         try {
             memoryIndex = new ByteBuffersDirectory();
@@ -158,6 +161,9 @@ public class AdvancedSearchController extends ControllerWrapper {
         }
     }
 
+    /**
+     * perform searching
+     */
     private void search() {
         List<Document> result = documents;
         if (!searchBox.getText().isEmpty()) {

@@ -74,6 +74,10 @@ public class RegisterController extends ControllerWrapper {
         });
     }
 
+    /**
+     * handle oauth callback
+     * @param authCode
+     */
     private void handleOAuthCallback(String authCode) {
         Task<AuthResult> task = new Task<AuthResult>() {
             @Override
@@ -103,7 +107,10 @@ public class RegisterController extends ControllerWrapper {
         new Thread(task).start();
     }
 
-
+    /**
+     * handle register button click event
+     * @param event
+     */
     public void registerButtonOnAction(ActionEvent event) {
         Task<AuthResult> task = new Task<AuthResult>() {
             @Override
@@ -140,6 +147,10 @@ public class RegisterController extends ControllerWrapper {
         new Thread(task).start();
     }
 
+    /**
+     * redirect to log in page
+     * @param event
+     */
     public void loginButtonOnAction(ActionEvent event) {
         safeSwitchScene("login.fxml");
         stage.show();

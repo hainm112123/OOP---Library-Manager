@@ -75,6 +75,10 @@ public class RatingQuery implements DataAccessObject<Rating> {
         }
     }
 
+    /**
+     * data model for recommendation system.
+     * @return
+     */
     public List<RecommendationData> getDataModel() {
         List<RecommendationData> dataModel = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {

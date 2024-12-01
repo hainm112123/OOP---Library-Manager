@@ -11,6 +11,12 @@ public class Avatar implements Component {
     private ImageView avatar;
     private int size;
 
+    /**
+     * create a circled image view for avatar
+     * @param avatar
+     * @param size
+     * @param imageLink
+     */
     public Avatar(ImageView avatar, int size, String imageLink) {
         this.avatar = avatar;
         this.size = size;

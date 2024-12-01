@@ -371,7 +371,7 @@ public class DocumentQuery implements DataAccessObject<Document> {
     }
 
     /**
-     * Get documents from a list of id
+     * Get documents from a list of id.
      * @param ids
      * @return
      */
@@ -398,10 +398,21 @@ public class DocumentQuery implements DataAccessObject<Document> {
         return documents;
     }
 
+    /**
+     * newest documents.
+     * @param limit
+     * @return
+     */
     public List<Document> getNewestDocuments(int limit) {
         return getDocuments("addDate desc", limit);
     }
 
+    /**
+     * get documents by status: in wishlist, pending, borrowing, completed
+     * @param userId
+     * @param status
+     * @return
+     */
     public List<Document> getDocumentsByStatus(int userId, int status) {
         List<Document> documents = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {

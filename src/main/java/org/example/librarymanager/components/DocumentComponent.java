@@ -146,6 +146,10 @@ public class DocumentComponent implements Component {
         listContainer.setEffect(ds);
     }
 
+    /**
+     * component to display in detail-view
+     * @param document
+     */
     public void initDetailView(Document document) {
         detailContainer = new HBox();
         detailContainer.setAlignment(Pos.CENTER);

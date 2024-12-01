@@ -72,6 +72,11 @@ public class NotificationQuery implements DataAccessObject<Notification> {
         return false;
     }
 
+    /**
+     * unread notifications
+     * @param userId
+     * @return
+     */
     public List<Notification> getUnreadNotifications(int userId) {
         List<Notification> notifications = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {

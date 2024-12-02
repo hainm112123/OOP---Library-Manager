@@ -28,11 +28,14 @@ import java.net.URL;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.time.format.DateTimeFormatter;
 
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ProfileController extends ControllerWrapper {
     final static String[] Colors = {"#d3d3d3","#90ee90","#32cd32","#228B22","#006400"};
@@ -193,7 +196,15 @@ public class ProfileController extends ControllerWrapper {
      * Init BorrowChart
      */
     public void InitChart(){
-        List<ServiceData> ListBorrowDate = ServiceQuery.getInstance().getServiceData(getUser().getId());
+        executor = Executors.newSingleThreadExecutor();
+        Future<List<ServiceData>> future = executor.submit(() -> ServiceQuery.getInstance().getServiceData(getUser().getId()));
+        List<ServiceData> ListBorrowDate;
+        try {
+            ListBorrowDate = future.get();
+        } catch (Exception e) {
+            ListBorrowDate = new ArrayList<>();
+            e.printStackTrace();
+        }
 
         XYChart.Series<Number , String> series = new XYChart.Series<>();
 

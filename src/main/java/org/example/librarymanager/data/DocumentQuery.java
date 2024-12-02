@@ -404,7 +404,7 @@ public class DocumentQuery implements DataAccessObject<Document> {
      * @return
      */
     public List<Document> getNewestDocuments(int limit) {
-        return getDocuments("addDate desc", limit);
+        return getDocuments("addDate desc, id desc", limit);
     }
 
     /**

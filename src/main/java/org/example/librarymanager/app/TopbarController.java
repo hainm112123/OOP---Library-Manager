@@ -488,7 +488,7 @@ public class TopbarController extends ControllerWrapper {
      */
     private void displaySuggestionPane(Trie.Node first, Trie.Node last) {
         suggestionsBox.getChildren().clear();
-        int buttonH = 30;
+        int buttonH = 40;
         if(first == null || last == null) {
             Button button = new Button();
             button.setText("No title found");

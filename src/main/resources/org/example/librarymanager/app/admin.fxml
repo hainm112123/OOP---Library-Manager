@@ -31,6 +31,11 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
+                  <Button mnemonicParsing="false" onAction="#showOverviewData" prefHeight="79.0" prefWidth="250.0" styleClass="topbar-button" text="Dashboard">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Button>
                   <Button mnemonicParsing="false" onAction="#userButtonOnClick" prefHeight="79.0" prefWidth="250.0" styleClass="topbar-button" text="Users" GridPane.rowIndex="1">
                      <font>
                         <Font size="25.0" />
@@ -41,22 +46,17 @@
                         <Font size="25.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#ratingButtonOnClick" prefHeight="79.0" prefWidth="250.0" styleClass="topbar-button" text="Ratings" GridPane.rowIndex="4">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Button>
                   <Button mnemonicParsing="false" onAction="#categoryButtonOnClick" prefHeight="79.0" prefWidth="250.0" styleClass="topbar-button" text="Categories" GridPane.rowIndex="3">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#serviceButtonOnClick" prefHeight="79.0" prefWidth="250.0" styleClass="topbar-button" text="Services" GridPane.rowIndex="5">
+                  <Button mnemonicParsing="false" onAction="#ratingButtonOnClick" prefHeight="79.0" prefWidth="250.0" styleClass="topbar-button" text="Ratings" GridPane.rowIndex="4">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#showOverviewData" prefHeight="79.0" prefWidth="250.0" styleClass="topbar-button" text="Dashboard">
+                  <Button mnemonicParsing="false" onAction="#serviceButtonOnClick" prefHeight="79.0" prefWidth="250.0" styleClass="topbar-button" text="Services" GridPane.rowIndex="5">
                      <font>
                         <Font size="25.0" />
                      </font>

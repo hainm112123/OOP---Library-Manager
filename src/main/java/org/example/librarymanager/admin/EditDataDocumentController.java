@@ -13,7 +13,7 @@ public class EditDataDocumentController extends EditDataController<Document> {
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
         dataAccessObject = DocumentQuery.getInstance();
-        Platform.runLater(this::enableDelete);
+//        Platform.runLater(this::enableDelete);
     }
 
 //    @Override

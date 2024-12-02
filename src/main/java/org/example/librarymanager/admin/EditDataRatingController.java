@@ -13,6 +13,6 @@ public class EditDataRatingController extends EditDataController<Rating> {
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
         dataAccessObject = RatingQuery.getInstance();
-        Platform.runLater(this::enableDelete);
+//        Platform.runLater(this::enableDelete);
     }
 }

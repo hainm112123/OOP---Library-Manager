@@ -167,11 +167,11 @@ public class DataTable<E extends Model> {
                 fxmlFile = "edit-data-user.fxml";
                 break;
             case "Document":
-                fxmlFile = "edit-data-document.fxml";
-                break;
+//                fxmlFile = "edit-data-document.fxml";
+                return;
             case "Rating":
-                fxmlFile = "edit-data-rating.fxml";
-                break;
+//                fxmlFile = "edit-data-rating.fxml";
+                return;
             case "Category":
                 fxmlFile = "edit-data-category.fxml";
                 break;

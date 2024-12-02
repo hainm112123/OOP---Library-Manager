@@ -26,7 +26,7 @@ public class HomeController extends ControllerWrapper{
     private AnchorPane recommendationsContainer;
 
     private static final int NUM_DOCUMENT_DISPLAY = 15;
-    private static List<Integer> recommendations;
+    private List<Integer> recommendations;
 
     /**
      * Display documents as document components on a scroll pane.

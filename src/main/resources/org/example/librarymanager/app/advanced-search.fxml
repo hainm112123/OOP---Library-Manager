@@ -85,7 +85,7 @@
                               <children>
                                  <MFXButton fx:id="searchButton" prefHeight="36.0" prefWidth="157.0" styleClass="primary-button" text="Search">
                                     <graphic>
-                                       <FontAwesomeIconView glyphName="SEARCH" wrappingWidth="16.742711067199707" />
+                                       <FontAwesomeIconView fill="WHITE" glyphName="SEARCH" wrappingWidth="16.742711067199707" />
                                     </graphic></MFXButton>
                               </children>
                               <padding>

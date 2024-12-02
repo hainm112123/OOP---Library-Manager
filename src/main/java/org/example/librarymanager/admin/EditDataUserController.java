@@ -34,9 +34,9 @@ public class EditDataUserController extends EditDataController<User> {
         dataAccessObject = UserQuery.getInstance();
         Platform.runLater(() -> {
             enableApply();
-            if (data.getPermission() != User.TYPE_ADMIN) {
-                enableDelete();
-            }
+//            if (data.getPermission() != User.TYPE_ADMIN) {
+//                enableDelete();
+//            }
 
             Node permissionNode = getGridPane(8, 1);
             MFXComboBox<Common.Choice> comboBox = new MFXComboBox<>();

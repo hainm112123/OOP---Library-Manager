@@ -268,7 +268,7 @@ public class DataTable<E extends Model> {
         Collections.sort(list, new Comparator<E>() {
             @Override
             public int compare(E o1, E o2) {
-                if (tmp == "ID") {
+                if (tmp.equals("ID")) {
                     List<Pair<String, String>> tmp1 = o1.getData();
                     List<Pair<String, String>> tmp2 = o2.getData();
                     for (int i = 0; i < tmp1.size(); i++) {

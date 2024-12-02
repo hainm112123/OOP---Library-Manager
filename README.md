@@ -176,7 +176,7 @@ You are allowed to edit a book if you are its owner. After access this screen th
 
 ### Recommendation system
 
-![image](https://github.com/user-attachments/assets/3dc5cd40-3027-4b2d-b7cf-014addf3d6a5)
+![image](https://github.com/user-attachments/assets/bbf2dc8a-6c45-4901-8595-8994639ca9ba)
 
 New books, most popular books, high rated books and books that user may like (based on users' activities) will be displayed in home screen.
 

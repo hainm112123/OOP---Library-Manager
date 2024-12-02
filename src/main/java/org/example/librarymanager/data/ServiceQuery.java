@@ -310,7 +310,7 @@ public class ServiceQuery implements DataAccessObject<Service> {
     public List<ServiceData> getServiceData(int userId) {
         List<ServiceData> data = new ArrayList<>();
         try (Connection connection = databaseConnection.getConnection()) {
-            PreparedStatement ps = connection.prepareStatement("select userId, count(*) as count, borrowDate as date from services where userId = ? and status != ? group by date");
+            PreparedStatement ps = connection.prepareStatement("select userId, count(*) as count, borrowDate as date from services where userId = ? and status != ? and borrowDate is not null group by date");
             ps.setInt(1, userId);
             ps.setInt(2, Service.STATUS_WISH_LIST);
             ResultSet rs = ps.executeQuery();

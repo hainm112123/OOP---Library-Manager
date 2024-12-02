@@ -66,7 +66,7 @@ public class Trie {
         };
         task.setOnSucceeded(e -> {
             List<Document> data = task.getValue();
-            for (int i = 0; i < data.size(); i++) {
+            for (int i = 0; i < Math.min(maxCnt, data.size()); i++) {
                 addTrie(data.get(i).getTitle(), data.get(i).getId());
             }
         });
@@ -97,6 +97,9 @@ public class Trie {
     public void addTrie(String x, int id) {
         if (cnt > maxCnt) {
             buildTrie();
+            if (cnt == maxCnt) {
+                return;
+            }
         }
         StringBuffer tmp = modify(x);
         int top = 0;
